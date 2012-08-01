@@ -14,8 +14,12 @@
 /log/*.log
 /tmp
 
-# Ignore VIM's swp files
+# Ignore VIM's .swp files
 **/*.swp
 *.swp
+
+# Ignore OS X .DS_Store files
+**/*.DS_Store
+*.DS_Store
 
 /db/schema.rb
