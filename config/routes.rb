@@ -1,4 +1,8 @@
 Tippspiel::Application.routes.draw do
+  resources :bets
+
+  resources :matches
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
