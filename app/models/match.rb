@@ -1,6 +1,7 @@
 class Match < ActiveRecord::Base
-  attr_accessible :match_date, :score_a, :score_b, :team_a, :team_b, :bets
+  attr_accessible :match_date, :score_a, :score_b, :team_a, :team_b, :bets, :matchday
 
+  belongs_to :matchday
   has_many :bets
   
   def to_s

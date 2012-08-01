@@ -1,0 +1,21 @@
+<h1>Listing matchdays</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @matchdays.each do |matchday| %>
+  <tr>
+    <td><%= link_to 'Show', matchday %></td>
+    <td><%= link_to 'Edit', edit_matchday_path(matchday) %></td>
+    <td><%= link_to 'Destroy', matchday, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Matchday', new_matchday_path %>

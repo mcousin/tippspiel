@@ -1,5 +1,7 @@
 Tippspiel::Application.routes.draw do
   
+  resources :matchdays
+
   resources :bets
 
   resources :matches
