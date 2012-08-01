@@ -5,6 +5,6 @@ class Match < ActiveRecord::Base
   has_many :bets
   
   def to_s
-    "#{team_a} vs #{team_b} scored #{score_a}:#{score_b} on #{match_date}"    
+    "#{team_a} vs #{team_b}"    
   end
 end
