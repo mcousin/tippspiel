@@ -3,5 +3,35 @@ class Bet < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :match
+
+  def points
+
+    case result
+    when :incomplete, :incorrect
+      0
+    when :correct_result
+      3
+    when :correct_goal_difference
+      2
+    when :correct_tendency
+      1
+    end
+
+  end
+
+  def result
+
+    if not (match.score_a && match.score_b && score_a && score_b)
+      :incomplete
+    elsif [match.score_a, match.score_b] == [score_a, score_b]
+      :correct_result
+    elsif match.score_a - match.score_b == score_a - score_b
+      :correct_goal_difference
+    elsif (match.score_a <=> match.score_b) == (score_a <=> score_b)
+      :correct_tendency
+    else
+      :incorrect
+    end
+  end
   
 end
