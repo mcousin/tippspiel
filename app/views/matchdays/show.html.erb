@@ -1,5 +1,9 @@
 <p id="notice"><%= notice %></p>
 
+<p>
+  <b>Description:</b>
+  <%= @matchday.description %>
+</p>
 
 <%= link_to 'Edit', edit_matchday_path(@matchday) %> |
 <%= link_to 'Back', matchdays_path %>
