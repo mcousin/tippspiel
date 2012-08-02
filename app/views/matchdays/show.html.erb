@@ -1,4 +1,28 @@
 <p id="notice"><%= notice %></p>
+<h1>Match Day N° <%= @matchday.id %></h1>
+
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @matchday.matches.each do |match| %>
+  <tr>
+    <td><%= match.team_a %></td>
+    <td>:</td>
+    <td><%= match.team_b %></td>
+    <td><%= match.score_a %></td>
+    <td>:</td>
+    <td><%= match.score_b %></td>
+  </tr>
+<% end %>
+</table>
 
 <p>
   <b>Description:</b>
