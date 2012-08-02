@@ -2,12 +2,12 @@
 
 <p>
   <b>Match:</b>
-  <%= @bet.match_id %>
+  <%= @bet.match %>
 </p>
 
 <p>
   <b>User:</b>
-  <%= @bet.user_id %>
+  <%= @bet.user.name %>
 </p>
 
 <p>
@@ -20,6 +20,10 @@
   <%= @bet.score_b %>
 </p>
 
+<p>
+  <b>Points:</b>
+  <%= @bet.points %>
+</p>
 
 <%= link_to 'Edit', edit_bet_path(@bet) %> |
 <%= link_to 'Back', bets_path %>
