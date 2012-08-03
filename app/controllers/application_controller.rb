@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
 
   def authenticate_user!
-    unless session[:user_id]
-      redirect_to new_session_path
+    unless current_user
+      redirect_to login_path
     end
   end
 

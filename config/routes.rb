@@ -8,7 +8,11 @@ Tippspiel::Application.routes.draw do
 
   resources :users
 
-  resource :session # singleton resource!
+  resource :session, :only => [:create] # singleton resource!
+
+  match 'login' => 'sessions#new'
+  match 'logout' => 'sessions#destroy'
+  
 
 
   # The priority is based upon order of creation:
