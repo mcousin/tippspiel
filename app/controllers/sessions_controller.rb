@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       session[:user_id] = @user.id
       redirect_to users_path
     else
-      redirect_to login_path
+      render "matches/index"
     end
   end
 

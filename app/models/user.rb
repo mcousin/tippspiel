@@ -4,9 +4,4 @@ class User < ActiveRecord::Base
   has_secure_password
   has_many :bets
 
-  def to_s
-    "Name: #{name}; E-Mail: #{email}"
-  end
-
-
 end
