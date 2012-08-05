@@ -16,22 +16,39 @@
     <th>Points</th>
   </tr>
 
-<% @matchday.matches.each do |match| %>
-  <% bet = current_user.bets.find_by_match_id(match.id) %>
-  <tr>
-    <td><%= match.team_a %></td>
-    <td>:</td>
-    <td><%= match.team_b %></td>
-    <% unless match.started? %>
-      <td>[bet form]</td>
-    <% else %>
-      <td><%= bet.scores_string %></td>
+  <% @started_matches.each do |match| %>
+    <% bet = current_user.bets.find_by_match_id(match.id) %>
+    <tr>
+      <td><%= match.team_a %></td>
+      <td>:</td>
+      <td><%= match.team_b %></td>
+      <td><%= bet ? bet.scores_string : "-:-" %></td>
+      <td><%= match.scores_string %></td>
+      <td><%= bet ? bet.points : 0 %></td>
+    </tr>
+  <% end %>
+
+  <%= form_tag update_matchday_bets_path, :method => :put, :matchday_id => @matchday.id do %>
+    <% @bets.each do |bet| %>
+      <tr>
+        <td><%= bet.match.team_a %></td>
+        <td>:</td>
+        <td><%= bet.match.team_b %></td>
+        <td>
+          <%= fields_for "bets[]", bet do |f| %>
+            <div class="field">
+              <%= f.number_field :score_a %>:<%= f.number_field :score_b %>
+            </div>
+          <% end %>
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
     <% end %>
-    <td><%= match.scores_string %></td>
-    <td><%= bet.points %></td>
-  </tr>
-<% end %>
 </table>
+    <p><%= submit_tag "Submit Bets" %></p>
+  <% end %>
+
 
 <%= link_to 'Edit', edit_matchday_path(@matchday) %> |
 <%= link_to 'Back', matchdays_path %>

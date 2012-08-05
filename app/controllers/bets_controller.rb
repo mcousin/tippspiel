@@ -80,4 +80,12 @@ class BetsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def update_matchday
+    params[:bets].each do |id, attributes|
+      Bet.find(id).update_attributes(attributes)
+    end
+    @matchday = Bet.find(params[:bets].keys.first).match.matchday
+    redirect_to @matchday
+  end
 end

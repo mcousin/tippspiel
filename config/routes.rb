@@ -2,7 +2,9 @@ Tippspiel::Application.routes.draw do
   
   resources :matchdays
 
-  resources :bets
+  resources :bets do
+    put 'update_matchday', :on => :collection
+  end
 
   resources :matches
 
