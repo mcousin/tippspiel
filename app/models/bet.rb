@@ -4,8 +4,11 @@ class Bet < ActiveRecord::Base
   belongs_to :user
   belongs_to :match
 
-  def points
+  def scores_string
+    [score_a, score_b].map{|score| score ? score.to_s : "-"}.join(":")
+  end
 
+  def points
     case result
     when :incomplete, :incorrect
       0
@@ -16,11 +19,9 @@ class Bet < ActiveRecord::Base
     when :correct_tendency
       1
     end
-
   end
 
   def result
-
     if not (match.score_a && match.score_b && score_a && score_b)
       :incomplete
     elsif [match.score_a, match.score_b] == [score_a, score_b]

@@ -7,4 +7,12 @@ class Match < ActiveRecord::Base
   def to_s
     "#{team_a} vs #{team_b}"    
   end
+
+  def started?
+    DateTime.now > match_date
+  end
+
+  def scores_string
+    [score_a, score_b].map{|score| score ? score.to_s : "-"}.join(":")
+  end
 end

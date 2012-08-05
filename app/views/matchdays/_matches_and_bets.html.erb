@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= f.label :matchday_id %><br />
-    <%= f.collection_select :matchday_id, Matchday.all, :id, :description %>
+    <%= f.collection_select :matchday_id, Matchday.all, :id, :to_s %>
   </div>
   <div class="field">
     <%= f.label :team_a %><br />

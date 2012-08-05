@@ -1,33 +1,37 @@
 <p id="notice"><%= notice %></p>
-<h1>Match Day N° <%= @matchday.id %></h1>
+
+<% Matchday.all.each do |matchday| %>
+  <%= link_to matchday.description, matchday_path(matchday) %> |
+<% end %>
+<h1><%= @matchday.description %></h1>
 
 
 <table>
   <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th>Home team</th>
+    <th>:</th>
+    <th>Away team</th>
+    <th>Bet</th>
+    <th>Result</th>
+    <th>Points</th>
   </tr>
 
 <% @matchday.matches.each do |match| %>
+  <% bet = current_user.bets.find_by_match_id(match.id) %>
   <tr>
     <td><%= match.team_a %></td>
     <td>:</td>
     <td><%= match.team_b %></td>
-    <td><%= match.score_a %></td>
-    <td>:</td>
-    <td><%= match.score_b %></td>
+    <% unless match.started? %>
+      <td>[bet form]</td>
+    <% else %>
+      <td><%= bet.scores_string %></td>
+    <% end %>
+    <td><%= match.scores_string %></td>
+    <td><%= bet.points %></td>
   </tr>
 <% end %>
 </table>
-
-<p>
-  <b>Description:</b>
-
-</p>
 
 <%= link_to 'Edit', edit_matchday_path(@matchday) %> |
 <%= link_to 'Back', matchdays_path %>

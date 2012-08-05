@@ -4,8 +4,7 @@
   <tr>
     <th>Match</th>
     <th>User</th>
-    <th>Score a</th>
-    <th>Score b</th>
+    <th>Bet</th>
     <th>Points</th>
     <th></th>
     <th></th>
@@ -16,8 +15,7 @@
   <tr>
     <td><%= bet.match %></td>
     <td><%= bet.user.name %></td>
-    <td><%= bet.score_a %></td>
-    <td><%= bet.score_b %></td>
+    <td><%= bet.scores_string %></td>
     <td><%= bet.points %></td>
     <td><%= link_to 'Show', bet %></td>
     <td><%= link_to 'Edit', edit_bet_path(bet) %></td>
