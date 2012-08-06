@@ -14,6 +14,7 @@
 * make sure form for bets on matchdays view works also for non-existing bets
 
 ## Done
+* show matches/bets on matchdays page for the selected matchday
 
 
 
@@ -22,7 +23,7 @@
 
 
 
-### Epics
+# Epics
 * show stats on starting page
 * create chat area on starting page, displaying also status messages (Matchday winner, new )
 * show current matchday on starting page
