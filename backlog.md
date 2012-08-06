@@ -28,10 +28,10 @@
 * move ranking page to GET /community/1
 
 ## In Progress
-* make sure form for bets on matchdays view works also for non-existing bets
 
 ## Done
 * show matches/bets on matchdays page for the selected matchday
+* make sure form for bets on matchdays view works also for non-existing bets
 
 
 
