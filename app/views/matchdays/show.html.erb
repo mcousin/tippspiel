@@ -28,14 +28,14 @@
     </tr>
   <% end %>
 
-  <%= form_tag update_matchday_bets_path, :method => :put, :matchday_id => @matchday.id do %>
+  <%= form_tag update_matchday_bets_path, :method => :put do %>
     <% @bets.each do |bet| %>
       <tr>
         <td><%= bet.match.team_a %></td>
         <td>:</td>
         <td><%= bet.match.team_b %></td>
         <td>
-          <%= fields_for "bets[]", bet do |f| %>
+          <%= fields_for :bets, bet, index: (bet.id || "M#{bet.match.id}") do |f| %>
             <div class="field">
               <%= f.number_field :score_a %>:<%= f.number_field :score_b %>
             </div>
@@ -46,6 +46,7 @@
       </tr>
     <% end %>
 </table>
+    <%= hidden_field_tag 'matchday_id', @matchday.id %>
     <p><%= submit_tag "Submit Bets" %></p>
   <% end %>
 
