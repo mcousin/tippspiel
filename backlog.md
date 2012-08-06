@@ -1,5 +1,10 @@
-# Backlog
+# Epics
+* show stats on starting page
+* create chat area on starting page, displaying also status messages (Matchday winner, new )
+* show current matchday on starting page
 
+
+# User Stories
 ## To Do
 * add model functionality to matchdays: ordering matchdays, current matchday ...
 * add dropdown for users on matchdays view (edit only current_user's bets, of course!)
@@ -21,9 +26,3 @@
 
 
 
-
-
-# Epics
-* show stats on starting page
-* create chat area on starting page, displaying also status messages (Matchday winner, new )
-* show current matchday on starting page
