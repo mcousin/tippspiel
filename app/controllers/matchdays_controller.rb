@@ -1,4 +1,7 @@
 class MatchdaysController < ApplicationController
+  
+  before_filter :authenticate_admin!, :only => [:new, :edit]
+  
   # GET /matchdays
   # GET /matchdays.json
   def index

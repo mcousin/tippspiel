@@ -1,4 +1,7 @@
 class MatchesController < ApplicationController
+
+  before_filter :authenticate_admin!, :only => [:new, :edit]
+
   # GET /matches
   # GET /matches.json
   def index
