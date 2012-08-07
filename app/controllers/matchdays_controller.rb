@@ -19,7 +19,11 @@ class MatchdaysController < ApplicationController
     @matchday = Matchday.find(params[:id])
     @started_matches = @matchday.matches.select{|match| match.started?}
     @matches_to_bet = @matchday.matches - @started_matches
-    @bets = @matches_to_bet.map{|match| current_user.bets.find_by_match_id(match.id)}
+
+    # find bet for each match of matchday if any, otherwise create new one
+    @bets = @matches_to_bet.map do |match| 
+      current_user.bets.find_by_match_id(match.id) || Bet.new(:user => current_user, :match => match)
+    end
 
     respond_to do |format|
       format.html # show.html.erb

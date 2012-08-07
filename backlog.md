@@ -31,8 +31,4 @@
 * show matches/bets on matchdays page for the selected matchday
 * add sign up form (only non-admins should be creatable here!)
 * add admin column to users table
-
-
-
-
-
+* make sure form for bets on matchdays view works also for non-existing bets
