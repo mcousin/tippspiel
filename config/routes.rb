@@ -13,6 +13,7 @@ Tippspiel::Application.routes.draw do
   resource :session, :only => [:create] # singleton resource!
 
   match 'login' => 'sessions#new'
+  match 'signup' => 'users#new'
   match 'logout' => 'sessions#destroy'
   
 

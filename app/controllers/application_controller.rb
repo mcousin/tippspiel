@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :authenticate_user!
 
+
   def authenticate_user!
     unless current_user
       redirect_to login_path
@@ -13,5 +14,11 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @current_user ||= User.find_by_id(session[:user_id])
+  end
+  
+  def authenticate_admin!
+    unless @current_user.role == 1
+      redirect_to matchdays_path
+    end
   end
 end
