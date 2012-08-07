@@ -17,4 +17,10 @@ class Match < ActiveRecord::Base
   def scores_string
     [score_a, score_b].map{|score| score ? score.to_s : "-"}.join(":")
   end
+  
+  # first match that is not started (or last one, if all are started)
+  def self.next
+    self.all.find{|match| not match.started?} || self.last
+  end
+  
 end

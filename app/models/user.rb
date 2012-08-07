@@ -5,9 +5,7 @@ class User < ActiveRecord::Base
   has_many :bets
   
   def points
-    points = 0
-    self.bets.each { |bet| points += bet.points }
-    points
+    self.bets.sum { |bet| bet.points }
   end
   
   def admin?
@@ -20,7 +18,7 @@ class User < ActiveRecord::Base
     ranking = {}
     
     # sort users by points
-    users = User.all.sort{|a,b| b.points <=> a.points}
+    users = User.all.sort {|a,b| b.points <=> a.points}
     
     # assign ranks
     users.each_with_index do |user, index|
