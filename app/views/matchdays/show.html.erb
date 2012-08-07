@@ -1,12 +1,14 @@
 <p id="notice"><%= notice %></p>
 
-<% Matchday.all.each do |matchday| %>
-  <%= link_to matchday.description, matchday_path(matchday) %> |
-<% end %>
+<div class="btn-group">
+  <% Matchday.all.each do |matchday| %>
+    <%= link_to matchday.description, matchday_path(matchday), :class => 'btn btn-mini' %>
+  <% end %>
+</div>
 <h1><%= @matchday.description %></h1>
 
 
-<table>
+<table class="table">
   <tr>
     <th>Home team</th>
     <th>:</th>
@@ -47,9 +49,5 @@
     <% end %>
 </table>
     <%= hidden_field_tag 'matchday_id', @matchday.id %>
-    <p><%= submit_tag "Submit Bets" %></p>
+    <p><%= submit_tag "Submit Bets", :class => 'btn' %></p>
   <% end %>
-
-
-<%= link_to 'Edit', edit_matchday_path(@matchday) %> |
-<%= link_to 'Back', matchdays_path %>
