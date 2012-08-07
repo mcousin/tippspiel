@@ -4,6 +4,8 @@ class Match < ActiveRecord::Base
   belongs_to :matchday
   has_many :bets
   
+  default_scope order("match_date ASC")
+  
   def to_s
     "#{team_a} vs #{team_b}"    
   end
