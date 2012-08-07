@@ -5,7 +5,8 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.all.sort{|user| user.points}
+    @ranking = User.get_ranking
+    @users = User.all.sort{|a,b| b.points <=> a.points}
 
     respond_to do |format|
       format.html # index.html.erb

@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   end
   
   def authenticate_admin!
-    unless @current_user.role == 1
+    unless @current_user.admin?
       redirect_to matchdays_path
     end
   end
