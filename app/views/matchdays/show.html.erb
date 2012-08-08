@@ -7,6 +7,14 @@
 </div>
 <h1><%= @matchday.description %></h1>
 
+    <% form_for :bet do |f| %>
+    <div class="field">
+    <%= f.label :score_a %><br />
+    <%= f.text_field :score_a %>
+  </div>
+
+  <% end %>
+
 
 <table class="table">
   <tr>
@@ -29,6 +37,7 @@
       <td><%= bet ? bet.points : 0 %></td>
     </tr>
   <% end %>
+  
 
   <%= form_tag update_matchday_bets_path, :method => :put do %>
     <% @bets.each do |bet| %>

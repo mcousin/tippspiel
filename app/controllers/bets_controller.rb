@@ -82,6 +82,7 @@ class BetsController < ApplicationController
   end
 
   def update_matchday
+    raise
     params[:bets].each do |id, attributes|
 
       # dirty hack to distinguish between existing and new bets
