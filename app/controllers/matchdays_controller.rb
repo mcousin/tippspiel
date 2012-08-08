@@ -17,13 +17,6 @@ class MatchdaysController < ApplicationController
   # GET /matchdays/1.json
   def show
     @matchday = Matchday.find(params[:id])
-    @started_matches = @matchday.matches.select{|match| match.started?}
-    @matches_to_bet = @matchday.matches - @started_matches
-
-    # find bet for each match of matchday if any, otherwise create new one
-    @bets = @matches_to_bet.map do |match| 
-      current_user.bets.find_by_match_id(match.id) || Bet.new(:user => current_user, :match => match)
-    end
 
     respond_to do |format|
       format.html # show.html.erb
@@ -65,7 +58,7 @@ class MatchdaysController < ApplicationController
 
   # PUT /matchdays/1
   # PUT /matchdays/1.json
-  def update
+  def update    
     @matchday = Matchday.find(params[:id])
 
     respond_to do |format|

@@ -82,17 +82,14 @@ class BetsController < ApplicationController
   end
 
   def update_matchday
-    raise
-    params[:bets].each do |id, attributes|
-
-      # dirty hack to distinguish between existing and new bets
-      unless id.include?("M") 
-        Bet.find(id).update_attributes(attributes)
+    params[:bet_for_match].each do |match_id, bet_attributes| 
+      if bet = Bet.find_by_match_id(match_id)
+        bet.update_attributes!(bet_attributes)
       else
-        Bet.create(attributes.merge(:user => current_user, 
-                                    :match => Match.find(id.sub("M",""))))
+        Bet.create!(bet_attributes)
       end
     end
+    
     @matchday = Matchday.find(params[:matchday_id])
     redirect_to @matchday
   end
