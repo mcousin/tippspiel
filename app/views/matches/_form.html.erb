@@ -11,30 +11,24 @@
     </div>
   <% end %>
 
+
   <div class="field">
-    <%= f.label :matchday_id %><br />
+    <%= f.label "Matchday" %>
     <%= f.collection_select :matchday_id, Matchday.all, :id, :description %>
   </div>
   <div class="field">
-    <%= f.label :team_a %><br />
-    <%= f.text_field :team_a %>
+    <%= f.label "Pairing" %>
+    <%= f.text_field :team_a %>:<%= f.text_field :team_b %>
+  </div>
+  <div class="field">    
+    <%= f.label "Result" %>
+    <%= f.number_field :score_a %>:<%= f.number_field :score_a %>
   </div>
   <div class="field">
-    <%= f.label :team_b %><br />
-    <%= f.text_field :team_b %>
-  </div>
-  <div class="field">
-    <%= f.label :score_a %><br />
-    <%= f.number_field :score_a %>
-  </div>
-  <div class="field">
-    <%= f.label :score_b %><br />
-    <%= f.number_field :score_b %>
-  </div>
-  <div class="field">
-    <%= f.label :match_date %><br />
+    <%= f.label "Date" %>
     <%= f.datetime_select :match_date %>
   </div>
+  
   <div class="actions">
     <%= f.submit %>
   </div>

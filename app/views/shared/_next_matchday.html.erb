@@ -21,7 +21,7 @@
 
   <%= form_tag update_matchday_bets_path, :method => :put do %>
   <% @matchday.matches.each do |match| %>
-    <% bet = current_user.bets.find_by_match_id(match.id) || Bet.new(:user => current_user, :match => match) %>
+    <% bet = current_user.bets.find_by_match_id(match.id) || Bet.new(:match => match) %>
     <tr>
       <td><%= match.team_a %></td>
       <td>:</td>
@@ -33,7 +33,6 @@
           <%= fields_for :bet_for_match, bet, index: match.id do |bet_form| %>
           <div class="field">
             <%= bet_form.number_field :score_a %>:<%= bet_form.number_field :score_b %>
-            <%= bet_form.hidden_field :user_id %>
             <%= bet_form.hidden_field :match_id %>
           </div>
           <% end %>

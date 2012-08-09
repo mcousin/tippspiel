@@ -11,14 +11,7 @@
 * create ranking page at GET /users/
 * show part of ranking on starting page
 
-* user twitter bootstrap buttons etc for matchday view
-* add dropdown for users on matchdays view (edit only current_user's bets, of course!)
-
 * kicker/DFB-API
-* add model functionality to matchdays: ordering matchdays, current matchday ...
-
-
-
 * use flash messages (notice and alert)
 * change submit button label on user profile
 * matches (admins only): index, edit, show (where put the links?)

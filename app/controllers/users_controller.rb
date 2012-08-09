@@ -21,16 +21,9 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @users = User.all.sort{|a,b| b.points <=> a.points}
 
-    @matchday = Matchday.find(1)
-    @started_matches = @matchday.matches.select{|match| match.started?}
-    @matches_to_bet = @matchday.matches - @started_matches
+    @matchday = Matchday.current
     @ranking = User.get_ranking
     
-    # find bet for each match of matchday if any, otherwise create new one
-    @bets = @matches_to_bet.map do |match| 
-      current_user.bets.find_by_match_id(match.id) || Bet.new(:user => current_user, :match => match)
-    end
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @user }
