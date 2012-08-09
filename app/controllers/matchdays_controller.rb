@@ -1,6 +1,6 @@
 class MatchdaysController < ApplicationController
   
-  before_filter :authenticate_admin!, :only => [:new, :edit]
+  before_filter :authenticate_admin!, :except => [:index, :show]
   
   # GET /matchdays
   # GET /matchdays.json
@@ -23,6 +23,10 @@ class MatchdaysController < ApplicationController
       format.json { render json: @matchday }
     end
   end
+  
+  #################################
+  #         ADMINS ONLY           #
+  #################################
 
   # GET /matchdays/new
   # GET /matchdays/new.json

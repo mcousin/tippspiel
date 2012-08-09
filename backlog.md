@@ -11,8 +11,12 @@
 * show part of ranking on starting page
 * show current matchday on starting page
 
+* use flash messages (notice and alert)
+* change submit button label on user profile
+* matches (admins only): index, edit, show (where put the links?)
+* matchdays (admins only): index, edit, show (where put the links?)
+
 * highlight current user within ranking
-* find better solution for forms for bets on matchdays view
 * re-think ranking. More elegant solution for determining a user's rank?
 * hide buttons for regular users only admins should see (already in users index -> good solution?)
 
@@ -24,6 +28,7 @@
 ## In Progress
 * limit access rights for non-admin users (!=admin=>redirect_to_where??? last page?)
 
+
 ## Done
 * show matches/bets on matchdays page for the selected matchday
 * add sign up form (only non-admins should be creatable here!)
@@ -33,3 +38,4 @@
 * make sure form for bets on matchdays view works also for non-existing bets
 * create ranking page at GET /users/
 * add model functionality to matchdays: ordering matchdays, current matchday ...
+* find better solution for forms for bets on matchdays view

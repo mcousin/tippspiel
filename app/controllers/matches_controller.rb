@@ -1,6 +1,6 @@
 class MatchesController < ApplicationController
 
-  before_filter :authenticate_admin!, :only => [:new, :edit]
+  before_filter :authenticate_admin!, :except => [:index, :show]
 
   # GET /matches
   # GET /matches.json
@@ -23,6 +23,10 @@ class MatchesController < ApplicationController
       format.json { render json: @match }
     end
   end
+
+  #################################
+  #         ADMINS ONLY           #
+  #################################
 
   # GET /matches/new
   # GET /matches/new.json

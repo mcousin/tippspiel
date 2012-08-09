@@ -1,4 +1,7 @@
 class BetsController < ApplicationController
+  
+  before_filter :authenticate_admin!, :except => [:index, :show, :update_matchday]
+  
   # GET /bets
   # GET /bets.json
   def index
@@ -20,6 +23,24 @@ class BetsController < ApplicationController
       format.json { render json: @bet }
     end
   end
+  
+  def update_matchday
+    params[:bet_for_match].each do |match_id, bet_attributes|
+      if bet = current_user.bets.find_by_match_id(match_id)
+        bet.update_attributes!(bet_attributes)
+      else
+        current_user.bets.create!(bet_attributes)
+      end
+    end
+    
+    @matchday = Matchday.find(params[:matchday_id])
+    redirect_to @matchday
+  end
+
+
+  #################################
+  #         ADMINS ONLY           #
+  #################################
 
   # GET /bets/new
   # GET /bets/new.json
@@ -81,16 +102,4 @@ class BetsController < ApplicationController
     end
   end
 
-  def update_matchday
-    params[:bet_for_match].each do |match_id, bet_attributes| 
-      if bet = Bet.find_by_match_id(match_id)
-        bet.update_attributes!(bet_attributes)
-      else
-        Bet.create!(bet_attributes)
-      end
-    end
-    
-    @matchday = Matchday.find(params[:matchday_id])
-    redirect_to @matchday
-  end
 end

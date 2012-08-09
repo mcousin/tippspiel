@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => [:new, :create]
+  before_filter :verify_permission_for_id,  :only => [:edit, :update, :destroy]
 
   # GET /users
   # GET /users.json
@@ -24,6 +25,7 @@ class UsersController < ApplicationController
       format.json { render json: @user }
     end
   end
+  
 
   # GET /users/new
   # GET /users/new.json
@@ -34,11 +36,6 @@ class UsersController < ApplicationController
       format.html # new.html.erb
       format.json { render json: @user }
     end
-  end
-
-  # GET /users/1/edit
-  def edit
-    @user = User.find(params[:id])
   end
 
   # POST /users
@@ -55,6 +52,16 @@ class UsersController < ApplicationController
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  #################################
+  #        LIMITED ACCESS         #
+  # (user can only edit himself)  #
+  #################################
+
+  # GET /users/1/edit
+  def edit
+    @user = User.find(params[:id])
   end
 
   # PUT /users/1
@@ -83,5 +90,14 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url }
       format.json { head :no_content }
     end
+  end
+  
+  private 
+  
+  def verify_permission_for_id
+    unless current_user.id == params[:id].to_i
+      redirect_to users_path, notice: "You don't have the permission to edit other user's data."
+    end
+    
   end
 end
