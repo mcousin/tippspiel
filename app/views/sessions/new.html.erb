@@ -9,7 +9,7 @@
     <%= f.label :password %>
     <%= f.password_field :password %>
     <br />
-    <%= f.submit 'Login'%>
-	<%= link_to 'Sign Up', :controller => "users", :action => "new" %>
+    <%= f.submit 'Login', :class => 'btn'%>
+    or <%= link_to 'Sign Up', new_user_path, :class => 'btn' %>
 
 <% end %>

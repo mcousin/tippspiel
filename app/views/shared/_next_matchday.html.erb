@@ -8,43 +8,43 @@
 
   <% end %>
 
-
-<table class="table">
-  <tr>
-    <th>Home team</th>
-    <th>:</th>
-    <th>Away team</th>
-    <th>Bet</th>
-    <th>Result</th>
-    <th>Points</th>
-  </tr>
-
-  <%= form_tag update_matchday_bets_path, :method => :put do %>
-  <% @matchday.matches.each do |match| %>
-    <% bet = current_user.bets.find_by_match_id(match.id) || Bet.new(:match => match) %>
+<%= form_tag update_matchday_bets_path, :method => :put do %>
+  <table class="table">
     <tr>
-      <td><%= match.team_a %></td>
-      <td>:</td>
-      <td><%= match.team_b %></td>
-      <td>
-        <% if match.started? %>
-          <%= bet.scores_string %>        
-        <% else %>
-          <%= fields_for :bet_for_match, bet, index: match.id do |bet_form| %>
-          <div class="field">
-            <%= bet_form.number_field :score_a %>:<%= bet_form.number_field :score_b %>
-            <%= bet_form.hidden_field :match_id %>
-          </div>
-          <% end %>
-        <% end %>      
-      </td>
-      <td><%= match.scores_string %></td>
-      <td><%= bet ? bet.points : 0 %></td>
+      <th>Home team</th>
+      <th>:</th>
+      <th>Away team</th>
+      <th>Bet</th>
+      <th>Result</th>
+      <th>Points</th>
     </tr>
-  <% end %>
-  
 
-</table>
-    <%= hidden_field_tag 'matchday_id', @matchday.id %>
-    <p><%= submit_tag "Submit Bets", :class => 'btn' %></p>
-  <% end %>
+
+    <% @matchday.matches.each do |match| %>
+      <% bet = current_user.bets.find_by_match_id(match.id) || Bet.new(:match => match) %>
+      <tr>
+        <td><%= match.team_a %></td>
+        <td>:</td>
+        <td><%= match.team_b %></td>
+        <td>
+          <% if match.started? %>
+            <%= bet.scores_string %>        
+          <% else %>
+            <%= fields_for :bet_for_match, bet, index: match.id do |bet_form| %>
+            <div class="field">
+              <%= bet_form.number_field :score_a %>:<%= bet_form.number_field :score_b %>
+              <%= bet_form.hidden_field :match_id %>
+            </div>
+            <% end %>
+          <% end %>      
+        </td>
+        <td><%= match.scores_string %></td>
+        <td><%= bet ? bet.points : 0 %></td>
+      </tr>
+    <% end %>
+  
+  </table>
+  
+  <%= hidden_field_tag 'matchday_id', @matchday.id %>
+  <p><%= submit_tag "Submit Bets", :class => 'btn' %></p>
+<% end %>
