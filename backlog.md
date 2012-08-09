@@ -6,16 +6,15 @@
 
 # User Stories
 ## To Do
-* create ranking page at GET /users/
-* create template for starting page at GET /users/1
-* show part of ranking on starting page
 * show current matchday on starting page
 
+* create ranking page at GET /users/
+* show part of ranking on starting page
 
 * user twitter bootstrap buttons etc for matchday view
 * add dropdown for users on matchdays view (edit only current_user's bets, of course!)
 
-
+* kicker/DFB-API
 * add model functionality to matchdays: ordering matchdays, current matchday ...
 
 * create league: name, has_many matchdays, has_many communities
@@ -24,6 +23,7 @@
 * move ranking page to GET /community/1
 
 ## In Progress
+* create template for starting page at GET /users/1
 * make sure form for bets on matchdays view works also for non-existing bets
 * limit access rights for non-admin users (!=admin=>redirect_to_where??? last page?)
 

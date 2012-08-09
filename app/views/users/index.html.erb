@@ -1,27 +1,4 @@
-<h1>Ranking</h1>
 
-<table class="table">
-  <tr>
-    <th>Rank</th>
-    <th>Name</th>
-    <th>Total points</th>
-    <th></th>
-  </tr>
+<%= render :partial => "shared/ranking_overview" %>
 
-<% @users.each do |user| %>
-  <tr>
-    <td><%= @ranking[user] %></td>
-    <td><%= user.name %></td>
-    <td><%= user.points %></td>
-    <td>
-      <% if current_user.admin? %>
-        <%= link_to 'Show', user, :class => 'btn btn-mini' %>
-        <%= link_to 'Edit', edit_user_path(user), :class => 'btn btn-mini' %>
-        <%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger' %>
-      <% end %>
-    </td>
-  </tr>
-<% end %>
-</table>
 
-<br />
