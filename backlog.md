@@ -5,8 +5,7 @@
 
 # User Stories
 ## To Do
-* show only part of ranking on starting page (set @users variable accordingly)
-* CSV import for matches/matchdays
+* Validierung für Eingaben (Match immer mit Date...)
 * use flash messages (notice and alert)
 * change submit button label on user profile
 * highlight current user within ranking
@@ -15,9 +14,17 @@
 * create community: name, has_many users, has_many leagues
 * user has_many communities
 * move ranking page to GET /community/1
+* Layout-Prototype
+* Bet-Overvie-prototype
+* Logo - Link to start
 
 ## In Progress
+* transform html.erb -> haml
+* CSV import for matches/matchdays
 
+* Activate heroku account
+* BUG: next matchday nicht auf startseite (wenn user != admin???)
+* show only part of ranking on starting page (set @users variable accordingly)
 
 ## Done
 * create template for starting page at GET /users/1
