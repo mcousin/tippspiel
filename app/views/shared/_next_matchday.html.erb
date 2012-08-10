@@ -4,8 +4,9 @@
 <% error_count = @bets.map{|bet| bet.errors.count}.sum %>
 <% if error_count > 0 %>
   <% error_messages = @bets.map{|bet| bet.errors.full_messages}.flatten.uniq %>
+  <% invalid_bets_count = @bets.select{|bet| bet.errors.any?}.count %>
   <div id="error_explanation">
-    <h2><%= pluralize(error_count, "error") %> prohibited at least one of these bets from being saved:</h2>
+    <h2><%= pluralize(error_count, "error") %> prohibited <%= pluralize(invalid_bets_count, "bet") %> from being saved:</h2>
     <ul>
     <% error_messages.each do |msg| %>
       <li><%= msg %></li>
