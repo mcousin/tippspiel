@@ -4,6 +4,13 @@ class Match < ActiveRecord::Base
   belongs_to :matchday
   has_many :bets
   
+  validates :team_a, presence: true
+  validates :team_b, presence: true
+  validates :score_a, numericality: { only_integer: true }, allow_nil: true
+  validates :score_b, numericality: { only_integer: true }, allow_nil: true
+  validates :matchday_id, presence: true
+  validates :match_date, presence: true
+  
   default_scope order("match_date ASC")
   
   def to_s

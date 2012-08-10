@@ -25,16 +25,15 @@ class BetsController < ApplicationController
   end
   
   def update_matchday
+    @bets = []
     params[:bet_for_match].each do |match_id, bet_attributes|
-      if bet = current_user.bets.find_by_match_id(match_id)
-        bet.update_attributes!(bet_attributes)
-      else
-        current_user.bets.create!(bet_attributes)
-      end
+      bet = current_user.bets.find_by_match_id(match_id) || current_user.bets.create
+      bet.update_attributes(bet_attributes)
+      @bets << bet
     end
     
     @matchday = Matchday.find(params[:matchday_id])
-    redirect_to @matchday
+    render "matchdays/show"
   end
 
 
