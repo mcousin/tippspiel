@@ -17,6 +17,9 @@ class MatchdaysController < ApplicationController
   # GET /matchdays/1.json
   def show
     @matchday = Matchday.find(params[:id])
+    @bets = @matchday.matches.map do |match|
+      current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
+    end
 
     respond_to do |format|
       format.html # show.html.erb

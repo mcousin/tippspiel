@@ -5,7 +5,6 @@
 
 # User Stories
 ## To Do
-* Validierung für Eingaben (Match immer mit Date...)
 * use flash messages (notice and alert)
 * change submit button label on user profile
 * highlight current user within ranking
@@ -41,3 +40,4 @@
 * find better solution for forms for bets on matchdays view
 * limit access rights for non-admin users (!=admin=>redirect_to_where??? last page?)
 * show ranking on starting page
+* Validierung für Eingaben (Match immer mit Date...)

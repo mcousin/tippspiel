@@ -1,12 +1,20 @@
 <h1><%= @matchday.description %></h1>
 <br />
-    <% form_for :bet do |f| %>
-    <div class="field">
-    <%= f.label :score_a %><br />
-    <%= f.text_field :score_a %>
-  </div>
 
-  <% end %>
+<% error_count = @bets.map{|bet| bet.errors.count}.sum %>
+<% if error_count > 0 %>
+  <% error_messages = @bets.map{|bet| bet.errors.full_messages}.flatten.uniq %>
+  <% invalid_bets_count = @bets.select{|bet| bet.errors.any?}.count %>
+  <div id="error_explanation">
+    <h2><%= pluralize(error_count, "error") %> prohibited <%= pluralize(invalid_bets_count, "bet") %> from being saved:</h2>
+    <ul>
+    <% error_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
 
 <%= form_tag update_matchday_bets_path, :method => :put do %>
   <table class="table">
@@ -18,19 +26,16 @@
       <th>Result</th>
       <th>Points</th>
     </tr>
-
-
-    <% @matchday.matches.each do |match| %>
-      <% bet = current_user.bets.find_by_match_id(match.id) || Bet.new(:match => match) %>
+    <% @bets.each do |bet| %>
       <tr>
-        <td><%= match.team_a %></td>
+        <td><%= bet.match.team_a %></td>
         <td>:</td>
-        <td><%= match.team_b %></td>
+        <td><%= bet.match.team_b %></td>
         <td>
-          <% if match.started? %>
+          <% if bet.match.started? %>
             <%= bet.scores_string %>        
           <% else %>
-            <%= fields_for :bet_for_match, bet, index: match.id do |bet_form| %>
+            <%= fields_for :bet_for_match, bet, index: bet.match.id do |bet_form| %>
             <div class="field">
               <%= bet_form.number_field :score_a %>:<%= bet_form.number_field :score_b %>
               <%= bet_form.hidden_field :match_id %>
@@ -38,8 +43,8 @@
             <% end %>
           <% end %>      
         </td>
-        <td><%= match.scores_string %></td>
-        <td><%= bet ? bet.points : 0 %></td>
+        <td><%= bet.match.scores_string %></td>
+        <td><%= bet.points %></td>
       </tr>
     <% end %>
   
