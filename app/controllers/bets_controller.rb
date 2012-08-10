@@ -33,7 +33,14 @@ class BetsController < ApplicationController
     end
     
     @matchday = Matchday.find(params[:matchday_id])
-    render "matchdays/show"
+    if @bets.any?{|bet| bet.errors.any?}
+      render "matchdays/show"
+    else 
+      redirect_to @matchday, notice: 'Your bets were successfully updated.'
+    end
+    
+
+
   end
 
 

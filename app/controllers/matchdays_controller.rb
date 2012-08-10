@@ -18,7 +18,7 @@ class MatchdaysController < ApplicationController
   def show
     @matchday = Matchday.find(params[:id])
     @bets = @matchday.matches.map do |match|
-      current_user.bets.find_by_match_id(match.id) || Bet.new(:match => match)
+      current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
     end
 
     respond_to do |format|
