@@ -6,6 +6,9 @@ gem 'rails', '3.2.7'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 group :development, :test do
   gem 'sqlite3'
+  gem 'haml-rails'
+  gem 'hpricot'
+  gem 'ruby_parser'
 end
 
 # needed for HEROKU
