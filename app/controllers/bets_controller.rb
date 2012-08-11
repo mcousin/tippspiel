@@ -27,7 +27,7 @@ class BetsController < ApplicationController
   def update_matchday
     @bets = []
     params[:bet_for_match].each do |match_id, bet_attributes|
-      bet = current_user.bets.find_by_match_id(match_id) || current_user.bets.create
+      bet = current_user.bets.find_by_match_id(match_id) || current_user.bets.build
       bet.update_attributes(bet_attributes)
       @bets << bet
     end

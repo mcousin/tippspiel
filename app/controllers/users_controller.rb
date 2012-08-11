@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => [:new, :create]
-  before_filter :verify_permission_for_id,  :only => [:edit, :update, :destroy]
+  before_filter :verify_write_permission!,  :only => [:edit, :update, :destroy]
 
   # GET /users
   # GET /users.json
@@ -98,10 +98,9 @@ class UsersController < ApplicationController
   
   private 
   
-  def verify_permission_for_id
-    unless current_user.id == params[:id].to_i
-      redirect_to users_path, notice: "You don't have the permission to edit other user's data."
-    end
-    
+  def verify_write_permission!
+    unless current_user.id == params[:id].to_i || current_user.admin?
+      render_forbidden
+    end    
   end
 end
