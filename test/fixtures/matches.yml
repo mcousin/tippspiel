@@ -1,0 +1,13 @@
+Spiel1:
+    id: 1
+    team_a: FC
+    team_b: HSV
+    matchday_id: 1
+    match_date: DateTime.now + 100
+    
+Spiel2:
+    id: 2
+    team_a: BVB
+    team_b: FCK
+    matchday_id: 1
+    match_date: DateTime.now + 100
