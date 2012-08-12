@@ -1,0 +1,11 @@
+%p#notice= notice
+%h1 Login
+= form_for(:user, :url => session_path) do |f|
+  = f.label :email
+  = f.text_field :email
+  %br/
+  = f.label :password
+  = f.password_field :password
+  %br/
+  = f.submit 'Login', :class => 'btn'
+  or #{link_to 'Sign Up', new_user_path, :class => 'btn'}

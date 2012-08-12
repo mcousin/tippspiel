@@ -1,0 +1,19 @@
+%p#notice= notice
+%p
+  %b Match:
+  = @bet.match
+%p
+  %b User:
+  = @bet.user.name
+%p
+  %b Score a:
+  = @bet.score_a
+%p
+  %b Score b:
+  = @bet.score_b
+%p
+  %b Points:
+  = @bet.points
+= link_to 'Edit', edit_bet_path(@bet)
+|
+\#{link_to 'Back', bets_path}

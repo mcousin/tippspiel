@@ -15,6 +15,9 @@ end
 
 
 gem 'rspec-rails'
+gem 'haml-rails'
+gem 'hpricot'
+gem 'ruby_parser'
 
 # Gems used only for assets and not required
 # in production environments by default.

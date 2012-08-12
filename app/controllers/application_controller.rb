@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user!
     unless current_user
-      redirect_to login_path
+      redirect_to login_path, notice: "Please login."
     end
   end
 
@@ -17,8 +17,12 @@ class ApplicationController < ActionController::Base
   end
   
   def authenticate_admin!
-    unless @current_user.admin?
-      redirect_to matchdays_path
+    unless current_user.admin?
+      render_forbidden
     end
+  end
+  
+  def render_forbidden
+    render :file => "#{Rails.root}/public/403.html", :status => :forbidden
   end
 end

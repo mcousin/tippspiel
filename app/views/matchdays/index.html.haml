@@ -1,0 +1,14 @@
+%h1 Listing matchdays
+%table.table
+  %tr
+    %th Description
+    %th
+  - @matchdays.each do |matchday|
+    %tr
+      %td= matchday.description
+      %td
+        = link_to 'Show', matchday, :class => 'btn btn-mini'
+        = link_to 'Edit', edit_matchday_path(matchday), :class => 'btn btn-mini'
+        = link_to 'Destroy', matchday, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'
+%br/
+= link_to 'New Matchday', new_matchday_path, :class => 'btn btn-mini'

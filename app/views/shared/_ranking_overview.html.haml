@@ -1,0 +1,18 @@
+%h1 Ranking
+%br/
+%table.table
+  %tr
+    %th Rank
+    %th Name
+    %th Total points
+    %th
+  - @users.each do |user|
+    %tr
+      %td= @ranking[user]
+      %td= user.name
+      %td= user.points
+      %td
+        - if current_user.admin?
+          = link_to 'Show', user, :class => 'btn btn-mini'
+          = link_to 'Edit', edit_user_path(user), :class => 'btn btn-mini'
+          = link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'

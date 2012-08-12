@@ -1,0 +1,25 @@
+= form_for(@match) do |f|
+  - if @match.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@match.errors.count, "error")
+        prohibited this match from being saved:
+      %ul
+        - @match.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = f.label "Matchday"
+    = f.collection_select :matchday_id, Matchday.all, :id, :description
+  .field
+    = f.label "Pairing"
+    = f.text_field :team_a
+    \:#{f.text_field :team_b}
+  .field
+    = f.label "Result"
+    = f.number_field :score_a
+    \:#{f.number_field :score_b}
+  .field
+    = f.label "Date"
+    = f.datetime_select :match_date
+  .actions
+    = f.submit

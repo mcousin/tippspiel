@@ -1,0 +1,20 @@
+%h1 Listing matches
+%table.table
+  %tr
+    %th Home
+    %th Away
+    %th Result
+    %th Match date
+    %th
+  - @matches.each do |match|
+    %tr
+      %td= match.team_a
+      %td= match.team_b
+      %td= match.scores_string
+      %td= match.match_date
+      %td
+        = link_to 'Show', match, :class => 'btn btn-mini'
+        = link_to 'Edit', edit_match_path(match), :class => 'btn btn-mini'
+        = link_to 'Destroy', match, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'
+%br/
+= link_to 'New Match', new_match_path, :class => 'btn btn-mini'
