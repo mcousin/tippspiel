@@ -20,7 +20,6 @@
 * Logo - Link to start
 
 ## In Progress
-* transform html.erb -> haml
 * CSV import for matches/matchdays
 
 * Activate heroku account
@@ -43,3 +42,4 @@
 * limit access rights for non-admin users (!=admin=>redirect_to_where??? last page?)
 * show ranking on starting page
 * Validierung für Eingaben (Match immer mit Date...)
+* transform html.erb -> haml
