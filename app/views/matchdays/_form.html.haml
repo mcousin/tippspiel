@@ -12,7 +12,8 @@
     %br/
     = f.text_field :description
   .input-xlarge
-    = f.label "Paste csv here"
+    = f.label "csv for matches (semicolon separated):"
+    = f.label "(like: '[start time];[team 1];[team 2]')"
     %textarea{name: "csv", type: "textarea", rows: 10}
     
   .actions
