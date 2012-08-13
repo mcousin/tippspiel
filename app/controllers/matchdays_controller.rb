@@ -1,6 +1,8 @@
 class MatchdaysController < ApplicationController
   
-  before_filter :authenticate_admin!, :except => [:index, :show]
+  before_filter :authenticate_admin!, :except => [:index, :show]  
+  
+  before_filter :create_attributes_with_nested_matches, :only => [:create, :update]
   
   # GET /matchdays
   # GET /matchdays.json
@@ -50,7 +52,8 @@ class MatchdaysController < ApplicationController
   # POST /matchdays
   # POST /matchdays.json
   def create
-    @matchday = Matchday.new(params[:matchday])
+    @matchday = Matchday.new(@matchday_attributes)
+    @matchday.matches += @matches
 
     respond_to do |format|
       if @matchday.save
@@ -67,9 +70,10 @@ class MatchdaysController < ApplicationController
   # PUT /matchdays/1.json
   def update    
     @matchday = Matchday.find(params[:id])
+    @matchday.matches += @matches
 
     respond_to do |format|
-      if @matchday.update_attributes(params[:matchday])
+      if @matchday.update_attributes(@matchday_attributes)
         format.html { redirect_to @matchday, notice: 'Matchday was successfully updated.' }
         format.json { head :no_content }
       else
@@ -89,5 +93,13 @@ class MatchdaysController < ApplicationController
       format.html { redirect_to matchdays_url }
       format.json { head :no_content }
     end
+  end
+  
+  protected
+  
+  def create_attributes_with_nested_matches
+    csv = params["csv"]
+    @matches = Match.build_from_csv(csv, col_sep: ";", row_sep: "\r\n")
+    @matchday_attributes = params[:matchday].except("csv")
   end
 end

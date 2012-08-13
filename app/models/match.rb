@@ -1,3 +1,5 @@
+require 'CSV'
+
 class Match < ActiveRecord::Base
   attr_accessible :match_date, :score_a, :score_b, :team_a, :team_b, :bets, :matchday, :matchday_id
 
@@ -28,6 +30,18 @@ class Match < ActiveRecord::Base
   # first match that is not started (or last one, if all are started)
   def self.next
     self.all.find{|match| not match.started?} || self.last
+  end
+  
+  def self.build_from_csv(csv_string, options = {})    
+    csv = CSV.new(csv_string, options)
+    
+    Time.zone = "Berlin"    # should be an attribute of a community in the future!
+    matches = []    
+    csv.each do |row|
+      attributes = {match_date: row.first, team_a: row.second, team_b: row.third}
+      matches << Match.new(attributes)
+    end
+    matches
   end
   
 end
