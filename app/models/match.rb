@@ -4,14 +4,16 @@ class Match < ActiveRecord::Base
   attr_accessible :match_date, :score_a, :score_b, :team_a, :team_b, :bets, :matchday, :matchday_id
 
   belongs_to :matchday
-  has_many :bets
+  has_many :bets, dependent: :destroy
   
   validates :team_a, presence: true
   validates :team_b, presence: true
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
-  validates :matchday_id, presence: true
   validates :match_date, presence: true
+    
+  validates_presence_of :matchday
+
   
   default_scope order("match_date ASC")
   

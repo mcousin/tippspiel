@@ -14,7 +14,8 @@
           = "Logged in as"
           = link_to current_user.name, edit_user_path(current_user)
           %br/
-          = link_to 'Current Matchday', matchday_path(Matchday.current), :class => 'btn btn-mini'
+          - if Matchday.current
+            = link_to 'Current Matchday', matchday_path(Matchday.current), :class => 'btn btn-mini'
           = link_to 'Ranking', users_path, :class => 'btn btn-mini'
           = link_to 'Logout', logout_path, :class => 'btn btn-mini btn-danger'
           - if current_user.admin?

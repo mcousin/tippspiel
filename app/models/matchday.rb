@@ -1,7 +1,7 @@
 class Matchday < ActiveRecord::Base
   attr_accessible :matches, :description
   
-  has_many :matches
+  has_many :matches, dependent: :destroy
 
   validates :description, presence: true
   

@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   validates :name, presence: true
 
   has_secure_password
-  has_many :bets
+  has_many :bets, dependent: :destroy
   
   def points
     self.bets.sum { |bet| bet.points }

@@ -3,8 +3,8 @@ class Bet < ActiveRecord::Base
 
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
-  validates :match_id, presence: true
-  validates :user_id, presence: true
+  validates_presence_of :match
+  validates_presence_of :user
   
   belongs_to :user
   belongs_to :match
