@@ -13,6 +13,7 @@
 = form_tag update_matchday_bets_path, :method => :put do
   %table.table
     %tr
+      %th Match Start
       %th Home team
       %th :
       %th Away team
@@ -21,6 +22,7 @@
       %th Points
     - @bets.each do |bet|
       %tr
+        %td= bet.match.match_date
         %td= bet.match.team_a
         %td :
         %td= bet.match.team_b

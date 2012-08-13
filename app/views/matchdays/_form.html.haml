@@ -11,5 +11,9 @@
     = f.label :description
     %br/
     = f.text_field :description
+  .input-xlarge
+    = f.label "Paste csv here"
+    %textarea{name: "csv", type: "textarea", rows: 10}
+    
   .actions
     = f.submit
