@@ -20,6 +20,8 @@
 * Logo - Link to start
 
 ## In Progress
+* DEBUG: users/1 + link on startpage
+
 * CSV import for matches/matchdays
 
 * Activate heroku account
