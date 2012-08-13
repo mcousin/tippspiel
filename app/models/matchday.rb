@@ -9,8 +9,12 @@ class Matchday < ActiveRecord::Base
     self.matches.min{|match| match.match_date}
   end
   
-  def self.current
-    Match.next.matchday
+  def self.current    
+    if Match.any?
+      Match.next.matchday
+    else
+      Matchday.last
+    end      
   end
   
 end
