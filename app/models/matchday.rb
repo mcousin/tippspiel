@@ -6,11 +6,11 @@ class Matchday < ActiveRecord::Base
   validates :description, presence: true
   
   def start
-    self.matches.min{|match| match.match_date}
+      self.matches.min{|match| match.match_date}
   end
   
   def self.current
-    Match.next.matchday
+      Match.next.matchday
   end
   
 end

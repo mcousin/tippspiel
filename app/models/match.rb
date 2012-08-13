@@ -16,7 +16,7 @@ class Match < ActiveRecord::Base
   def to_s
     "#{team_a} vs #{team_b}"    
   end
-
+  
   def started?
     DateTime.now > match_date
   end
