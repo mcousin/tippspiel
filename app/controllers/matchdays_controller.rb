@@ -53,10 +53,11 @@ class MatchdaysController < ApplicationController
   # POST /matchdays.json
   def create
     @matchday = Matchday.new(@matchday_attributes)
+    @matches.each{|match| match.matchday = @matchday}
     @matchday.matches += @matches
 
     respond_to do |format|
-      if @matchday.save
+      if @matchday.save!
         format.html { redirect_to @matchday, notice: 'Matchday was successfully created.' }
         format.json { render json: @matchday, status: :created, location: @matchday }
       else
@@ -70,6 +71,7 @@ class MatchdaysController < ApplicationController
   # PUT /matchdays/1.json
   def update    
     @matchday = Matchday.find(params[:id])
+    @matches.each{|match| match.matchday = @matchday}
     @matchday.matches += @matches
 
     respond_to do |format|

@@ -22,6 +22,12 @@ class UsersController < ApplicationController
     @users = User.all.sort{|a,b| b.points <=> a.points}
 
     @matchday = Matchday.current
+    if @matchday
+      @bets = @matchday.matches.map do |match|
+        current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
+      end
+    end
+
     @ranking = User.get_ranking
     
     respond_to do |format|
