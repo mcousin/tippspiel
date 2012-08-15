@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => [:new, :create]
-  before_filter :verify_permission!,      :only => [:edit, :update, :destroy, :show]
+  before_filter :verify_permission!,      :only => [:edit, :update, :destroy]
 
   # GET /users
   def index
@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     @matchday = Matchday.current
     if @matchday
       @bets = @matchday.matches.map do |match|
-        current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
+        @user.bets.find_by_match_id(match.id) || @user.bets.build(:match => match)
       end
     end
     

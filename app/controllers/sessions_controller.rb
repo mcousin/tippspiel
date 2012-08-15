@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       session[:user_id] = @user.id
       redirect_to @user
     else
-      render "matches/index"
+      redirect_to login_path, notice: "Invalid credentials!" 
     end
   end
 

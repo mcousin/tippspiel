@@ -1,42 +1,21 @@
 -if @matchday
   %h1= @matchday.description
   %br/
-  - error_count = @bets.map{|bet| bet.errors.count}.sum
-  - if error_count > 0
-    - error_messages = @bets.map{|bet| bet.errors.full_messages}.flatten.uniq
-    - invalid_bets_count = @bets.select{|bet| bet.errors.any?}.count
-    #error_explanation
-      %h2= "#{pluralize(error_count, "error")} prohibited #{pluralize(invalid_bets_count, "bet")} from being saved:"
-      %ul
-        - error_messages.each do |msg|
-          %li= msg
-        
-  = form_tag update_matchday_bets_path, :method => :put do
-    %table.table
+  %table.table
+    %tr
+      %th Match Start
+      %th Home team
+      %th :
+      %th Away team
+      %th Bet
+      %th Result
+      %th Points
+    - @bets.each do |bet|
       %tr
-        %th Match Start
-        %th Home team
-        %th :
-        %th Away team
-        %th Bet
-        %th Result
-        %th Points
-      - @bets.each do |bet|
-        %tr
-          %td= bet.match.match_date
-          %td= bet.match.team_a
-          %td :
-          %td= bet.match.team_b
-          %td
-            - if bet.match.started?
-              = bet.scores_string
-            - else
-              = fields_for :bet_for_match, bet, index: bet.match.id do |bet_form|
-                .field
-                  = bet_form.number_field :score_a
-                  = bet_form.number_field :score_b
-                  = bet_form.hidden_field :match_id
-          %td= bet.match.scores_string
-          %td= bet.points
-    = hidden_field_tag 'matchday_id', @matchday.id
-    %p= submit_tag "Submit Bets", :class => 'btn'
+        %td= bet.match.match_date
+        %td= bet.match.team_a
+        %td :
+        %td= bet.match.team_b
+        %td= bet.scores_string
+        %td= bet.match.scores_string
+        %td= bet.points
