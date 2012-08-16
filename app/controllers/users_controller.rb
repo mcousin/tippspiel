@@ -1,35 +1,42 @@
 class UsersController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => [:new, :create]
-  before_filter :verify_permission!,      :only => [:edit, :update, :destroy]
+  before_filter :authenticate_admin!,     :only => [:destroy]      
 
-  # GET /users
-  def index
-    @ranking = User.get_ranking
-    @users = User.all.sort{|a,b| b.points <=> a.points}
-  end
 
-  # GET /users/1
-  def show
-    @user = User.find(params[:id])
-    
+  # GET /home
+  def home
     @users = User.all.sort{|a,b| b.points <=> a.points}
     @ranking = User.get_ranking
     
     @matchday = Matchday.current
     if @matchday
       @bets = @matchday.matches.map do |match|
-        @user.bets.find_by_match_id(match.id) || @user.bets.build(:match => match)
+        current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
       end
     end
     
   end
   
-
-  # GET /users/new
+  
+  # GET /signup
   def new
     @user = User.new
   end
+
+
+  # GET /users
+  def index
+    @ranking = User.get_ranking
+    @users = User.all.sort{|a,b| b.points <=> a.points}
+  end
+  
+  
+  # GET /users/1
+  def show
+    @user = User.find(params[:id])
+  end
+  
 
   # POST /users
   def create
@@ -42,17 +49,14 @@ class UsersController < ApplicationController
     end
   end
 
-  #################################
-  #        LIMITED ACCESS         #
-  # (user can only edit himself)  #
-  #################################
-
-  # GET /users/1/edit
+  
+  # GET /profile
   def edit
     @user = User.find(params[:id])
   end
 
-  # PUT /users/1
+
+  # PUT /profile
   def update
     @user = User.find(params[:id])
 
@@ -62,6 +66,11 @@ class UsersController < ApplicationController
       render action: "edit"
     end
   end
+
+
+  #################################
+  #         ADMINS ONLY           #
+  #################################
 
   # DELETE /users/1
   def destroy
@@ -73,9 +82,4 @@ class UsersController < ApplicationController
   
   protected 
   
-  def verify_permission!
-    unless current_user.id == params[:id].to_i || current_user.admin?
-      render_forbidden
-    end    
-  end
 end

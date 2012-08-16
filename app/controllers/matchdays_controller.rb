@@ -1,8 +1,12 @@
 class MatchdaysController < ApplicationController
   
-  before_filter :authenticate_admin!, :except => [:index, :show]  
+  before_filter :authenticate_admin!
   
   before_filter :create_attributes_with_nested_matches, :only => [:create, :update]
+
+  #################################
+  #         ADMINS ONLY           #
+  #################################
   
   # GET /matchdays
   def index
@@ -12,15 +16,8 @@ class MatchdaysController < ApplicationController
   # GET /matchdays/1
   def show
     @matchday = Matchday.find(params[:id])
-    @bets = @matchday.matches.map do |match|
-      current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
-    end
   end
   
-  #################################
-  #         ADMINS ONLY           #
-  #################################
-
   # GET /matchdays/new
   def new
     @matchday = Matchday.new

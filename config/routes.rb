@@ -1,23 +1,29 @@
 Tippspiel::Application.routes.draw do
   
-  root :to => 'sessions#new'
-  resources :matchdays
 
-  resources :bets do
-    put 'update_matchday', :on => :collection
+  # routes for sessions
+  root :to => 'sessions#new'    
+  resource :session, :only => [:create]   
+  match 'login' => 'sessions#new'
+  match 'logout' => 'sessions#destroy'
+
+  # routes for matchdays/bets
+  resources :matchdays do
+    match 'bets'      => 'bets#edit'
+    match 'bets'      => 'bets#update', :via => :put
+    match 'bets/all'  => 'bets#index'
   end
 
+  # routes for matches
   resources :matches
-
-  resources :users
-
-  resource :session, :only => [:create] # singleton resource!
-
-  match 'login' => 'sessions#new'
-  match 'signup' => 'users#new'
-  match 'logout' => 'sessions#destroy'
   
-
+  # routes for users
+  resources :users, :only => [:create, :destroy, :index, :show]
+  match 'signup'  => 'users#new'
+  match 'home'    => 'users#home'
+  match 'profile' => 'users#edit'
+  match 'profile' => 'users#update', :via => :put
+  
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,42 @@
+          root        /                               sessions#new
+          
+     matchdays GET    /matchdays            matchdays#index     ADMIN ONLY
+               POST   /matchdays            matchdays#create    ADMIN ONLY
+  new_matchday GET    /matchdays/new        matchdays#new       ADMIN ONLY
+ edit_matchday GET    /matchdays/:id/edit   matchdays#edit      ADMIN ONLY
+      matchday GET    /matchdays/:id        matchdays#show      ADMIN ONLY
+               PUT    /matchdays/:id        matchdays#update    ADMIN ONLY
+               DELETE /matchdays/:id        matchdays#destroy   ADMIN ONLY
+               GET    /matchdays/:matchday_id/bets/edit         bets#edit
+               PUT    /matchdays/:matchday_id/bets/update       bets#update
+               GET    /matchdays/:matchday_id/bets/             bets#index
+               
+               
+               
+
+
+       matches GET    /matches              matches#index       ADMIN ONLY
+               POST   /matches              matches#create      ADMIN ONLY  
+     new_match GET    /matches/new          matches#new         ADMIN ONLY
+    edit_match GET    /matches/:id/edit     matches#edit        ADMIN ONLY
+         match GET    /matches/:id          matches#show        ADMIN ONLY
+               PUT    /matches/:id          matches#update      ADMIN ONLY
+               DELETE /matches/:id          matches#destroy     ADMIN ONLY
+               
+         users GET    /users                users#index                     #ranking
+
+        signup GET    /signup               users#new
+               POST   /users                users#create
+               GET    /profile              users#edit
+               PUT    /profile              users#update                      
+              
+               GET    /home                 users#home
+        
+          user GET    /users/:id            users#show
+     
+
+               DELETE /users/:id            users#destroy       ADMIN ONLY (später können user auch sich selbst löschen)
+               
+      session POST   /session              sessions#create
+         login        /login                sessions#new
+        logout        /logout               sessions#destroy

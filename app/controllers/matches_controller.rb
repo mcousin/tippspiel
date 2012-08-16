@@ -1,6 +1,10 @@
 class MatchesController < ApplicationController
 
-  before_filter :authenticate_admin!, :except => [:index, :show]
+  before_filter :authenticate_admin!
+
+  #################################
+  #         ADMINS ONLY           #
+  #################################
 
   # GET /matches
   def index
@@ -11,10 +15,6 @@ class MatchesController < ApplicationController
   def show
     @match = Match.find(params[:id])
   end
-
-  #################################
-  #         ADMINS ONLY           #
-  #################################
 
   # GET /matches/new
   def new

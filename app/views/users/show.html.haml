@@ -1,7 +1,5 @@
 %p#notice= notice
-- if @user == current_user
-  = render :partial => "shared/matchday_form"
-  = render :partial => "shared/ranking_overview"
-- else
-  = render :partial => "shared/matchday"
-
+%p
+  %b Name:
+  = @user.name
+= link_to 'Back', users_path, :class => 'btn btn-mini'
