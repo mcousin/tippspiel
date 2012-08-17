@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   
   # GET /profile
   def edit
-    @user = User.find(params[:id])
+    @user = current_user
   end
 
 

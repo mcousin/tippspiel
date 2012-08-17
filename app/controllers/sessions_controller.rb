@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   def new
   end
 
-  # PUT /session/
+  # POST /session/
   def create
     user_params = params["user"]
     @user = User.find_by_email(user_params["email"])

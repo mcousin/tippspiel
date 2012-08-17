@@ -15,13 +15,12 @@ class BetsController < ApplicationController
     end
   end
   
-
   # PUT matchdays/:matchday_id/bets
   def update
     @bets = []
-    params[:bets].each do |id, attributes|
-      bet = current_user.bets.find_by_id(id) || current_user.bets.build
-      bet.update_attributes(attributes)
+    params[:bets].each do |match_id, bet_attributes|
+      bet = current_user.bets.find_by_match_id(match_id) || current_user.bets.build(match: match)
+      bet.update_attributes(bet_attributes)
       @bets << bet
     end
     

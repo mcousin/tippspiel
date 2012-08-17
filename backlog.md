@@ -6,8 +6,6 @@
 # User Stories
 ## To Do
 * use flash messages (notice and alert)
-* remove unused controller actions (like bets#edit, bets#update, bets#new and so on)
-* remove JSON support from controller actions?
 * change submit button label on user profile
 * highlight current user within ranking
 * re-think ranking. More elegant solution for determining a user's rank?
@@ -22,7 +20,7 @@
 ## In Progress
 * DEBUG: users/1 + link on startpage
 
-* CSV import for matches/matchdays
+
 
 * Activate heroku account
 * BUG: next matchday nicht auf startseite (wenn user != admin???)
@@ -45,3 +43,7 @@
 * show ranking on starting page
 * Validierung für Eingaben (Match immer mit Date...)
 * transform html.erb -> haml
+* CSV import for matches/matchdays
+* remove unused controller actions (like bets#edit, bets#update, bets#new and so on)
+* remove JSON support from controller actions?
+

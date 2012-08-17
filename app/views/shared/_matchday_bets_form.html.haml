@@ -31,11 +31,10 @@
             - if bet.match.started?
               = bet.scores_string
             - else
-              = fields_for :bets, bet, index: bet.id do |bet_form|
+              = fields_for :bets, bet, index: (bet.match_id) do |bet_form|
                 .field
                   = bet_form.number_field :score_a
                   = bet_form.number_field :score_b
-                  = bet_form.hidden_field :match_id
           %td= bet.match.scores_string
           %td= bet.points
     %p= submit_tag "Submit Bets", :class => 'btn'
