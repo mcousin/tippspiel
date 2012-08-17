@@ -1,9 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+
   helper_method :current_user # makes method available to views
 
   before_filter :authenticate_user!
+  before_filter :set_time_zone_and_format
 
 
   def authenticate_user!
@@ -20,6 +22,11 @@ class ApplicationController < ActionController::Base
     unless current_user.admin?
       render_forbidden
     end
+  end
+  
+  def set_time_zone_and_format
+    Time.zone = "Berlin"
+    Time::DATE_FORMATS[:default] = "%Y-%m-%d %H:%M"
   end
   
   def render_forbidden

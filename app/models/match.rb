@@ -36,8 +36,7 @@ class Match < ActiveRecord::Base
   
   def self.build_from_csv(csv_string, options = {})    
     csv = CSV.new(csv_string, options)
-    
-    Time.zone = "Berlin"    # should be an attribute of a community in the future!
+  
     matches = []    
     csv.each do |row|
       attributes = {match_date: row.first, team_a: row.second, team_b: row.third}
