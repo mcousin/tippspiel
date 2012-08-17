@@ -1,7 +1,5 @@
 class BetsController < ApplicationController
   
-  before_filter :authenticate_admin!, :except => [:index, :show, :update_matchday]
-  
   # GET matchdays/:matchday_id/bets
   def index
     raise "NOT YET IMPLEMENTED!"

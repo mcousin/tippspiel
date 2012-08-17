@@ -16,23 +16,29 @@ class User < ActiveRecord::Base
     self.role == 1
   end
   
-  # returns a hash that assigns ranks to users 
+  # gets an array of users and returns a hash that maps 
+  # them onto ranks
   # (users with equal points getting equal ranks)    
-  def self.get_ranking
+  def self.full_ranking
     ranking = {}
-    
-    # sort users by points
-    users = User.all.sort {|a,b| b.points <=> a.points}
-    
-    # assign ranks
-    users.each_with_index do |user, index|
+    sorted_users = User.all.sort {|a,b| b.points <=> a.points}
+    sorted_users.each_with_index do |user, index|
       ranking[user] = index + 1
-      if index > 0 && user.points == users[index - 1].points
-        ranking[user] = ranking[users[index - 1]]
+      if index > 0 && user.points == sorted_users[index - 1].points
+        ranking[user] = ranking[sorted_users[index - 1]]
       end
     end
     
     ranking
+  end
+  
+  # returns the fragment of full_ranking consisting of all users
+  # that have rank within [rank of self]±radius
+  def ranking_fragment(radius)
+    ranking = User.full_ranking
+    ranking.select do |user, rank|
+      (rank - ranking[self]).abs <= radius
+    end
   end
     
 end

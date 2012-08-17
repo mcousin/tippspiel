@@ -6,8 +6,7 @@ class UsersController < ApplicationController
 
   # GET /home
   def home
-    @users = User.all.sort{|a,b| b.points <=> a.points}
-    @ranking = User.get_ranking
+    @ranking = current_user.ranking_fragment(1)
     
     @matchday = Matchday.current
     if @matchday
@@ -27,8 +26,7 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @ranking = User.get_ranking
-    @users = User.all.sort{|a,b| b.points <=> a.points}
+    @ranking = User.full_ranking
   end
   
   

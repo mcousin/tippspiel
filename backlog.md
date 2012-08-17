@@ -1,30 +1,28 @@
 # Epics
 * show stats on starting page
 * create chat area on starting page, displaying also status messages (Matchday winner, new )
+* use I18n (localized messages)
+* create leagues and communities
+** create league: name, has_many matchdays, has_many communities
+** create community: name, has_many users, has_many leagues
+** user has_many communities
+
 
 
 # User Stories
 ## To Do
-* use flash messages (notice and alert)
-* change submit button label on user profile
+
+* fix bug: main content extends into footer
+* consistent page styling
+* create logo, with link to /home/
 * highlight current user within ranking
-* re-think ranking. More elegant solution for determining a user's rank?
-* create league: name, has_many matchdays, has_many communities
-* create community: name, has_many users, has_many leagues
-* user has_many communities
-* move ranking page to GET /community/1
-* Layout-Prototype
-* Bet-Overvie-prototype
-* Logo - Link to start
+* Bet-Overview-prototype
+
 
 ## In Progress
 * DEBUG: users/1 + link on startpage
-
-
-
 * Activate heroku account
 * BUG: next matchday nicht auf startseite (wenn user != admin???)
-* show only part of ranking on starting page (set @users variable accordingly)
 
 ## Done
 * create template for starting page at GET /users/1
@@ -46,4 +44,7 @@
 * CSV import for matches/matchdays
 * remove unused controller actions (like bets#edit, bets#update, bets#new and so on)
 * remove JSON support from controller actions?
+* show only part of ranking on starting page (set @users variable accordingly)
+* use flash messages
+* Layout-Prototype
 

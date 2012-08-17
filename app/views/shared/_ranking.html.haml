@@ -6,12 +6,11 @@
     %th Name
     %th Total points
     %th
-  - @users.each do |user|
+  - @ranking.sort_by {|user, rank| 0}.each do |user, rank|
     %tr
-      %td= @ranking[user]
-      %td= user.name
+      %td= rank
+      %td= link_to user.name, user
       %td= user.points
       %td
         - if current_user.admin?
-          = link_to 'Show', user, :class => 'btn btn-mini'
           = link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'
