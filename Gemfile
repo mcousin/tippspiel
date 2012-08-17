@@ -1,11 +1,19 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.7'
+gem 'bcrypt-ruby', '~> 3.0.0', :require => 'bcrypt'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# needed for haml
+gem 'haml-rails'
+gem 'hpricot'
+gem 'ruby_parser'
+
 group :development, :test do
+  gem 'debugger'  
   gem 'sqlite3'
+  gem 'rspec-rails'               # test framework  
+  gem 'capybara'                  # integration test framework
+  gem 'mocha', :require => false  # mock framework
 end
 
 # needed for HEROKU
@@ -13,21 +21,11 @@ group :production, :staging do
   gem "pg"
 end
 
-
-gem 'rspec-rails'
-gem 'haml-rails'
-gem 'hpricot'
-gem 'ruby_parser'
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
   gem 'uglifier', '>= 1.0.3'
   gem 'twitter-bootstrap-rails'
   gem 'therubyracer'
@@ -35,11 +33,7 @@ end
 
 gem 'jquery-rails'
 
-# To use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0', :require => 'bcrypt'
 
-# Mock Framework
-gem 'mocha', :require => false
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
@@ -50,5 +44,3 @@ gem 'mocha', :require => false
 # Deploy with Capistrano
 # gem 'capistrano'
 
-# To use debugger
-gem 'debugger'
