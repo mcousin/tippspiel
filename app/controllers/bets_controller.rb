@@ -18,19 +18,18 @@ class BetsController < ApplicationController
 
   # PUT matchdays/:matchday_id/bets
   def update
-    raise
     @bets = []
-    params[:bet_for_match].each do |match_id, bet_attributes|
-      bet = current_user.bets.find_by_match_id(match_id) || current_user.bets.build
-      bet.update_attributes(bet_attributes)
+    params[:bets].each do |id, attributes|
+      bet = current_user.bets.find_by_id(id) || current_user.bets.build
+      bet.update_attributes(attributes)
       @bets << bet
     end
     
     @matchday = Matchday.find(params[:matchday_id])
     if @bets.any?{|bet| bet.errors.any?}
-      render "matchdays/show"
+      render "bets/edit"
     else 
-      redirect_to @matchday, notice: 'Your bets were successfully updated.'
+      redirect_to matchday_bets_path(@matchday), notice: 'Your bets were successfully updated.'
     end
   end
 

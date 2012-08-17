@@ -9,8 +9,9 @@ Tippspiel::Application.routes.draw do
 
   # routes for matchdays/bets
   resources :matchdays do
+    match 'bets'      => 'bets#update', :via => :put    
     match 'bets'      => 'bets#edit'
-    match 'bets'      => 'bets#update', :via => :put
+
     match 'bets/all'  => 'bets#index'
   end
 
