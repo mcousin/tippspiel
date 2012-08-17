@@ -3,9 +3,9 @@
 * create chat area on starting page, displaying also status messages (Matchday winner, new )
 * use I18n (localized messages)
 * create leagues and communities
-* * create league: name, has_many matchdays, has_many communities
-* * create community: name, has_many users, has_many leagues
-* * user has_many communities
+  * create league: name, has_many matchdays, has_many communities
+  * create community: name, has_many users, has_many leagues
+  * user has_many communities
 
 
 
