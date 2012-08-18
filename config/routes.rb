@@ -19,11 +19,11 @@ Tippspiel::Application.routes.draw do
   resources :matches
   
   # routes for users
-  resources :users, :only => [:create, :destroy, :index, :show]
-  match 'signup'  => 'users#new'
-  match 'home'    => 'users#home'
+  resources :users, :except => [:edit, :new]
+  match 'home'    => 'users#home'  
+  match 'signup'  => 'users#new'  
   match 'profile' => 'users#edit'
-  match 'profile' => 'users#update', :via => :put
+
   
 
   # The priority is based upon order of creation:

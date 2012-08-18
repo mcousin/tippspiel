@@ -41,7 +41,8 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
 
     if @user.save
-      redirect_to @user, notice: 'User was successfully created.'
+      session[:user_id] = @user.id
+      redirect_to home_path, notice: "Welcome, #{@user.name}!"
     else
       render action: "new"
     end
@@ -54,12 +55,13 @@ class UsersController < ApplicationController
   end
 
 
-  # PUT /profile
-  def update
-    @user = User.find(params[:id])
+  # PUT /users/1
+  def update    
+    render_forbidden if User.find_by_id(params[:id]) != current_user
+    @user = current_user
 
     if @user.update_attributes(params[:user])
-      redirect_to @user, notice: 'User was successfully updated.'
+      redirect_to profile_path, notice: 'Your profile was successfully updated.'
     else
       render action: "edit"
     end
