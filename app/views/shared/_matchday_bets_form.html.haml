@@ -38,3 +38,22 @@
           %td= bet.match.scores_string
           %td= bet.points
     %p= submit_tag "Submit Bets", :class => 'btn'
+
+  - if @matchday != Match.next.matchday
+    - all_players = User.find(:all)
+    - all_players.sort! { |a,b| a.points <=> b.points }
+    %table.table
+      %tr
+        %th Name
+        - @matchday.matches.each do |match|
+          %th= match.team_a +  " : " + match.team_b + " (" + match.score_a.to_s + ":" + match.score_b.to_s + ")"
+      - all_players.each do |player|
+        %tr
+          %td= player.name
+          - i = 0
+          - @matchday.matches.each do |match|
+            - if Bet.find_by_user_id_and_match_id(player.id, match.id)
+              %td= Bet.find_by_user_id_and_match_id(player.id, match.id).points
+            - elsif
+              %td= 0
+            - i = i + 1
