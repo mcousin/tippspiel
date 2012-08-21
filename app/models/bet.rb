@@ -1,6 +1,7 @@
 class Bet < ActiveRecord::Base
   attr_accessible :match_id, :score_a, :score_b, :user_id, :match, :user
 
+  validate :no_changes_after_match_start
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
   validates_presence_of :match
@@ -39,5 +40,16 @@ class Bet < ActiveRecord::Base
       :incorrect
     end
   end
+  
+  private
+  
+  def no_changes_after_match_start
+    if match && match.started?
+      changes.except(:match_id).each_key do |attribute|
+        errors.add(attribute, "can't be changed once the match has started.")
+      end
+    end
+  end
+  
   
 end
