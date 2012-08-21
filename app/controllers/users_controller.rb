@@ -6,6 +6,8 @@ class UsersController < ApplicationController
 
   # GET /home
   def home
+    @ranking_first = User.full_ranking.first
+    @ranking_last = User.full_ranking.first
     @ranking = current_user.ranking_fragment(1)
     
     @matchday = Matchday.current

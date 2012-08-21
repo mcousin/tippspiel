@@ -39,6 +39,5 @@ class User < ActiveRecord::Base
     ranking.select do |user, rank|
       (rank - ranking[self]).abs <= radius
     end
-  end
-    
+  end    
 end

@@ -1,16 +1,34 @@
-%h1 Ranking
+= link_to 'Ranking', users_path
 %br/
 %table.table
   %tr
     %th Rank
     %th Name
     %th Total points
-    %th
-  - @ranking.sort_by {|user, rank| 0}.each do |user, rank|
     %tr
-      %td= rank
-      %td= link_to user.name, user
-      %td= user.points
-      %td
-        - if current_user.admin?
-          = link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'
+      %td= @ranking_first[1]
+      %td= @ranking_first[0].name
+      %td= @ranking_first[0].points
+    %tr
+      %td= "..."
+      %td= "..."
+      %td= "..."
+  - @ranking.sort_by {|user, rank| 0}.each do |user, rank|
+    - if user.id == @current_user.id  
+      %tr.highlighted
+        %td= rank
+        %td= link_to user.name, user
+        %td= user.points
+    - else
+      %tr
+        %td= rank
+        %td= link_to user.name, user
+        %td= user.points
+  %tr
+    %td= "..."
+    %td= "..."
+    %td= "..."
+  %tr
+    %td= @ranking_last[1]
+    %td= @ranking_last[0].name
+    %td= @ranking_last[0].points
