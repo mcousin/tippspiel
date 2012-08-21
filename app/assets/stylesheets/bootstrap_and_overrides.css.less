@@ -2,9 +2,9 @@
 body {
 	padding-top: 0px;
 	padding-left: 20px;
-	background-image: asset-url("bg_footer_left.png"), asset-url("bg_footer.png");
-	background-position: bottom left, bottom;
-	background-repeat: no-repeat, repeat-x;
+	background-image: asset-url("bg_footer_left_line.png"), asset-url("bg_with_line_center.png"), asset-url("bg_footer.png");
+	background-position: bottom left, left, bottom;
+	background-repeat: no-repeat, repeat-y, repeat-x;
 }
 
 .highlighted {
@@ -13,8 +13,15 @@ body {
 
 #header{
 	min-height:200px;
-	background-image: asset-url("bg_top_left.png"), asset-url("bg_top.png");
+	background-image: asset-url("bg_top_left_line.png"), asset-url("bg_top.png");
 	background-repeat: no-repeat, repeat-x;
+}
+
+#center{
+background-image: asset-url("bg_with_line_center.png");
+background-position: left;
+background-repeat: repeat-y;
+
 }
 
 #content{
@@ -27,6 +34,10 @@ body {
 
 .rightaligned{
 	text-align: right;
+}
+
+.row {
+    margin-left: -50px;
 }
 
 @import "twitter/bootstrap/responsive";

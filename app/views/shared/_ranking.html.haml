@@ -1,18 +1,10 @@
-= link_to 'Ranking', users_path
+%h1 Ranking
 %br/
 %table.table
   %tr
     %th Rank
     %th Name
     %th Total points
-  %tr
-    %td= @ranking_first[1]
-    %td= @ranking_first[0].name
-    %td= @ranking_first[0].total_points
-  %tr
-    %td= "..."
-    %td= "..."
-    %td= "..."
   - @ranking.sort_by {|user, rank| rank}.each do |user, rank|
     - if user.id == @current_user.id  
       %tr.highlighted
@@ -24,13 +16,5 @@
         %td= rank
         %td= link_to user.name, user
         %td= user.total_points
-  %tr
-    %td= "..."
-    %td= "..."
-    %td= "..."
-  %tr
-    %td= @ranking_last[1]
-    %td= @ranking_last[0].name
-    %td= @ranking_last[0].total_points
 
 
