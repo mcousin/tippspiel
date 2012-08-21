@@ -28,7 +28,6 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @ranking = User.full_ranking
   end
   
   

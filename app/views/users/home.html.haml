@@ -1,2 +1,4 @@
-= render :partial => "shared/matchday_bets_form"
+- if @matchday
+  %h1 Your bets
+  = render :partial => "shared/matchday_bets_form"
 = render :partial => "shared/ranking"

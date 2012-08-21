@@ -16,11 +16,11 @@ describe User do
     user3 = mock("user3")
     
     User.stubs(:all).returns([user1, user2, user3])
-    user1.stubs(:points).returns(2)
-    user2.stubs(:points).returns(4)
-    user3.stubs(:points).returns(4)
+    user1.stubs(:total_points).returns(2)
+    user2.stubs(:total_points).returns(4)
+    user3.stubs(:total_points).returns(4)
 
-    ranking = User.get_ranking
+    ranking = User.ranking
     ranking[user1].should eq(3)
     ranking[user2].should eq(1)
     ranking[user3].should eq(1)

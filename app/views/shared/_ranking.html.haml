@@ -5,6 +5,7 @@
     %th Rank
     %th Name
     %th Total points
+<<<<<<< HEAD
     %tr
       %td= @ranking_first[1]
       %td= @ranking_first[0].name
@@ -13,7 +14,7 @@
       %td= "..."
       %td= "..."
       %td= "..."
-  - @ranking.sort_by {|user, rank| 0}.each do |user, rank|
+  - @ranking.sort_by {|user, rank| rank}.each do |user, rank|
     - if user.id == @current_user.id  
       %tr.highlighted
         %td= rank
@@ -32,3 +33,5 @@
     %td= @ranking_last[1]
     %td= @ranking_last[0].name
     %td= @ranking_last[0].points
+
+
