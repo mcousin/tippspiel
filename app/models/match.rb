@@ -1,4 +1,4 @@
-require 'CSV'
+require 'csv'
 
 class Match < ActiveRecord::Base
   attr_accessible :match_date, :score_a, :score_b, :team_a, :team_b, :bets, :matchday, :matchday_id
