@@ -1,6 +1,6 @@
 .btn-group
   - Matchday.all.each do |matchday|
-    = link_to matchday.description, matchday_bets_path(matchday), :class => 'btn btn-mini'
+    = link_to matchday.description + " / ", matchday_bets_path(matchday) 
 
 - if @matchday
   %h1= @matchday.description
