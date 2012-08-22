@@ -19,6 +19,7 @@ end
 # needed for HEROKU
 group :production, :staging do
   gem "pg"
+  gem "railties", "~> 3.2.8"
 end
 
 # Gems used only for assets and not required
