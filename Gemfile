@@ -19,7 +19,6 @@ end
 # needed for HEROKU
 group :production, :staging do
   gem "pg"
-  gem "railties", "~> 3.2.8"
 end
 
 # Gems used only for assets and not required
@@ -30,6 +29,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'twitter-bootstrap-rails'
   gem 'therubyracer'
+  gem "railties", "~> 3.2.8"  
 end
 
 gem 'jquery-rails'
