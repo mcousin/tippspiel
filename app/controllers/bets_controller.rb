@@ -28,7 +28,7 @@ class BetsController < ApplicationController
     if @bets.any?{|bet| bet.errors.any?}
       render "bets/edit"
     else 
-      redirect_to matchday_bets_path(@matchday), notice: 'Your bets were successfully updated.'
+      redirect_to :back, notice: 'Your bets were successfully updated.'
     end
   end
 
