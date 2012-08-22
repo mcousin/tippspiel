@@ -15,15 +15,15 @@
     %table.table
       %tr
         %th Match Start
-        %th Home team
-        %th :
+        %th{:style=>'text-align: right'} Home team
+        %th{:style=>'text-align: center'} :
         %th Away team
         %th Bet
       - @bets.select{|bet| not bet.match.started?}.each do |bet|
         %tr
-          %td= bet.match.match_date
-          %td= bet.match.team_a
-          %td :
+          %td= bet.match.match_date.strftime("%d.%m.%Y - %H:%M")
+          %td{:style=>'text-align: right'}= bet.match.team_a
+          %td{:style=>'text-align: center'} :
           %td= bet.match.team_b
           %td
             = fields_for :bets, bet, index: (bet.match_id) do |bet_form|
