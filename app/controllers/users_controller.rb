@@ -28,6 +28,7 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
+    @ranking = User.ranking
   end
   
   
