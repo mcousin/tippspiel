@@ -8,3 +8,8 @@
   %br/
   = f.submit 'Login', :class => 'btn btn-primary btn-large'
   = link_to 'Sign Up Now', signup_path
+
+:javascript
+  $(document).ready(function() {
+    $('#user_email:first').focus();
+  });
