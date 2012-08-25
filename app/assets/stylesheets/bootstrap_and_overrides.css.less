@@ -1,46 +1,5 @@
+
 @import "twitter/bootstrap/bootstrap";
-body {
-	padding-top: 0px;
-	background-image: asset-url('bg_footer_left_line.png'), asset-url('bg_with_line_center.png'), asset-url('bg_footer.png');
-	background-position: bottom left, left, bottom;
-	background-repeat: no-repeat, repeat-y, repeat-x;
-}
-
-.highlighted {
-	background-color: #fbf7e2;	
-}
-
-.wspace {
-	padding:5px;
-}
-
-#header{
-	min-height:200px;
-	background-image: asset-url("bg_top_left_line.png"), asset-url("bg_top.png");
-	background-repeat: no-repeat, repeat-x;
-}
-
-.h1{
-	color: #ff0000;
-}
-
-#center{
-	padding-left: 20px;
-	margin-left: 20px;	
-}
-
-#content{
-	padding-left: 60px;
-	min-height:600px;
-}
-
-#footer{
-	min-height:200px;
-}
-
-.rightaligned{
-	text-align: right;
-}
 
 @import "twitter/bootstrap/responsive";
 
@@ -68,4 +27,66 @@ body {
 // See http://twitter.github.com/bootstrap/less.html for their names and documentation
 //
 // Example:
-// @linkColor: #ff0000;
+@green: #5e7c32;
+@linkColor: @green;
+
+
+
+body {
+	padding-top: 0px;
+	background-image: asset-url('bg_footer_left_line.png'), asset-url('bg_with_line_center.png'), asset-url('bg_footer.png');
+	background-position: bottom left, left, bottom;
+	background-repeat: no-repeat, repeat-y, repeat-x;
+}
+
+// 
+.highlighted {
+	background-color: #fbf7e2;	
+}
+
+
+.wspace {
+	padding: 5px;
+}
+
+#header{
+	min-height: 200px;
+	background-image: asset-url("bg_top_left_line.png"), asset-url("bg_top.png");
+	background-repeat: no-repeat, repeat-x;
+}
+
+.h1{
+	color: #ff0000;
+}
+
+#center{
+	padding-left: 20px;
+	margin-left: 20px;	
+}
+
+#content{
+	padding-left: 60px;
+	min-height: 600px;
+}
+
+#footer{
+	min-height: 200px;
+}
+
+.rightaligned{
+	text-align: right;
+}
+
+.a {
+  color: #0000ff;
+}
+
+.table td .nopadding {
+	padding: 0px;
+}
+
+
+.nomargin {
+	margin: 0px;
+}
+
