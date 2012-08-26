@@ -32,4 +32,5 @@ class ApplicationController < ActionController::Base
   def render_forbidden
     render :file => "#{Rails.root}/public/403.html", :status => :forbidden
   end
+
 end

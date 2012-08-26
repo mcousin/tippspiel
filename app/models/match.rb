@@ -44,5 +44,4 @@ class Match < ActiveRecord::Base
     end
     matches
   end
-  
 end
