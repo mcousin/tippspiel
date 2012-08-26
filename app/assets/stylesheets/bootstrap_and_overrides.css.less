@@ -29,6 +29,9 @@
 // Example:
 @green: #5e7c32;
 @linkColor: @green;
+@navbarLinkColorActive: @green;
+@headingsFontFamily: 'Lobster Two', cursive;
+
 
 
 
@@ -77,10 +80,6 @@ body {
 	text-align: right;
 }
 
-.a {
-  color: #0000ff;
-}
-
 .table td .nopadding {
 	padding: 0px;
 }
@@ -109,6 +108,13 @@ body {
 	text-shadow: #c0c0c0 3px 3px 5px;
 }
 
+.badge-none{
+	background-image: asset-url('badge_none.png');
+	color: #ffffff;
+	font-size: 16px;
+	text-shadow: #c0c0c0 3px 3px 5px;
+}
+
 .badge-caption{
 	padding-top: 12px;
 	text-align: center;
@@ -118,6 +124,11 @@ body {
 	line-height: 32px;
 	font-size: 28px;
 }
+
+.text-small{
+	font-size: 9px;
+}
+
 
 
 

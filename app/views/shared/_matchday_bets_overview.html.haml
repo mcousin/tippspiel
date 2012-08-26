@@ -1,6 +1,6 @@
 - started_matches = @matchday.matches.select{|match| match.started?}
 - if started_matches.any?
-  %table.table
+  %table.table.table-striped.table-condensed.text-small
     %tr
       %th Name
       - started_matches.each do |match|

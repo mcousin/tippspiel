@@ -1,6 +1,14 @@
-%h1 Your awards
-.badge-icon.badge-number-one
-  .badge-caption
-    You're  
-  .badge-caption.text-large
-    N°1!
+%h1 Your new awards
+- @ranking.sort_by {|user, rank| rank}.select{|rank| rank.second == @ranking.values.min}.each do |user, rank|
+  - if user.id == @current_user.id
+    .badge-icon.badge-number-one
+      .badge-caption
+        You're  
+      .badge-caption.text-large
+        N°1!
+  -elsif
+    .badge-icon.badge-none
+      .badge-caption
+        No award  
+      .badge-caption.text-large
+        yet!
