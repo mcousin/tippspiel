@@ -2,7 +2,7 @@ Tippspiel::Application.routes.draw do
   
 
   # routes for sessions
-  root :to => 'sessions#new'    
+  root :to => 'users#home'    
   resource :session, :only => [:create]   
   match 'login' => 'sessions#new'
   match 'logout' => 'sessions#destroy'
