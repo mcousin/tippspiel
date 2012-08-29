@@ -1,16 +1,19 @@
 - if @matchday
   .row
-    .span7
+    .span6
       %h1 Your bets
       .wspace
       = render :partial => "shared/matchday_bets_form"
+    .span1
+      .wspace
     .span5
-      = render :partial => "shared/badges_new"
-.wspace
-.wspace
-.row
-  .span12
-    %h1 Your Rank
-    .wspace
-    = render :partial => "shared/ranking"
+      .row
+        = render :partial => "shared/badges_new"    
+      .row
+        .wspace
+        .wspace      
+      .row
+        %h1 Your Rank
+        .wspace
+        = render :partial => "shared/ranking"
 
