@@ -51,13 +51,11 @@ class User < ActiveRecord::Base
   def ranking_fragment(radius, options = {})
     ranking = User.ranking(options)
 
-    selected_ranks = [ranking.values.min, ranking.values.max]
-    selected_ranks += ranking.values.select{|r| r <= ranking[self]}.sort.last(radius)
-    selected_ranks += ranking.values.select{|r| r >= ranking[self]}.sort.first(radius)
+    selected_ranks = [ranking.values.min, ranking.values.max, ranking[self]]
+    selected_ranks += ranking.values.select{|r| r < ranking[self]}.sort.last(radius)
+    selected_ranks += ranking.values.select{|r| r > ranking[self]}.sort.first(radius)
     
-    ranking.select do |user, rank|
-      selected_ranks.include?(rank)
-    end
+    ranking.select{ |user, rank| selected_ranks.include?(rank) }
   end  
     
 end
