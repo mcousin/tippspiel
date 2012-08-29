@@ -83,7 +83,10 @@ class User < ActiveRecord::Base
           awards << ["badge-match-day-winner", "Todays", "BEST!"]
         end
       end
-    end    
+    end
+    if awards.empty?
+      awards << ["badge-none", "No award", "so far!"]
+    end
     awards
   end
 end
