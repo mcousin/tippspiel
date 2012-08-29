@@ -19,6 +19,7 @@ end
 # needed for HEROKU
 group :production, :staging do
   gem "pg"
+  gem 'google-webfonts'  
 end
 
 # Gems used only for assets and not required
