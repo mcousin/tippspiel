@@ -70,12 +70,12 @@ class User < ActiveRecord::Base
         when 1
           awards << ["badge-number-one", "You're", "N1!"]
         when ranking.sort.last[1]
-          awards << ["badge-number-last", "", "Oh, no!"]
+          awards << ["badge-number-last", "Oh, you're", "LAST!"]
         end
       end
     end
     
-    ranking = User.ranking(:matchday => Matchday.current).sort_by {|user, rank| rank}
+    ranking = User.ranking(:matchday => Matchday.find(1)).sort_by {|user, rank| rank}
     ranking.each  do |user, rank|
       if user.id == self.id
         case rank
