@@ -58,6 +58,33 @@ class User < ActiveRecord::Base
     ranking.select do |user, rank|
       selected_ranks.include?(rank)
     end
-  end  
+  end
+  
+  def my_awards
+    awards = Array.new
     
+    ranking = User.ranking.sort_by {|user, rank| rank}
+    ranking.each  do |user, rank|
+      if user.id == self.id
+        case rank
+        when 1
+          awards << ["badge-number-one", "You're", "N1!"]
+        when ranking.sort.last[1]
+          awards << ["badge-number-last", "", "Oh, no!"]
+        end
+      end
+    end
+    
+    ranking = User.ranking(:matchday => Matchday.current).sort_by {|user, rank| rank}
+    ranking.each  do |user, rank|
+      if user.id == self.id
+        case rank
+        when 1
+          awards << ["badge-match-day-winner", "Todays", "BEST!"]
+        end
+      end
+    end
+    
+    awards
+  end  
 end

@@ -13,7 +13,7 @@
           .navbar-inner
             %a.brand{:href => home_path} Home
             %ul.nav
-              %li= link_to 'Current Matchday', matchday_bets_path(Matchday.current)
+              %li= link_to 'Bets', matchday_bets_path(Matchday.current)
               %li= link_to 'Ranking', users_path
               - if current_user.admin?
                 %li= link_to 'Matchdays', matchdays_path

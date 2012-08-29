@@ -1,14 +1,7 @@
 %h1 Your new awards
-- @ranking.sort_by {|user, rank| rank}.select{|rank| rank.second == @ranking.values.min}.each do |user, rank|
-  - if user.id == @current_user.id
-    .badge-icon.badge-number-one
-      .badge-caption
-        You're  
-      .badge-caption.text-large
-        N°1!
-  -elsif
-    .badge-icon.badge-none
-      .badge-caption
-        No award  
-      .badge-caption.text-large
-        yet!
+- @current_user.my_awards().each do |award|
+  %div{:class => "badge-icon " + award[0]}
+    %div{:class => "badge-caption"}
+      = award[1]
+    %div{:class => "badge-caption text-large"}
+      = award[2]
