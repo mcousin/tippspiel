@@ -46,10 +46,18 @@ class User < ActiveRecord::Base
   
   # returns the fragment of ranking consisting of all users
   # that have rank within [rank of self]±radius
-  def ranking_fragment(radius)
-    ranking = User.ranking
+  #
+  # can be restricted further using the same options as User.ranking
+  def ranking_fragment(radius, options = {})
+    ranking = User.ranking(options)
+
+    selected_ranks = [ranking.values.min, ranking.values.max]
+    selected_ranks += ranking.values.select{|r| r <= ranking[self]}.sort.last(radius)
+    selected_ranks += ranking.values.select{|r| r >= ranking[self]}.sort.first(radius)
+    
     ranking.select do |user, rank|
-      (rank - ranking[self]).abs <= radius
+      selected_ranks.include?(rank)
     end
-  end    
+  end  
+    
 end
