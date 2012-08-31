@@ -9,9 +9,10 @@ gem 'hpricot'
 gem 'ruby_parser'
 
 group :development, :test do
-  gem 'debugger'  
+  gem 'factory_girl_rails'
+  gem 'debugger'
   gem 'sqlite3'
-  gem 'rspec-rails'               # test framework  
+  gem 'rspec-rails'               # test framework
   gem 'capybara'                  # integration test framework
   gem 'mocha', :require => false  # mock framework
 end
@@ -19,7 +20,7 @@ end
 # needed for HEROKU
 group :production, :staging do
   gem "pg"
-  gem 'google-webfonts'  
+  gem 'google-webfonts'
 end
 
 # Gems used only for assets and not required
@@ -30,7 +31,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'twitter-bootstrap-rails'
   gem 'therubyracer'
-  gem 'google-webfonts'  
+  gem 'google-webfonts'
 end
 
 gem 'jquery-rails'
