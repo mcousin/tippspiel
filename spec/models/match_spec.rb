@@ -2,7 +2,15 @@ require 'spec_helper'
 
 describe Match do
 
-  it "should show the competing teams" do
+  it "should have a factory creating a valid object" do
+    FactoryGirl.build(:match).should be_valid
+  end
+
+  it "has_ended should default to false" do
+    Match.new.has_ended.should be_false
+  end
+
+  it "should have a to_s method show the competing teams" do
     match = FactoryGirl.build(:match)
     match.to_s.should == "#{match.team_a} vs #{match.team_b}"
   end
@@ -16,10 +24,6 @@ describe Match do
       object.should be_a(Match)
     end
 
-  end
-
-  it "should have a factory creating a valid object" do
-    FactoryGirl.build(:match).should be_valid
   end
 
   it "should have a method checking whether the match has started" do
@@ -36,10 +40,9 @@ describe Match do
       Match.next.should eq match2
     end
 
-    it "should return the latest match in case there is no future match" do
+    it "should return nil in case there is no future match" do
       match1 = FactoryGirl.create(:match, :match_date => 2.days.ago)
-      match2 = FactoryGirl.create(:match, :match_date => 1.day.ago)
-      Match.next.should eq match2
+      Match.next.should be_nil
     end
 
     it "should return nil in case no matches exist" do
