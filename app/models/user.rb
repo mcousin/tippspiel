@@ -8,8 +8,14 @@ class User < ActiveRecord::Base
   has_secure_password
   has_many :bets, dependent: :destroy
 
-  def total_points
-    self.bets.sum { |bet| bet.points }
+  def total_points(options = {})
+    if options[:as_of_matchday]
+      this_matchday = options[:as_of_matchday]
+      earlier_matchdays = Matchday.select{|matchday| matchday.complete? && matchday.start < this_matchday.start}
+      (earlier_matchdays << this_matchday).sum {|matchday| matchday_points(matchday)}
+    else
+      self.bets.sum { |bet| bet.points }
+    end
   end
 
   def matchday_points(matchday)

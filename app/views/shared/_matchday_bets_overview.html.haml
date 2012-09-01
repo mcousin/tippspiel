@@ -6,7 +6,7 @@
       - started_matches.each do |match|
         %th= "#{match} (#{match.scores_string})"
       %th matchday points
-      %th total points         
+      %th total points
     - User.ranking(:matchday => @matchday).sort_by {|user, rank| rank}.each do |user, rank|
       %tr
         %td= user.name
@@ -14,8 +14,8 @@
           - bet = user.bets.find_by_match_id(match.id)
           %td= "#{bet ? bet.scores_string : "-:-"} (#{bet ? bet.points : 0} pts)"
         %td= user.matchday_points(@matchday)
-        %td= user.total_points
-- else 
+        %td= user.total_points(as_of_matchday: @matchday)
+- else
   %p No bet overview available yet for this matchday.
 
 
