@@ -95,21 +95,76 @@ describe User do
 
 
 
+  context "ranking computation" do
 
-  it "should compute ranks correctly" do
-    user1 = mock("user1")
-    user2 = mock("user2")
-    user3 = mock("user3")
+    before(:each) do
+      @users = 10.times.map{|n| FactoryGirl.build(:user)}
+      User.stubs(:all).returns(@users)
 
-    User.stubs(:all).returns([user1, user2, user3])
-    user1.stubs(:total_points).returns(2)
-    user2.stubs(:total_points).returns(4)
-    user3.stubs(:total_points).returns(4)
+      points = [10,8,8,7,6,5,4,3,2,2]
+      @users.each_index do |n|
+        @users[n].stubs(:total_points).returns(points[n])
+      end
+    end
 
-    ranking = User.ranking
-    ranking[user1].should eq(3)
-    ranking[user2].should eq(1)
-    ranking[user3].should eq(1)
+    context "for a full ranking" do
+      it "should be correct" do
+        ranking = User.ranking
+        ranking[@users[0]].should eq(1)
+        ranking[@users[1]].should eq(2)
+        ranking[@users[2]].should eq(2)
+        ranking[@users[3]].should eq(4)
+        ranking[@users[4]].should eq(5)
+        ranking[@users[5]].should eq(6)
+        ranking[@users[6]].should eq(7)
+        ranking[@users[7]].should eq(8)
+        ranking[@users[8]].should eq(9)
+        ranking[@users[9]].should eq(9)
+      end
+
+      it "should be correct when restricting to one matchday" do
+        mocked_matchday = mock("matchday")
+        points = [10,8,8,7,6,5,4,3,2,2]
+        @users.each_index do |n|
+          @users[n].stubs(:total_points).returns(100)
+          @users[n].stubs(:matchday_points).with(mocked_matchday).returns(points[n])
+        end
+        ranking = User.ranking(matchday: mocked_matchday)
+        ranking[@users[0]].should eq(1)
+        ranking[@users[1]].should eq(2)
+        ranking[@users[2]].should eq(2)
+        ranking[@users[3]].should eq(4)
+        ranking[@users[4]].should eq(5)
+        ranking[@users[5]].should eq(6)
+        ranking[@users[6]].should eq(7)
+        ranking[@users[7]].should eq(8)
+        ranking[@users[8]].should eq(9)
+        ranking[@users[9]].should eq(9)
+      end
+    end
+
+
+    context "for a ranking fragment" do
+      it "should be correct for a user from the middle of the ranking" do
+        ranking = @users[0].ranking_fragment(2)
+        ranking.values.sort.should eq [1,2,2,4,9,9]
+      end
+
+      it "should be correct for a user from the top of the ranking" do
+        ranking = @users[5].ranking_fragment(1)
+        ranking.values.sort.should eq [1,5,6,7,9,9]
+      end
+
+      it "should be correct for a user from the bottom of the ranking" do
+        ranking = @users[7].ranking_fragment(1)
+        ranking.values.sort.should eq [1,7,8,9,9]
+      end
+
+    end
+
+
+
+
 
   end
 end

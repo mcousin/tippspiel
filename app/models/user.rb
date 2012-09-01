@@ -58,8 +58,8 @@ class User < ActiveRecord::Base
     ranking = User.ranking(options)
 
     selected_ranks = [ranking.values.min, ranking.values.max, ranking[self]]
-    selected_ranks += ranking.values.select{|r| r < ranking[self]}.sort.last(radius)
-    selected_ranks += ranking.values.select{|r| r > ranking[self]}.sort.first(radius)
+    selected_ranks += ranking.values.uniq.select{|r| r < ranking[self]}.sort.last(radius)
+    selected_ranks += ranking.values.uniq.select{|r| r > ranking[self]}.sort.first(radius)
 
     ranking.select do |user, rank|
       selected_ranks.include?(rank)
