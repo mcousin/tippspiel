@@ -51,8 +51,10 @@ describe User do
 
         matchday = matches.third.matchday
 
-        Bet.any_instance.stubs(:no_changes_after_match_start)     # turn off validation to allow creating bets for matches in the past
-        bets = matches.map{ |match| FactoryGirl.create(:bet, match: match, user: @user) }
+        matches.each do |match|
+          bet = FactoryGirl.build(:bet, match: match, user: @user)
+          bet.save(validate: false) # turn off validation to allow creating bets for matches in the past
+        end
 
         Bet.any_instance.expects(:points).twice.returns(1)
         @user.total_points(as_of_matchday: matchday).should eq 2         # only first and third match should be taken into account

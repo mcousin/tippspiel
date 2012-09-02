@@ -13,7 +13,7 @@ FactoryGirl.define do
   end
 
   factory :user do
-    name        "Franz"
+    name        { FactoryGirl.generate(:user_name) }
     email       { FactoryGirl.generate(:user_email) }
 
     after(:build) do |user|
@@ -30,6 +30,9 @@ FactoryGirl.define do
     "email#{n}@foo.com"
   end
 
+  sequence :user_name do |n|
+    "User #{n}"
+  end
 
 
 end
