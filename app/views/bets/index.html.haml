@@ -1,0 +1,16 @@
+.btn-group
+  - Matchday.all.each do |matchday|
+    = link_to matchday.description + " / ", matchday_bets_path(matchday)
+
+- if @matchday
+  .wspace
+  %h1= @matchday.description
+  .wspace
+  %h2 Your bets
+  .wspace
+  = render :partial => "shared/matchday_bets_form"
+  .wspace
+  .wspace
+  %h2 Bet overview
+  .wspace
+  = render :partial => "shared/matchday_bets_overview"

@@ -3,7 +3,7 @@
     %th Rank
     %th Name
     %th Total points
-  - expected_rank = 1  
+  - expected_rank = 1
   - @ranking.sort_by {|user, rank| rank}.each do |user, rank|
     - if rank > expected_rank
       %tr
@@ -11,7 +11,8 @@
         %td ...
         %td ...
       - expected_rank = rank
-    - if user.id == @current_user.id  
+    - expected_rank += 1
+    - if user.id == @current_user.id
       %tr.highlighted
         %td= rank
         %td= link_to user.name, user
@@ -21,6 +22,6 @@
         %td= rank
         %td= link_to user.name, user
         %td= user.total_points
-    - expected_rank += 1
+
 
 

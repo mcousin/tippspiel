@@ -1,30 +1,30 @@
 Tippspiel::Application.routes.draw do
-  
+
 
   # routes for sessions
-  root :to => 'users#home'    
-  resource :session, :only => [:create]   
+  resource :session, :only => [:create]
   match 'login' => 'sessions#new'
   match 'logout' => 'sessions#destroy'
 
   # routes for matchdays/bets
   resources :matchdays do
-    match 'bets'      => 'bets#update', :via => :put    
-    match 'bets'      => 'bets#edit'
-
-    match 'bets/all'  => 'bets#index'
+    match 'bets'      => 'bets#update', :via => :put
+    match 'bets'      => 'bets#index'
   end
 
   # routes for matches
   resources :matches
-  
+
   # routes for users
   resources :users, :except => [:edit, :new]
-  match 'home'    => 'users#home'  
-  match 'signup'  => 'users#new'  
+  match 'home'    => 'users#home'
+  match 'signup'  => 'users#new'
   match 'profile' => 'users#edit'
 
-  
+  # root route
+  root :to => 'users#home'
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
