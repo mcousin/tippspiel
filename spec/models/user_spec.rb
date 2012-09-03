@@ -51,6 +51,7 @@ describe User do
 
         matchday = matches.third.matchday
 
+
         matches.each do |match|
           bet = FactoryGirl.build(:bet, match: match, user: @user)
           bet.save(validate: false) # turn off validation to allow creating bets for matches in the past

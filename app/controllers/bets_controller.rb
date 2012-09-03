@@ -10,6 +10,7 @@ class BetsController < ApplicationController
 
   # PUT matchdays/:matchday_id/bets
   def update
+    puts params
     @bets = []
     if params[:bets]
       params[:bets].each do |match_id, bet_attributes|
