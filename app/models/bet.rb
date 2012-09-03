@@ -4,7 +4,7 @@ class Bet < ActiveRecord::Base
   validate :no_changes_after_match_start
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
-  validates :match_id, uniqueness: {scope: :user_id}
+  validates :match_id, uniqueness:  { scope: :user_id }
   validates_presence_of :match
   validates_presence_of :user
 

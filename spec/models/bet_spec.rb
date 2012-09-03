@@ -7,17 +7,33 @@ describe Bet do
     @bet = FactoryGirl.build(:bet, score_a: 1, score_b: 2, match: @match)
   end
 
-  it "should reject changes once the match has started" do
-    @bet.save!
-    @match.stubs(:started?).returns(true)
-    @bet.score_a += 1
-    @bet.should_not be_valid
-  end
+  context "validation" do
+    it "should reject changes once the match has started" do
+      @bet.save!
+      @match.stubs(:started?).returns(true)
+      @bet.score_a += 1
+      @bet.should_not be_valid
+    end
 
-  it "should require match_id to be unique for a user" do
-    @bet.save!
-    FactoryGirl.build(:bet, match: @bet.match, user: @bet.user).should_not be_valid
-    FactoryGirl.build(:bet, match: @bet.match).should be_valid
+    it "should require match_id to be unique for a user" do
+      @bet.save!
+      FactoryGirl.build(:bet, match: @bet.match, user: @bet.user).should_not be_valid
+      FactoryGirl.build(:bet, match: @bet.match).should be_valid
+    end
+
+    it "should require the presence of a match" do
+      FactoryGirl.build(:bet, match_id: 0).should_not be_valid
+    end
+
+    it "should require the presence of a user" do
+      FactoryGirl.build(:bet, user_id: 0).should_not be_valid
+    end
+
+    it "should require both scores to be numbers (if set)" do
+      FactoryGirl.build(:bet, score_a: "x").should_not be_valid
+      FactoryGirl.build(:bet, score_b: "x").should_not be_valid
+    end
+
   end
 
   context "result" do
