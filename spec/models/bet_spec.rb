@@ -14,6 +14,12 @@ describe Bet do
     @bet.should_not be_valid
   end
 
+  it "should require match_id to be unique for a user" do
+    @bet.save!
+    FactoryGirl.build(:bet, match: @bet.match, user: @bet.user).should_not be_valid
+    FactoryGirl.build(:bet, match: @bet.match).should be_valid
+  end
+
   context "result" do
 
     it "should be correct for incomplete bets" do

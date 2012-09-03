@@ -4,9 +4,10 @@ class Bet < ActiveRecord::Base
   validate :no_changes_after_match_start
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
+  validates :match_id, uniqueness: {scope: :user_id}
   validates_presence_of :match
   validates_presence_of :user
-  
+
   belongs_to :user
   belongs_to :match
 
@@ -40,9 +41,9 @@ class Bet < ActiveRecord::Base
       :incorrect
     end
   end
-  
+
   private
-  
+
   def no_changes_after_match_start
     if match && match.started?
       changes.except(:match_id).each_key do |attribute|
@@ -50,6 +51,6 @@ class Bet < ActiveRecord::Base
       end
     end
   end
-  
-  
+
+
 end
