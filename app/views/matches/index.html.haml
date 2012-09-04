@@ -5,6 +5,7 @@
     %th Away
     %th Result
     %th Match date
+    %th has ended
     %th
   - @matches.each do |match|
     %tr
@@ -12,6 +13,7 @@
       %td= match.team_b
       %td= match.scores_string
       %td= match.match_date
+      %td= match.has_ended
       %td
         = link_to 'Show', match, :class => 'btn btn-mini'
         = link_to 'Edit', edit_match_path(match), :class => 'btn btn-mini'

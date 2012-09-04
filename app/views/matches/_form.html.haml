@@ -21,5 +21,8 @@
   .field
     = f.label "Date"
     = f.datetime_select :match_date
+  .field
+    = f.check_box :has_ended
+    = f.label "has ended"
   .actions
     = f.submit
