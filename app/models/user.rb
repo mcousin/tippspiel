@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
       awards << ["badge-number-last", "Oh, you're", "LAST!"]
     end
 
-    matchday = Matchday.first_incomplete || Matchday.last_complete
+    matchday = Matchday.last_complete || Matchday.first_incomplete
     if matchday
       ranking = User.ranking(:matchday => matchday)
       case ranking[self]
