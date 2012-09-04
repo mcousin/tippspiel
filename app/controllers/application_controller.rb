@@ -17,20 +17,20 @@ class ApplicationController < ActionController::Base
   def current_user
     @current_user ||= User.find_by_id(session[:user_id])
   end
-  
+
   def authenticate_admin!
     unless current_user.admin?
       render_forbidden
     end
   end
-  
+
   def set_time_zone_and_format
     Time.zone = "Berlin"
     Time::DATE_FORMATS[:default] = "%Y-%m-%d %H:%M"
   end
-  
+
   def render_forbidden
-    render :file => "#{Rails.root}/public/403.html", :status => :forbidden
+    render :file => "#{Rails.root}/public/403", :status => :forbidden, :formats => [:html]
   end
 
 end

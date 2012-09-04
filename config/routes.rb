@@ -16,10 +16,12 @@ Tippspiel::Application.routes.draw do
   resources :matches
 
   # routes for users
-  resources :users, :except => [:edit, :new]
+  resources :users, :except => [:edit, :new, :update]
   match 'home'    => 'users#home'
   match 'signup'  => 'users#new'
+  match 'profile' => 'users#update', :via => :put
   match 'profile' => 'users#edit'
+
 
   # root route
   root :to => 'users#home'

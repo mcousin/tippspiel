@@ -74,3 +74,8 @@ def populate_database
   end
 
 end
+
+def clear_database
+  User.destroy_all
+  Matchday.destroy_all
+end

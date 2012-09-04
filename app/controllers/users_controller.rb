@@ -1,23 +1,23 @@
 class UsersController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => [:new, :create]
-  before_filter :authenticate_admin!,     :only => [:destroy]      
+  before_filter :authenticate_admin!,     :only => [:destroy]
 
 
   # GET /home
   def home
     @ranking = current_user.ranking_fragment(1)
-    
+
     @matchday = Matchday.current
     if @matchday
       @bets = @matchday.matches.map do |match|
         current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
       end
     end
-    
+
   end
-  
-  
+
+
   # GET /signup
   def new
     @user = User.new
@@ -28,13 +28,13 @@ class UsersController < ApplicationController
   def index
     @ranking = User.ranking
   end
-  
-  
+
+
   # GET /users/1
   def show
     @user = User.find(params[:id])
   end
-  
+
 
   # POST /users
   def create
@@ -48,16 +48,15 @@ class UsersController < ApplicationController
     end
   end
 
-  
+
   # GET /profile
   def edit
     @user = current_user
   end
 
 
-  # PUT /users/1
-  def update    
-    render_forbidden if User.find_by_id(params[:id]) != current_user
+  # PUT /profile
+  def update
     @user = current_user
 
     if @user.update_attributes(params[:user])
@@ -79,7 +78,7 @@ class UsersController < ApplicationController
 
     redirect_to users_url
   end
-  
-  protected 
-  
+
+  protected
+
 end

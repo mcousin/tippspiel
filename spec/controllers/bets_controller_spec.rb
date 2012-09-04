@@ -32,7 +32,7 @@ describe BetsController do
     it "should update existing bets" do
       FactoryGirl.create(:bet, match: match, user: user)
       lambda {
-        put(:update, { matchday_id: matchday.id, bets: {"#{match.id}" => {"score_a" => 3, "score_b" => 2} } }, {user_id: user.id})
+        put(:update, { matchday_id: matchday.id, bets: {match.id => {score_a: 3, score_b: 2} } }, {user_id: user.id})
       }.should_not change(Bet, :count)
       user.bets.find_by_match_id(match.id).score_a.should eq(3)
       user.bets.find_by_match_id(match.id).score_b.should eq(2)
@@ -40,18 +40,18 @@ describe BetsController do
 
     it "should create bets if non-existent" do
       lambda {
-        put(:update, { matchday_id: matchday.id, bets: {"#{match.id}" => {"score_a" => 3, "score_b" => 2} } }, {user_id: user.id})
+        put(:update, { matchday_id: matchday.id, bets: {match.id => {score_a: 3, score_b: 2} } }, {user_id: user.id})
       }.should change(Bet, :count).by(1)
     end
 
-    it "should re-render the index template in case of errors, including the invalid bet into @bets" do
-      put(:update, { matchday_id: matchday.id, bets: {"#{match.id}" => {"score_a" => "xxx"} } }, {user_id: user.id})
+    it "should re-render the index template in case of errors, assigning the invalid as @bets" do
+      put(:update, { matchday_id: matchday.id, bets: {match.id => {score_a: "xxx"} } }, {user_id: user.id})
       assigns(:bets).any?{|bet| bet.match_id == match.id}.should be_true
-      response.should render_template "index"
+      response.should render_template :index
     end
 
-    it "should redirect to 'back' if update was successful" do
-      put(:update, { matchday_id: matchday.id, bets: {"#{match.id}" => {"score_a" => "2"} } }, {user_id: user.id})
+    it "should redirect back" do
+      put(:update, { matchday_id: matchday.id, bets: {match.id => {score_a: 3, score_b: 2} } }, {user_id: user.id})
       response.should redirect_to "where_i_came_from"
     end
 
