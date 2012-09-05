@@ -21,6 +21,27 @@ describe Matchday do
       FactoryGirl.create(:matchday).start.should be_nil
     end
 
+    it "should compare matchdays by start" do
+      early_matchday = FactoryGirl.build(:matchday)
+      early_matchday.stubs(:start).returns(2.days.ago)
+
+      late_matchday = FactoryGirl.build(:matchday)
+      late_matchday.stubs(:start).returns(1.day.ago)
+
+      (early_matchday <=> late_matchday).should eq(-1)
+      [late_matchday, early_matchday].sort.should eq([early_matchday, late_matchday])
+    end
+
+    it "should regard a match as started? once its start lies in the past" do
+      started_matchday = FactoryGirl.build(:matchday)
+      started_matchday.stubs(:start).returns(1.day.ago)
+      started_matchday.should be_started
+
+      future_matchday = FactoryGirl.build(:matchday)
+      future_matchday.stubs(:start).returns(1.day.from_now)
+      future_matchday.should_not be_started
+    end
+
   end
 
   context "complete?" do

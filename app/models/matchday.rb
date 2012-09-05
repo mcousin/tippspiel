@@ -9,6 +9,14 @@ class Matchday < ActiveRecord::Base
     self.matches.map{|match| match.match_date}.min
   end
 
+  def started?
+    start < Time.now
+  end
+
+  def <=>(other)
+    start <=> other.start
+  end
+
   def complete?
     not self.matches.any?{|match| not match.has_ended}
   end
@@ -18,11 +26,11 @@ class Matchday < ActiveRecord::Base
   end
 
   def self.last_complete
-    self.select{|matchday| matchday.complete?}.sort{|d1, d2| d1.start <=> d2.start}.last
+    self.select{|matchday| matchday.complete?}.sort.last
   end
 
   def self.first_incomplete
-    self.select{|matchday| not matchday.complete?}.sort{|d1, d2| d1.start <=> d2.start}.first
+    self.select{|matchday| not matchday.complete?}.sort.first
   end
 
   def self.current
