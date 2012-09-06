@@ -12,15 +12,16 @@ class SessionsController < ApplicationController
     @user = User.find_by_email(user_params["email"])
     if @user and @user.authenticate(user_params["password"])
       session[:user_id] = @user.id
-      redirect_to home_path, notice: "Welcome back, #{@user.name}!" 
+      redirect_to home_path, notice: "Welcome back, #{@user.name}!"
     else
-      redirect_to login_path, notice: "Invalid credentials!" 
+      flash.notice = "Invalid credentials!"
+      render action: "new"
     end
   end
 
   # DELETE /logout/
   def destroy
     session[:user_id] = nil
-    redirect_to login_path
+    redirect_to login_path, notice: "You were successfully logged out."
   end
 end
