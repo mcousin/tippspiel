@@ -8,7 +8,7 @@ describe UsersController do
     end
 
     it "routes to #new" do
-      get("/users/new").should route_to("users#new")
+      get("/signup").should route_to("users#new")
     end
 
     it "routes to #show" do
@@ -16,7 +16,12 @@ describe UsersController do
     end
 
     it "routes to #edit" do
-      get("/users/1/edit").should route_to("users#edit", :id => "1")
+      get("/profile").should route_to("users#edit")
+    end
+
+    it "routes to #home" do
+      get("/home").should route_to("users#home")
+      get("/").should route_to("users#home")
     end
 
     it "routes to #create" do
@@ -24,7 +29,7 @@ describe UsersController do
     end
 
     it "routes to #update" do
-      put("/users/1").should route_to("users#update", :id => "1")
+      put("/profile").should route_to("users#update")
     end
 
     it "routes to #destroy" do

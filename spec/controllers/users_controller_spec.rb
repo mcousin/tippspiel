@@ -14,30 +14,31 @@ describe UsersController do
     end
 
     let(:user) { User.first }
-    let(:session) { {user_id: user.id} }
+
+    before { session[:user_id] = user.id}
 
     describe "home" do
       it "should assign a ranking fragment as @ranking" do
-        get(:home, {}, session)
+        get(:home, {})
         assigns(:ranking).should eq(user.ranking_fragment(1))
       end
 
       it "should assign the current matchday" do
         user = FactoryGirl.create(:user)
-        get(:home, {}, session)
+        get(:home, {})
         assigns(:matchday).should eq(Matchday.current)
       end
 
       it "should assign a bet for each of its matches (if a matchday exist) for the current user" do
         matchday = Matchday.current
-        get(:home, {}, session)
+        get(:home, {})
         assigns(:bets).should eq(user.bets.select{ |bet| bet.match.matchday == matchday })
       end
     end
 
     describe "index" do
       it "should assign the full ranking as @ranking" do
-        get(:home, {}, session)
+        get(:home, {})
         assigns(:ranking).should eq(User.ranking)
       end
     end
@@ -45,7 +46,7 @@ describe UsersController do
     describe "show" do
       it "assigns the requested user as @user" do
         requested_user = User.last
-        get(:show, {id: requested_user.id}, session)
+        get(:show, {id: requested_user.id})
         assigns(:user).should eq(requested_user)
       end
     end
@@ -59,7 +60,7 @@ describe UsersController do
 
     describe "edit" do
       it "assigns the current user as @user" do
-        get(:edit, {}, session)
+        get(:edit, {})
         assigns(:user).should eq(user)
       end
     end
@@ -93,17 +94,18 @@ describe UsersController do
   describe "PUT update" do
 
     let(:user) { FactoryGirl.create(:user) }
-    let(:session) { {user_id: user.id} }
+
+    before { session[:user_id] = user.id}
 
     it "updates the current user and redirect to profile" do
       User.any_instance.expects(:update_attributes).with({"these" => "params"}).returns(true)
-      put(:update, {id: user.id, user: {"these" => "params"}}, session)
+      put(:update, {id: user.id, user: {"these" => "params"}})
       response.should redirect_to "/profile"
     end
 
     it "should re-render the new template in case of errors, assigning the invalid user as @user" do
       User.any_instance.expects(:update_attributes).with({"these" => "params"}).returns(false)
-      put(:update, {id: user.id, user: {"these" => "params"}}, session)
+      put(:update, {id: user.id, user: {"these" => "params"}})
       response.should render_template :edit
     end
 
@@ -113,16 +115,17 @@ describe UsersController do
 
     let(:user) { FactoryGirl.create(:user) }
     let(:user_to_destroy) { FactoryGirl.create(:user) }
-    let(:session) { {user_id: user.id} }
+
+    before { session[:user_id] = user.id}
 
     it "should reject non-admins" do
-      delete(:destroy, {id: user_to_destroy.id}, session)
+      delete(:destroy, {id: user_to_destroy.id})
       response.status.should eq(403)
     end
 
     it "should destroy the requested user and redirect to users" do
       User.any_instance.expects(:admin?).returns(true)
-      delete(:destroy, {id: user_to_destroy.id}, session)
+      delete(:destroy, {id: user_to_destroy.id})
       response.should redirect_to users_url
     end
 

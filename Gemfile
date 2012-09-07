@@ -13,6 +13,7 @@ group :development, :test do
   gem 'debugger'
   gem 'sqlite3'
   gem 'rspec-rails'               # test framework
+  gem 'shoulda-matchers'          # additional matchers for rspec tests
   gem 'capybara'                  # integration test framework
   gem 'mocha', :require => false  # mock framework
 end

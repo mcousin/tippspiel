@@ -6,10 +6,10 @@ FactoryGirl.define do
   end
 
   factory :match do
+    matchday
     match_date  1.day.from_now
     team_a      "BVB"
     team_b      "S04"
-    association :matchday
   end
 
   factory :user do
@@ -22,8 +22,8 @@ FactoryGirl.define do
   end
 
   factory :bet do
-    association :user
-    association :match
+    user
+    match
   end
 
   sequence :user_email do |n|

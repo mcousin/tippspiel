@@ -52,7 +52,7 @@ class MatchesController < ApplicationController
   def destroy
     @match = Match.find(params[:id])
     @match.destroy
-    
+
     redirect_to matches_url
   end
 end

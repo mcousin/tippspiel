@@ -2,34 +2,24 @@ require 'spec_helper'
 
 describe Match do
 
+  context "associations" do
+    it { should belong_to(:matchday) }
+    it { should have_many(:bets).dependent(:destroy) }
+  end
+
   context "validations" do
-
-    it "should have a factory creating a valid object" do
-      FactoryGirl.build(:match).should be_valid
-    end
-
-    it "should not be valid if one of the teams are blank" do
-      FactoryGirl.build(:match, team_a: "").should_not be_valid
-      FactoryGirl.build(:match, team_b: "").should_not be_valid
-    end
-
-    it "should validate the (integer) numericality of the scores" do
-      FactoryGirl.build(:match, score_a: "x").should_not be_valid
-      FactoryGirl.build(:match, score_b: "y").should_not be_valid
-    end
-
-    it "should validate the presence of the matchday" do
-      FactoryGirl.build(:match, matchday_id: 0).should_not be_valid
-    end
-
-    it "should require a match date" do
-      FactoryGirl.build(:match, match_date: nil).should_not be_valid
-    end
+    it { should validate_presence_of(:team_a) }
+    it { should validate_presence_of(:team_b) }
+    it { should validate_presence_of(:match_date) }
+    it { should validate_presence_of(:matchday)}
+    it { should_not validate_presence_of(:score_a) }
+    it { should_not validate_presence_of(:score_b) }
+    it { should validate_numericality_of(:score_a).only_integer }
+    it { should validate_numericality_of(:score_b).only_integer }
 
     it "should not be valid if it has ended before it has started" do
       FactoryGirl.build(:match, match_date: 1.day.from_now, has_ended: true).should_not be_valid
     end
-
   end
 
 
@@ -47,10 +37,7 @@ describe Match do
     objects = Match.build_from_csv(csv_string, :col_sep => ";", :row_sep => "\n")
 
     objects.count.should eq 54
-    objects.each do |object|
-      object.should be_a(Match)
-    end
-
+    objects.each { |object| object.should be_a(Match) }
   end
 
   it "should have a method checking whether the match has started" do

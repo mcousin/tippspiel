@@ -6,7 +6,7 @@ Tippspiel::Application.routes.draw do
   match 'login' => 'sessions#new'
   match 'logout' => 'sessions#destroy'
 
-  # routes for matchdays/bets
+  # routes for matchdays and bets
   resources :matchdays do
     match 'bets'      => 'bets#update', :via => :put
     match 'bets'      => 'bets#index'
