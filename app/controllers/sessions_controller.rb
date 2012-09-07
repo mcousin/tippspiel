@@ -9,10 +9,14 @@ class SessionsController < ApplicationController
   # POST /session/
   def create
     user_params = params["user"]
-    @user = User.find_by_email(user_params["email"])
-    if @user and @user.authenticate(user_params["password"])
-      session[:user_id] = @user.id
-      redirect_to home_path, notice: "Welcome back, #{@user.name}!"
+    user = User.find_by_email(user_params["email"])
+    if user and user.authenticate(user_params["password"])
+      if params[:remember_me]
+        cookies.permanent['auth_token'] = user.auth_token
+      else
+        cookies['auth_token'] = user.auth_token
+      end
+      redirect_to home_path, notice: "Welcome back, #{user.name}!"
     else
       flash.notice = "Invalid credentials!"
       render action: "new"
@@ -21,7 +25,8 @@ class SessionsController < ApplicationController
 
   # DELETE /logout/
   def destroy
-    session[:user_id] = nil
+    cookies.delete('auth_token')
     redirect_to login_path, notice: "You were successfully logged out."
   end
+
 end

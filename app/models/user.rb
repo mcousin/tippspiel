@@ -8,6 +8,15 @@ class User < ActiveRecord::Base
   has_secure_password
   has_many :bets, dependent: :destroy
 
+  before_create { generate_token(:auth_token) }
+
+  def generate_token(column)
+    begin
+      self[column] = SecureRandom.urlsafe_base64
+    end while User.exists?(column => self[column])
+  end
+
+
   def total_points(options = {})
     if options[:as_of_matchday]
       this_matchday = options[:as_of_matchday]

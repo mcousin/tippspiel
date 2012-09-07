@@ -15,7 +15,7 @@ describe UsersController do
 
     let(:user) { User.first }
 
-    before { session[:user_id] = user.id}
+    before { cookies['auth_token'] = user.auth_token }
 
     describe "home" do
       it "should assign a ranking fragment as @ranking" do
@@ -79,7 +79,7 @@ describe UsersController do
       post(:create, user: {name: "name", email: "name@email.com",
                            password: "password", password_confirmation: "password"})
       user = User.last
-      session[:user_id].should eq(user.id)
+      cookies['auth_token'].should eq user.auth_token
       response.should redirect_to "/home"
     end
 
@@ -95,7 +95,7 @@ describe UsersController do
 
     let(:user) { FactoryGirl.create(:user) }
 
-    before { session[:user_id] = user.id}
+    before { cookies['auth_token'] = user.auth_token }
 
     it "updates the current user and redirect to profile" do
       User.any_instance.expects(:update_attributes).with({"these" => "params"}).returns(true)
@@ -116,7 +116,7 @@ describe UsersController do
     let(:user) { FactoryGirl.create(:user) }
     let(:user_to_destroy) { FactoryGirl.create(:user) }
 
-    before { session[:user_id] = user.id}
+    before { cookies['auth_token'] = user.auth_token }
 
     it "should reject non-admins" do
       delete(:destroy, {id: user_to_destroy.id})

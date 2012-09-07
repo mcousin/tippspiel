@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe Matchday do
 
-  it "should have a factory creating a valid object" do
-    FactoryGirl.build(:matchday).should be_valid
-  end
-
   context "start" do
 
     it "should return the beginning of the first of its matches" do

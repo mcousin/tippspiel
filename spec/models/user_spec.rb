@@ -2,9 +2,6 @@ require 'spec_helper'
 
 describe User do
 
-  it "should have a factory creating a valid object" do
-    FactoryGirl.build(:user).should be_valid
-  end
 
   it "should authenticate a user correctly" do
     user = FactoryGirl.build(:user)

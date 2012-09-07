@@ -4,7 +4,8 @@ describe BetsController do
 
   let(:user)     { FactoryGirl.create(:user) }
   let(:matchday) { FactoryGirl.create(:matchday) }
-  before { session[:user_id] = user.id}
+
+  before { cookies['auth_token'] = user.auth_token }
 
 
   describe "GET index" do

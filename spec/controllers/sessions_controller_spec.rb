@@ -15,11 +15,7 @@ describe SessionsController do
       before(:each) { post(:create, user: {email: user.email, password: user.password}) }
 
       it "should log the user in" do
-        session[:user_id].should eq(user.id)
-      end
-
-      it "should assign the user as @user" do
-        assigns(:user).should eq(user)
+        cookies['auth_token'].should eq(user.auth_token)
       end
 
       it "should redirect to users/home" do
@@ -41,9 +37,9 @@ describe SessionsController do
   context "DELETE destroy" do
 
     it "should log the user out" do
-      session[:user_id] = 1
+      cookies['auth_token'] = 1
       delete(:destroy)
-      session[:user_id].should be_nil
+      cookies['auth_token'].should be_nil
     end
   end
 

@@ -3,7 +3,8 @@ require 'spec_helper'
 describe MatchesController do
 
   let(:user) { FactoryGirl.create(:user, role: 1) }
-  before { session[:user_id] = user.id}
+
+  before { cookies['auth_token'] = user.auth_token }
 
   context "GET" do
 
