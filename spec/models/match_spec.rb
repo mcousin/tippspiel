@@ -2,9 +2,36 @@ require 'spec_helper'
 
 describe Match do
 
-  it "should have a factory creating a valid object" do
-    FactoryGirl.build(:match).should be_valid
+  context "validations" do
+
+    it "should have a factory creating a valid object" do
+      FactoryGirl.build(:match).should be_valid
+    end
+
+    it "should not be valid if one of the teams are blank" do
+      FactoryGirl.build(:match, team_a: "").should_not be_valid
+      FactoryGirl.build(:match, team_b: "").should_not be_valid
+    end
+
+    it "should validate the (integer) numericality of the scores" do
+      FactoryGirl.build(:match, score_a: "x").should_not be_valid
+      FactoryGirl.build(:match, score_b: "y").should_not be_valid
+    end
+
+    it "should validate the presence of the matchday" do
+      FactoryGirl.build(:match, matchday_id: 0).should_not be_valid
+    end
+
+    it "should require a match date" do
+      FactoryGirl.build(:match, match_date: nil).should_not be_valid
+    end
+
+    it "should not be valid if it has ended before it has started" do
+      FactoryGirl.build(:match, match_date: 1.day.from_now, has_ended: true).should_not be_valid
+    end
+
   end
+
 
   it "has_ended should default to false" do
     Match.new.has_ended.should be_false

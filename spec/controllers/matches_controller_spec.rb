@@ -13,60 +13,56 @@ require 'spec_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 #
 # Compared to earlier versions of this generator, there is very limited use of
-# stubs and message expectations in this spec.  Stubs are only used when there
+# expectss and message expectations in this spec.  Stubs are only used when there
 # is no simpler way to get a handle on the object needed for the example.
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
 describe MatchesController do
 
-  # This should return the minimal set of attributes required to create a valid
-  # Match. As you add validations to Match, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    {}
-  end
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # MatchesController. Be sure to keep this updated too.
-  def valid_session
-    {}
-  end
+  let(:user) { FactoryGirl.create(:user, role: 1) }
+  let(:valid_session) { {user_id: user.id} }
 
-  describe "GET index" do
-    it "assigns all matches as @matches" do
-      match = Match.create! valid_attributes
-      get :index, {}, valid_session
-      assigns(:matches).should eq([match])
+  context "GET" do
+
+    let(:match) { FactoryGirl.create(:match) }
+
+    context "index" do
+      it "assigns all matches as @matches" do
+        match
+        get :index, {}, valid_session
+        assigns(:matches).should eq([match])
+      end
+    end
+
+    context "show" do
+      it "assigns the requested match as @match" do
+        get :show, {:id => match.to_param}, valid_session
+        assigns(:match).should eq(match)
+      end
+    end
+
+    context "new" do
+      it "assigns a new match as @match" do
+        get :new, {}, valid_session
+        assigns(:match).should be_a_new(Match)
+      end
+    end
+
+    context "edit" do
+      it "assigns the requested match as @match" do
+        get :edit, {:id => match.to_param}, valid_session
+        assigns(:match).should eq(match)
+      end
     end
   end
 
-  describe "GET show" do
-    it "assigns the requested match as @match" do
-      match = Match.create! valid_attributes
-      get :show, {:id => match.to_param}, valid_session
-      assigns(:match).should eq(match)
-    end
-  end
+  context "POST create" do
 
-  describe "GET new" do
-    it "assigns a new match as @match" do
-      get :new, {}, valid_session
-      assigns(:match).should be_a_new(Match)
-    end
-  end
+    let(:valid_attributes) { FactoryGirl.build(:match).as_json(:only => [:team_a, :team_b, :match_date, :matchday_id]) }
 
-  describe "GET edit" do
-    it "assigns the requested match as @match" do
-      match = Match.create! valid_attributes
-      get :edit, {:id => match.to_param}, valid_session
-      assigns(:match).should eq(match)
-    end
-  end
-
-  describe "POST create" do
-    describe "with valid params" do
+    context "with valid params" do
       it "creates a new Match" do
         expect {
           post :create, {:match => valid_attributes}, valid_session
@@ -85,77 +81,72 @@ describe MatchesController do
       end
     end
 
-    describe "with invalid params" do
+    context "with invalid params" do
       it "assigns a newly created but unsaved match as @match" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Match.any_instance.stub(:save).and_return(false)
+        Match.any_instance.expects(:save).returns(false)
         post :create, {:match => {}}, valid_session
         assigns(:match).should be_a_new(Match)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Match.any_instance.stub(:save).and_return(false)
+        Match.any_instance.expects(:save).returns(false)
         post :create, {:match => {}}, valid_session
         response.should render_template("new")
       end
     end
   end
 
-  describe "PUT update" do
-    describe "with valid params" do
+  context "PUT update" do
+
+    let(:match) { FactoryGirl.create(:match) }
+    let(:valid_attributes) { FactoryGirl.build(:match).as_json(:only => [:team_a, :team_b, :match_date, :matchday_id]) }
+
+    context "with valid params" do
       it "updates the requested match" do
-        match = Match.create! valid_attributes
-        # Assuming there are no other matches in the database, this
-        # specifies that the Match created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Match.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        Match.any_instance.expects(:update_attributes).with({'these' => 'params'})
         put :update, {:id => match.to_param, :match => {'these' => 'params'}}, valid_session
       end
 
       it "assigns the requested match as @match" do
-        match = Match.create! valid_attributes
         put :update, {:id => match.to_param, :match => valid_attributes}, valid_session
         assigns(:match).should eq(match)
       end
 
       it "redirects to the match" do
-        match = Match.create! valid_attributes
         put :update, {:id => match.to_param, :match => valid_attributes}, valid_session
         response.should redirect_to(match)
       end
     end
 
-    describe "with invalid params" do
+    context "with invalid params" do
       it "assigns the match as @match" do
-        match = Match.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Match.any_instance.stub(:save).and_return(false)
+        Match.any_instance.expects(:save).returns(false)
         put :update, {:id => match.to_param, :match => {}}, valid_session
         assigns(:match).should eq(match)
       end
 
       it "re-renders the 'edit' template" do
-        match = Match.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Match.any_instance.stub(:save).and_return(false)
+        Match.any_instance.expects(:save).returns(false)
         put :update, {:id => match.to_param, :match => {}}, valid_session
         response.should render_template("edit")
       end
     end
   end
 
-  describe "DELETE destroy" do
+  context "DELETE destroy" do
     it "destroys the requested match" do
-      match = Match.create! valid_attributes
+      match = FactoryGirl.create(:match)
       expect {
         delete :destroy, {:id => match.to_param}, valid_session
       }.to change(Match, :count).by(-1)
     end
 
     it "redirects to the matches list" do
-      match = Match.create! valid_attributes
+      match = FactoryGirl.create(:match)
       delete :destroy, {:id => match.to_param}, valid_session
       response.should redirect_to(matches_url)
     end

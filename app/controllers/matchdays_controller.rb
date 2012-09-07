@@ -66,7 +66,7 @@ class MatchdaysController < ApplicationController
 
   def create_attributes_with_nested_matches
     csv = params["csv"]
-    @matches = Match.build_from_csv(csv, col_sep: ";", row_sep: "\r\n")
+    @matches = csv ? Match.build_from_csv(csv, col_sep: ";", row_sep: "\r\n") : []
     @matchday_attributes = params[:matchday].except("csv")
   end
 end

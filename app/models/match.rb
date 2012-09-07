@@ -14,6 +14,8 @@ class Match < ActiveRecord::Base
 
   validates_presence_of :matchday
 
+  validate :match_has_not_ended_before_its_start
+
   default_scope order("match_date ASC")
 
 
@@ -50,5 +52,11 @@ class Match < ActiveRecord::Base
       matches << Match.new(attributes)
     end
     matches
+  end
+
+  def match_has_not_ended_before_its_start
+    if has_ended and not started?
+      errors.add(:has_ended, "can't true if match has not even started.")
+    end
   end
 end

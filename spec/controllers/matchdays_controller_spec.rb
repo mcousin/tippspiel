@@ -13,60 +13,56 @@ require 'spec_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 #
 # Compared to earlier versions of this generator, there is very limited use of
-# stubs and message expectations in this spec.  Stubs are only used when there
+# expectss and message expectations in this spec.  Stubs are only used when there
 # is no simpler way to get a handle on the object needed for the example.
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
 describe MatchdaysController do
 
-  # This should return the minimal set of attributes required to create a valid
-  # Matchday. As you add validations to Matchday, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    {}
-  end
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # MatchdaysController. Be sure to keep this updated too.
-  def valid_session
-    {}
-  end
+  let(:user) { FactoryGirl.create(:user, role: 1) }
+  let(:valid_session) { {user_id: user.id} }
 
-  describe "GET index" do
-    it "assigns all matchdays as @matchdays" do
-      matchday = Matchday.create! valid_attributes
-      get :index, {}, valid_session
-      assigns(:matchdays).should eq([matchday])
+  context "GET" do
+
+    let(:matchday) { FactoryGirl.create(:matchday) }
+
+    context "index" do
+      it "assigns all matchdays as @matchdays" do
+        matchday
+        get :index, {}, valid_session
+        assigns(:matchdays).should eq([matchday])
+      end
+    end
+
+    context "show" do
+      it "assigns the requested matchday as @matchday" do
+        get :show, {:id => matchday.to_param}, valid_session
+        assigns(:matchday).should eq(matchday)
+      end
+    end
+
+    context "new" do
+      it "assigns a new matchday as @matchday" do
+        get :new, {}, valid_session
+        assigns(:matchday).should be_a_new(Matchday)
+      end
+    end
+
+    context "edit" do
+      it "assigns the requested matchday as @matchday" do
+        get :edit, {:id => matchday.to_param}, valid_session
+        assigns(:matchday).should eq(matchday)
+      end
     end
   end
 
-  describe "GET show" do
-    it "assigns the requested matchday as @matchday" do
-      matchday = Matchday.create! valid_attributes
-      get :show, {:id => matchday.to_param}, valid_session
-      assigns(:matchday).should eq(matchday)
-    end
-  end
+  context "POST create" do
 
-  describe "GET new" do
-    it "assigns a new matchday as @matchday" do
-      get :new, {}, valid_session
-      assigns(:matchday).should be_a_new(Matchday)
-    end
-  end
+    let(:valid_attributes) { FactoryGirl.build(:matchday).as_json(:only => [:description]) }
 
-  describe "GET edit" do
-    it "assigns the requested matchday as @matchday" do
-      matchday = Matchday.create! valid_attributes
-      get :edit, {:id => matchday.to_param}, valid_session
-      assigns(:matchday).should eq(matchday)
-    end
-  end
-
-  describe "POST create" do
-    describe "with valid params" do
+    context "with valid params" do
       it "creates a new Matchday" do
         expect {
           post :create, {:matchday => valid_attributes}, valid_session
@@ -79,83 +75,78 @@ describe MatchdaysController do
         assigns(:matchday).should be_persisted
       end
 
-      it "redirects to the created matchday" do
+      it "redirects to the created match" do
         post :create, {:matchday => valid_attributes}, valid_session
         response.should redirect_to(Matchday.last)
       end
     end
 
-    describe "with invalid params" do
+    context "with invalid params" do
       it "assigns a newly created but unsaved matchday as @matchday" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Matchday.any_instance.stub(:save).and_return(false)
+        Matchday.any_instance.expects(:save).returns(false)
         post :create, {:matchday => {}}, valid_session
         assigns(:matchday).should be_a_new(Matchday)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Matchday.any_instance.stub(:save).and_return(false)
+        Matchday.any_instance.expects(:save).returns(false)
         post :create, {:matchday => {}}, valid_session
         response.should render_template("new")
       end
     end
   end
 
-  describe "PUT update" do
-    describe "with valid params" do
-      it "updates the requested matchday" do
-        matchday = Matchday.create! valid_attributes
-        # Assuming there are no other matchdays in the database, this
-        # specifies that the Matchday created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Matchday.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+  context "PUT update" do
+
+    let(:matchday) { FactoryGirl.create(:matchday) }
+    let(:valid_attributes) { FactoryGirl.build(:matchday).as_json(:only => [:description]) }
+
+    context "with valid params" do
+      it "updates the requested match" do
+        Matchday.any_instance.expects(:update_attributes).with({'these' => 'params'})
         put :update, {:id => matchday.to_param, :matchday => {'these' => 'params'}}, valid_session
       end
 
       it "assigns the requested matchday as @matchday" do
-        matchday = Matchday.create! valid_attributes
         put :update, {:id => matchday.to_param, :matchday => valid_attributes}, valid_session
         assigns(:matchday).should eq(matchday)
       end
 
-      it "redirects to the matchday" do
-        matchday = Matchday.create! valid_attributes
+      it "redirects to the match" do
         put :update, {:id => matchday.to_param, :matchday => valid_attributes}, valid_session
         response.should redirect_to(matchday)
       end
     end
 
-    describe "with invalid params" do
+    context "with invalid params" do
       it "assigns the matchday as @matchday" do
-        matchday = Matchday.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Matchday.any_instance.stub(:save).and_return(false)
+        Matchday.any_instance.expects(:save).returns(false)
         put :update, {:id => matchday.to_param, :matchday => {}}, valid_session
         assigns(:matchday).should eq(matchday)
       end
 
       it "re-renders the 'edit' template" do
-        matchday = Matchday.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Matchday.any_instance.stub(:save).and_return(false)
+        Matchday.any_instance.expects(:save).returns(false)
         put :update, {:id => matchday.to_param, :matchday => {}}, valid_session
         response.should render_template("edit")
       end
     end
   end
 
-  describe "DELETE destroy" do
-    it "destroys the requested matchday" do
-      matchday = Matchday.create! valid_attributes
+  context "DELETE destroy" do
+    it "destroys the requested match" do
+      matchday = FactoryGirl.create(:matchday)
       expect {
         delete :destroy, {:id => matchday.to_param}, valid_session
       }.to change(Matchday, :count).by(-1)
     end
 
     it "redirects to the matchdays list" do
-      matchday = Matchday.create! valid_attributes
+      matchday = FactoryGirl.create(:matchday)
       delete :destroy, {:id => matchday.to_param}, valid_session
       response.should redirect_to(matchdays_url)
     end
