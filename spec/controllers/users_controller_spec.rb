@@ -2,131 +2,168 @@ require 'spec_helper'
 
 describe UsersController do
 
+  let(:current_user) { FactoryGirl.build(:user) }
+  before { controller.stubs(:current_user).returns(current_user) }
 
-  context "GET" do
+  describe "GET home" do
 
-    before(:all) do
-      populate_database
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { get(:home) }
     end
 
-    after(:all) do
-      clear_database
+    context "preparing the view" do
+      let(:ranking) { mock("ranking") }
+      let(:matchday) { FactoryGirl.build(:matchday) }
+      before { User.any_instance.stubs(:ranking_fragment).with(1).returns(ranking) }
+      before { Matchday.stubs(:current).returns(matchday) }
+      before { get(:home) }
+      it { should assign_to(:ranking).with(ranking) }
+      it { should assign_to(:matchday).with(matchday) }
+      it { should assign_to(:bets) }
     end
 
-    let(:user) { User.first }
+  end
 
-    before { cookies['auth_token'] = user.auth_token }
+  describe "GET index" do
 
-    describe "home" do
-      it "should assign a ranking fragment as @ranking" do
-        get(:home, {})
-        assigns(:ranking).should eq(user.ranking_fragment(1))
-      end
-
-      it "should assign the current matchday" do
-        user = FactoryGirl.create(:user)
-        get(:home, {})
-        assigns(:matchday).should eq(Matchday.current)
-      end
-
-      it "should assign a bet for each of its matches (if a matchday exist) for the current user" do
-        matchday = Matchday.current
-        get(:home, {})
-        assigns(:bets).should eq(user.bets.select{ |bet| bet.match.matchday == matchday })
-      end
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { get(:index) }
     end
 
-    describe "index" do
-      it "should assign the full ranking as @ranking" do
-        get(:home, {})
-        assigns(:ranking).should eq(User.ranking)
-      end
+    describe "preparing the view" do
+      let(:ranking) { mock("ranking") }
+      before { User.stubs(:ranking).returns(ranking) }
+      before { get(:index) }
+      it { should assign_to(:ranking).with(ranking) }
     end
 
-    describe "show" do
-      it "assigns the requested user as @user" do
-        requested_user = User.last
-        get(:show, {id: requested_user.id})
-        assigns(:user).should eq(requested_user)
-      end
+  end
+
+  describe "GET show" do
+
+    let(:requested_user) { FactoryGirl.build(:user) }
+    before { User.stubs(:find).with('1').returns(requested_user) }
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { get(:show, id: 1) }
     end
 
-    describe "new" do
-      it "assigns a new user as @user" do
-        get(:new, {})
-        assigns(:user).should be_a_new(User)
-      end
+    describe "preparing the view" do
+      before { get(:show, id: 1) }
+      it { should assign_to(:user).with(requested_user) }
     end
 
-    describe "edit" do
-      it "assigns the current user as @user" do
-        get(:edit, {})
-        assigns(:user).should eq(user)
-      end
+  end
+
+
+  describe "GET new" do
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!).never }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { get(:new) }
     end
+
+    describe "preparing the view" do
+      before { get(:new) }
+      it { should assign_to(:user).with_kind_of(User) }
+    end
+
+  end
+
+  describe "GET edit" do
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { get(:edit) }
+    end
+
+    describe "preparing the view" do
+      before { get(:edit) }
+      it { should assign_to(:user).with(current_user) }
+    end
+
   end
 
   describe "POST create" do
 
-    it "creates a new User" do
-      expect {
-        post :create, user: {name: "name", email: "name@email.com",
-                             password: "password", password_confirmation: "password"}
-      }.to change(User, :count).by(1)
+    let(:new_user) { FactoryGirl.build(:user) }
+    before { new_user; User.stubs(:new).with("some" => "attributes").returns(new_user) } # we have to create user before stubbing the new method
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!).never }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { post(:create, :user => {"some" => "attributes"}) }
     end
 
-    it "should login the newly created user and redirect to home" do
-      post(:create, user: {name: "name", email: "name@email.com",
-                           password: "password", password_confirmation: "password"})
-      user = User.last
-      cookies['auth_token'].should eq user.auth_token
-      response.should redirect_to "/home"
+    context "successful creation of a new user" do
+      before { User.any_instance.stubs(:save).returns(true) }
+      before { post(:create, :user => {"some" => "attributes"}) }
+      specify { new_user.should be_logged_in }
+      it { should assign_to(:user).with(new_user) }
+      it { should redirect_to "/home" }
+      it { should set_the_flash[:notice].to("Welcome, #{new_user.name}!")}
     end
 
-    it "should re-render the new template in case of errors, assigning the invalid user as @user" do
-      post(:create, user: {})
-      assigns(:user).should be_a_new(User)
-      response.should render_template :new
+    context "unsuccessful attempt to create a new user" do
+      before { User.any_instance.stubs(:save).returns(false) }
+      before { post(:create, :user => {"some" => "attributes"}) }
+      it { should assign_to(:user).with(new_user) }
+      it { should render_template :new }
     end
 
   end
 
   describe "PUT update" do
 
-    let(:user) { FactoryGirl.create(:user) }
-
-    before { cookies['auth_token'] = user.auth_token }
-
-    it "updates the current user and redirect to profile" do
-      User.any_instance.expects(:update_attributes).with({"these" => "params"}).returns(true)
-      put(:update, {id: user.id, user: {"these" => "params"}})
-      response.should redirect_to "/profile"
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { put(:update) }
     end
 
-    it "should re-render the new template in case of errors, assigning the invalid user as @user" do
-      User.any_instance.expects(:update_attributes).with({"these" => "params"}).returns(false)
-      put(:update, {id: user.id, user: {"these" => "params"}})
-      response.should render_template :edit
+    context "successful update of the current user" do
+      before { User.any_instance.stubs(:update_attributes).with("some" => "attributes").returns(true) }
+      before { put(:update, :user => {"some" => "attributes"}) }
+      it { should assign_to(:user).with(current_user) }
+      it { should redirect_to "/profile" }
+      it { should set_the_flash[:notice].to("Your profile was successfully updated.")}
+    end
+
+    context "unsuccessful update of the current user" do
+      before { User.any_instance.stubs(:update_attributes).with("some" => "attributes").returns(false) }
+      before { put(:update, :user => {"some" => "attributes"}) }
+      it { should assign_to(:user).with(current_user) }
+      it { should render_template :edit }
     end
 
   end
 
   describe "DELETE destroy" do
 
-    let(:user) { FactoryGirl.create(:user) }
-    let(:user_to_destroy) { FactoryGirl.create(:user) }
+    let(:requested_user) { FactoryGirl.build(:user) }
+    before { User.stubs(:find).with('1').returns(requested_user) }
 
-    before { cookies['auth_token'] = user.auth_token }
-
-    it "should reject non-admins" do
-      delete(:destroy, {id: user_to_destroy.id})
-      response.status.should eq(403)
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { delete(:destroy, id: 1) }
     end
 
-    it "should destroy the requested user and redirect to users" do
-      User.any_instance.expects(:admin?).returns(true)
-      delete(:destroy, {id: user_to_destroy.id})
-      response.should redirect_to users_url
+    context "successful deletion of the requested user" do
+      before { User.any_instance.stubs(:admin?).returns(true) }
+      before { User.any_instance.expects(:destroy) }
+      before { delete(:destroy, id: 1) }
+      it { should assign_to(:user).with(requested_user) }
+      it { should redirect_to users_url }
+      it { should set_the_flash[:notice].to("The user was successfully destroyed.")}
     end
 
   end

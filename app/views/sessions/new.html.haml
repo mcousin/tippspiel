@@ -6,6 +6,9 @@
   = f.label :password
   = f.password_field :password
   %br/
+  = f.check_box :remember_me
+  = f.label :remember_me
+  %br/
   = f.submit 'Login', :class => 'btn btn-primary btn-large'
   = link_to 'Sign Up Now', signup_path
 

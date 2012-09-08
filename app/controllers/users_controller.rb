@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  skip_before_filter :authenticate_user!, :only => [:new, :create]
-  before_filter :authenticate_admin!,     :only => [:destroy]
+  skip_before_filter :authenticate_user!,  :only => [:new, :create]
+  before_filter :authenticate_admin!,      :only => [:destroy]
 
 
   # GET /home
@@ -76,7 +76,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
 
-    redirect_to users_url
+    redirect_to users_url, notice: 'The user was successfully destroyed.'
   end
 
   protected

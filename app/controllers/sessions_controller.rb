@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
     user_params = params["user"]
     user = User.find_by_email(user_params["email"])
     if user and user.authenticate(user_params["password"])
-      if params[:remember_me]
+      if user_params["remember_me"] == "1"
         cookies.permanent['auth_token'] = user.auth_token
       else
         cookies['auth_token'] = user.auth_token
