@@ -2,45 +2,106 @@ require 'spec_helper'
 
 describe SessionsController do
 
-  context "GET new" do
-    it "should be successful" do
-      get(:new)
-      response.should be_successful
+  describe "GET new" do
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!).never }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { get(:new) }
     end
+
+    context "loading the page" do
+      before { get(:new) }
+      it { should respond_with(:success) }
+    end
+
   end
 
   context "POST create" do
-    context "with valid credentials" do
-      let(:user) { FactoryGirl.create(:user) }
-      before(:each) { post(:create, user: {email: user.email, password: user.password}) }
 
-      it "should log the user in" do
-        cookies['auth_token'].should eq(user.auth_token)
-      end
+    let(:user) { FactoryGirl.build(:user) }
 
-      it "should redirect to users/home" do
-        response.should redirect_to "/home"
-      end
+    context "active filters" do
+      before { User.stubs(:find_by_email).returns(user) }
+      specify { controller.expects(:authenticate_user!).never }
+      specify { controller.expects(:authenticate_admin!).never }
+      after { post(:create, user: {}) }
     end
 
-    context "with invalid credentials" do
+    context "successful login" do
 
-      before(:each) { post(:create, user: {}) }
+      before { User.stubs(:find_by_email).with("email").returns(user) }
+      before { User.any_instance.stubs(:authenticate).with("password").returns(true) }
 
-      it "should re-render the 'new' template" do
-        response.should render_template :new
+      context "redirecting to 'home'" do
+        before { post(:create, user: {email: "email", password: "password"}) }
+        it { should redirect_to home_path }
       end
+
+      context "remembering the user" do
+        after { post(:create, user: {email: "email", password: "password", remember_me: "1"}) }
+        specify { controller.expects(:login!).with(user, permanent: true) }
+      end
+
+      context "not remembering the user" do
+        after { post(:create, user: {email: "email", password: "password", remember_me: "0"}) }
+        specify { controller.expects(:login!).with(user, permanent: false) }
+      end
+
+    end
+
+    context "unsuccessful login attempt" do
+
+      context "with an invalid email" do
+
+        before { User.stubs(:find_by_email).with("email").returns(nil) }
+
+        context "no login" do
+          after { post(:create, user: {email: "email", password: "password"}) }
+          specify { controller.expects(:login!).never }
+        end
+
+        context "re-render template 'new'" do
+          before { post(:create, user: {email: "email", password: "password"}) }
+          it { should render_template :new }
+        end
+
+      end
+
+      context "with a valid email but an invalid password" do
+
+        before { User.stubs(:find_by_email).with("email").returns(nil) }
+        before { User.any_instance.stubs(:authenticate).with("password").returns(false) }
+
+        context "no login" do
+          after { post(:create, user: {email: "email", password: "password"}) }
+          specify { controller.expects(:login!).never }
+        end
+
+        context "re-render template 'new'" do
+          before { post(:create, user: {email: "email", password: "password"}) }
+          it { should render_template :new }
+        end
+
+      end
+
     end
 
   end
 
-  context "DELETE destroy" do
+  describe "DELETE destroy" do
 
-    it "should log the user out" do
-      cookies['auth_token'] = 1
-      delete(:destroy)
-      cookies['auth_token'].should be_nil
+    context "active filters" do
+      after { delete(:destroy) }
+      specify { controller.expects(:authenticate_user!).never }
+      specify { controller.expects(:authenticate_admin!).never }
     end
+
+    context "logging out" do
+      after { delete(:destroy) }
+      specify { controller.expects(:logout!) }
+    end
+
   end
 
 end

@@ -18,6 +18,18 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by_auth_token!(cookies[:auth_token]) if cookies[:auth_token]
   end
 
+  def login!(user, options = {})
+    if options[:permanent]
+      cookies.permanent['auth_token'] = user.auth_token
+    else
+      cookies['auth_token'] = user.auth_token
+    end
+  end
+
+  def logout!
+    cookies.delete('auth_token')
+  end
+
   def authenticate_admin!
     unless current_user.admin?
       render_forbidden

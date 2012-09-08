@@ -103,20 +103,39 @@ describe UsersController do
       after { post(:create, :user => {"some" => "attributes"}) }
     end
 
-    context "successful creation of a new user" do
+    context "successful signup" do
+
       before { User.any_instance.stubs(:save).returns(true) }
-      before { post(:create, :user => {"some" => "attributes"}) }
-      specify { new_user.should be_logged_in }
-      it { should assign_to(:user).with(new_user) }
-      it { should redirect_to "/home" }
-      it { should set_the_flash[:notice].to("Welcome, #{new_user.name}!")}
+
+      context "preparing the view" do
+        before { post(:create, :user => {"some" => "attributes"}) }
+        it { should assign_to(:user).with(new_user) }
+        it { should redirect_to "/home" }
+        it { should set_the_flash[:notice].to("Welcome, #{new_user.name}!")}
+      end
+
+      context "logging in" do
+        after { post(:create, :user => {"some" => "attributes"}) }
+        specify { controller.expects(:login!).with(new_user) }
+      end
+
     end
 
-    context "unsuccessful attempt to create a new user" do
+    context "unsuccessful signup attempt" do
+
       before { User.any_instance.stubs(:save).returns(false) }
-      before { post(:create, :user => {"some" => "attributes"}) }
-      it { should assign_to(:user).with(new_user) }
-      it { should render_template :new }
+
+      context "preparing the view" do
+        before { post(:create, :user => {"some" => "attributes"}) }
+        it { should assign_to(:user).with(new_user) }
+        it { should render_template :new }
+      end
+
+      context "no login" do
+        after { post(:create, :user => {"some" => "attributes"}) }
+        specify { controller.expects(:login!).with(new_user).never }
+      end
+
     end
 
   end

@@ -16,6 +16,13 @@ class User < ActiveRecord::Base
     end while User.exists?(column => self[column])
   end
 
+  def find_or_build_bets_for_matchday(matchday)
+    matchday.matches.map { |match| find_or_build_bet_for_match(match) }
+  end
+
+  def find_or_build_bet_for_match(match)
+    bets.find_by_match_id(match.id) || bets.build(match: match)
+  end
 
   def total_points(options = {})
     if options[:as_of_matchday]

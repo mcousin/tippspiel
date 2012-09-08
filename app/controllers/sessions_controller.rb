@@ -11,11 +11,7 @@ class SessionsController < ApplicationController
     user_params = params["user"]
     user = User.find_by_email(user_params["email"])
     if user and user.authenticate(user_params["password"])
-      if user_params["remember_me"] == "1"
-        cookies.permanent['auth_token'] = user.auth_token
-      else
-        cookies['auth_token'] = user.auth_token
-      end
+      login!(user, permanent: user_params["remember_me"] == "1")
       redirect_to home_path, notice: "Welcome back, #{user.name}!"
     else
       flash.notice = "Invalid credentials!"
@@ -25,7 +21,7 @@ class SessionsController < ApplicationController
 
   # DELETE /logout/
   def destroy
-    cookies.delete('auth_token')
+    logout!
     redirect_to login_path, notice: "You were successfully logged out."
   end
 
