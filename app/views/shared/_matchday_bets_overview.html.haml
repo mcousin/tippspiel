@@ -1,4 +1,4 @@
-- started_matches = @matchday.matches.select{|match| match.started?}
+- started_matches = @matchday.matches.select{|match| match.has_started?}
 - if started_matches.any?
   %table.table.table-striped.table-condensed.text-small
     %tr

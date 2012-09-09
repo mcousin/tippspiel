@@ -28,14 +28,14 @@ describe Matchday do
       [late_matchday, early_matchday].sort.should eq([early_matchday, late_matchday])
     end
 
-    it "should regard a match as started? once its start lies in the past" do
+    it "should regard a match as started once its start lies in the past" do
       started_matchday = FactoryGirl.build(:matchday)
       started_matchday.stubs(:start).returns(1.day.ago)
-      started_matchday.should be_started
+      started_matchday.should have_started
 
       future_matchday = FactoryGirl.build(:matchday)
       future_matchday.stubs(:start).returns(1.day.from_now)
-      future_matchday.should_not be_started
+      future_matchday.should_not have_started
     end
 
   end

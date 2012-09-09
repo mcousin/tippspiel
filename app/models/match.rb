@@ -30,7 +30,7 @@ class Match < ActiveRecord::Base
     "#{team_a} vs #{team_b}"
   end
 
-  def started?
+  def has_started?
     DateTime.now > match_date
   end
 
@@ -40,7 +40,7 @@ class Match < ActiveRecord::Base
 
   # first match that is not started (or last one, if all are started)
   def self.next
-    self.all.find{|match| not match.started?}
+    self.all.find{|match| not match.has_started?}
   end
 
   def self.build_from_csv(csv_string, options = {})
@@ -55,7 +55,7 @@ class Match < ActiveRecord::Base
   end
 
   def match_has_not_ended_before_its_start
-    if has_ended and not started?
+    if has_ended and not has_started?
       errors.add(:has_ended, "can't true if match has not even started.")
     end
   end

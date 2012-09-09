@@ -9,7 +9,7 @@ class Matchday < ActiveRecord::Base
     self.matches.map{|match| match.match_date}.min
   end
 
-  def started?
+  def has_started?
     start < Time.now
   end
 

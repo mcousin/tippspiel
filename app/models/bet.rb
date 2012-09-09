@@ -45,7 +45,7 @@ class Bet < ActiveRecord::Base
   private
 
   def no_changes_after_match_start
-    if match && match.started?
+    if match && match.has_started?
       changes.except(:match_id).each_key do |attribute|
         errors.add(attribute, "can't be changed once the match has started.")
       end

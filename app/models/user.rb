@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
     end
 
     first_incomplete_matchday = Matchday.first_incomplete
-    if first_incomplete_matchday && first_incomplete_matchday.started?
+    if first_incomplete_matchday && first_incomplete_matchday.has_started?
       matchday = first_incomplete_matchday
     else
       matchday = Matchday.last_complete

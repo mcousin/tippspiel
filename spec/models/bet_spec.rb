@@ -10,7 +10,7 @@ describe Bet do
   context "validation" do
     it "should reject changes once the match has started" do
       @bet.save!
-      @match.stubs(:started?).returns(true)
+      @match.stubs(:has_started?).returns(true)
       @bet.score_a += 1
       @bet.should_not be_valid
     end

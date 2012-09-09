@@ -17,50 +17,62 @@ describe Match do
     it { should validate_numericality_of(:score_a).only_integer }
     it { should validate_numericality_of(:score_b).only_integer }
 
-    it "should not be valid if it has ended before it has started" do
-      FactoryGirl.build(:match, match_date: 1.day.from_now, has_ended: true).should_not be_valid
+    context "a match that has ended before it has started" do
+      subject { FactoryGirl.build(:match, match_date: 1.day.from_now, has_ended: true) }
+      it { should_not be_valid }
     end
   end
 
-
-  it "has_ended should default to false" do
-    Match.new.has_ended.should be_false
+  context "defaults" do
+    subject { Match.new}
+    it { should_not have_ended }
   end
 
-  it "should have a to_s method show the competing teams" do
-    match = FactoryGirl.build(:match)
-    match.to_s.should == "#{match.team_a} vs #{match.team_b}"
+  context "method to_s" do
+    subject { FactoryGirl.build(:match, team_a: "A", team_b: "B") }
+    its(:to_s) { should eq "A vs B" }
   end
 
-  it "should have a CSV import method" do
-    csv_string = File.read(Rails.root.join('spec/test.csv'))
-    objects = Match.build_from_csv(csv_string, :col_sep => ";", :row_sep => "\n")
-
-    objects.count.should eq 54
-    objects.each { |object| object.should be_a(Match) }
+  context "CSV import" do
+    let(:csv) { File.read(Rails.root.join('spec/test.csv')) }
+    subject { Match.build_from_csv(csv, :col_sep => ";", :row_sep => "\n") }
+    its(:count) { should eq 54 }
+    its(:first) { should be_a(Match) }
   end
 
-  it "should have a method checking whether the match has started" do
-    FactoryGirl.build(:match, :match_date => 1.day.ago).should be_started
-    FactoryGirl.build(:match, :match_date => 1.day.from_now).should_not be_started
+  context "method has_started?" do
+
+    context "for a match that has started" do
+      subject { FactoryGirl.build(:match, :match_date => 1.day.ago) }
+      it { should have_started }
+    end
+
+    context "for a match that has not started" do
+      subject { FactoryGirl.build(:match, :match_date => 1.day.from_now) }
+      it { should_not have_started }
+    end
+
   end
 
   context "Match.next" do
 
-    it "should return the upcoming future match in case there is one" do
-      match1 = FactoryGirl.create(:match, :match_date => 2.days.ago)
-      match2 = FactoryGirl.create(:match, :match_date => 1.day.from_now)
-      match3 = FactoryGirl.create(:match, :match_date => 2.days.from_now)
-      Match.next.should eq match2
+    context "in case there is no future match" do
+      let(:match1) { FactoryGirl.create(:match, :match_date => 2.days.ago) }
+      let(:match2) { FactoryGirl.create(:match, :match_date => 1.day.from_now) }
+      let(:match3) { FactoryGirl.create(:match, :match_date => 2.days.from_now) }
+      subject { Match.next }
+      it { should eq match2 }
     end
 
-    it "should return nil in case there is no future match" do
-      match1 = FactoryGirl.create(:match, :match_date => 2.days.ago)
-      Match.next.should be_nil
+    context "in case there is no future match" do
+      before { FactoryGirl.create(:match, :match_date => 2.days.ago) }
+      subject { Match.next }
+      it { should be_nil }
     end
 
-    it "should return nil in case no matches exist" do
-      Match.next.should be_nil
+    context "in case no matches exist" do
+      subject { Match.next }
+      it { should be_nil }
     end
 
   end
