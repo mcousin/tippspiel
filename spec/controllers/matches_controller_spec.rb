@@ -2,140 +2,154 @@ require 'spec_helper'
 
 describe MatchesController do
 
-  let(:user) { FactoryGirl.create(:user, role: 1) }
+  let(:current_user) { FactoryGirl.build(:user) }
+  before { controller.stubs(:current_user).returns(current_user) }
+  before { User.any_instance.stubs(:admin?).returns(true) }
 
-  before { cookies['auth_token'] = user.auth_token }
+  context "GET index" do
 
-  context "GET" do
-
-    let(:match) { FactoryGirl.create(:match) }
-
-    context "index" do
-      it "assigns all matches as @matches" do
-        match
-        get :index, {}
-        assigns(:matches).should eq([match])
-      end
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:index) }
     end
 
-    context "show" do
-      it "assigns the requested match as @match" do
-        get :show, {:id => match.to_param}
-        assigns(:match).should eq(match)
-      end
+    context "preparing the view" do
+      let(:match) { FactoryGirl.build(:match) }
+      before { Match.stubs(:all).returns([match]) }
+      before { get(:index) }
+      it { should assign_to(:matches).with([match]) }
     end
 
-    context "new" do
-      it "assigns a new match as @match" do
-        get :new, {}
-        assigns(:match).should be_a_new(Match)
-      end
-    end
-
-    context "edit" do
-      it "assigns the requested match as @match" do
-        get :edit, {:id => match.to_param}
-        assigns(:match).should eq(match)
-      end
-    end
   end
 
-  context "POST create" do
+  describe "GET show" do
 
-    context "with valid params" do
+    let(:requested_match) { FactoryGirl.build(:match) }
+    before { Match.stubs(:find).with('1').returns(requested_match) }
 
-      before(:each) do
-        @match = FactoryGirl.build(:match)
-        Match.expects(:new).with("some" => "attributes").returns(@match)
-      end
-
-      it "creates a new Match" do
-        @match.expects(:save)
-        post(:create, :match => {"some" => "attributes"})
-      end
-
-      it "assigns a newly created match as @match" do
-        post :create, {:match => {"some" => "attributes"}}
-        should assign_to(:match)
-      end
-
-      it "redirects to the created match" do
-        post :create, {:match => {"some" => "attributes"}}
-        response.should redirect_to(@match)
-      end
-
-      it "should set the flash" do
-        post :create, {:match => {"some" => "attributes"}}
-        should set_the_flash[:notice].to('Match was successfully created.')
-      end
-
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:show, id: 1) }
     end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved match as @match" do
-        Match.any_instance.expects(:save).returns(false)
-        post :create, {:match => {}}
-        assigns(:match).should be_a_new(Match)
-      end
-
-      it "re-renders the 'new' template" do
-        Match.any_instance.expects(:save).returns(false)
-        post :create, {:match => {}}
-        response.should render_template("new")
-      end
+    describe "preparing the view" do
+      before { get(:show, id: 1) }
+      it { should assign_to(:match).with(requested_match) }
     end
+
   end
 
-  context "PUT update" do
+  describe "GET new" do
 
-    let(:match) { FactoryGirl.create(:match) }
-    let(:valid_attributes) { FactoryGirl.build(:match).as_json(:only => [:team_a, :team_b, :match_date, :matchday_id]) }
-
-    context "with valid params" do
-      it "updates the requested match" do
-        Match.any_instance.expects(:update_attributes).with({'these' => 'params'})
-        put :update, {:id => match.to_param, :match => {'these' => 'params'}}
-      end
-
-      it "assigns the requested match as @match" do
-        put :update, {:id => match.to_param, :match => valid_attributes}
-        assigns(:match).should eq(match)
-      end
-
-      it "redirects to the match" do
-        put :update, {:id => match.to_param, :match => valid_attributes}
-        response.should redirect_to(match)
-      end
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:new) }
     end
 
-    context "with invalid params" do
-      it "assigns the match as @match" do
-        Match.any_instance.expects(:save).returns(false)
-        put :update, {:id => match.to_param, :match => {}}
-        assigns(:match).should eq(match)
-      end
-
-      it "re-renders the 'edit' template" do
-        Match.any_instance.expects(:save).returns(false)
-        put :update, {:id => match.to_param, :match => {}}
-        response.should render_template("edit")
-      end
+    describe "preparing the view" do
+      before { get(:new) }
+      it { should assign_to(:match).with_kind_of(Match) }
     end
+
   end
 
-  context "DELETE destroy" do
-    it "destroys the requested match" do
-      match = FactoryGirl.create(:match)
-      expect {
-        delete :destroy, {:id => match.to_param}
-      }.to change(Match, :count).by(-1)
+  describe "GET edit" do
+
+    let(:requested_match) { FactoryGirl.build(:match) }
+    before { Match.stubs(:find).with('1').returns(requested_match) }
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:edit, id: 1) }
     end
 
-    it "redirects to the matches list" do
-      match = FactoryGirl.create(:match)
-      delete :destroy, {:id => match.to_param}
-      response.should redirect_to(matches_url)
+    describe "preparing the view" do
+      before { get(:edit, id: 1) }
+      it { should assign_to(:match).with(requested_match) }
     end
+
+  end
+
+  describe "POST create" do
+
+    let(:new_match) { FactoryGirl.build(:match) }
+    before { new_match; Match.stubs(:new).with("some" => "attributes").returns(new_match) } # create match before stubbing the new method
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { post(:create, :match => {"some" => "attributes"}) }
+    end
+
+    context "sucessful creation of a match" do
+      before { Match.any_instance.stubs(:save).returns(true) }
+      before { post(:create, :match => {"some" => "attributes"}) }
+      it { should assign_to(:match).with(new_match) }
+      it { should redirect_to matches_path }
+      it { should set_the_flash[:notice].to('The match was successfully created.')}
+    end
+
+    context "unsuccessful signup attempt" do
+      before { Match.any_instance.stubs(:save).returns(false) }
+      before { post(:create, :match => {"some" => "attributes"}) }
+      it { should assign_to(:match).with(new_match) }
+      it { should render_template :new }
+    end
+
+  end
+
+
+  describe "PUT update" do
+
+    let(:requested_match) { FactoryGirl.build(:match) }
+    before { Match.stubs(:find).with('1').returns(requested_match) }
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { put(:update, id: 1) }
+    end
+
+    context "successful update of the current match" do
+      before { Match.any_instance.stubs(:update_attributes).with("some" => "attributes").returns(true) }
+      before { put(:update, id: 1, :match => {"some" => "attributes"}) }
+      it { should assign_to(:match).with(requested_match) }
+      it { should redirect_to matches_path }
+      it { should set_the_flash[:notice].to("The match was successfully updated.")}
+    end
+
+    context "unsuccessful update of the current match" do
+      before { Match.any_instance.stubs(:update_attributes).with("some" => "attributes").returns(false) }
+      before { put(:update, id: 1, :match => {"some" => "attributes"}) }
+      it { should assign_to(:match).with(requested_match) }
+      it { should render_template :edit }
+    end
+
+  end
+
+  describe "DELETE destroy" do
+
+    let(:requested_match) { FactoryGirl.build(:match) }
+    before { Match.stubs(:find).with('1').returns(requested_match) }
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { delete(:destroy, id: 1) }
+    end
+
+    context "successful deletion of the requested match" do
+      before { Match.any_instance.expects(:destroy) }
+      before { delete(:destroy, id: 1) }
+      it { should assign_to(:match).with(requested_match) }
+      it { should redirect_to matches_url }
+      it { should set_the_flash[:notice].to("The match was successfully destroyed.")}
+    end
+
   end
 
 end

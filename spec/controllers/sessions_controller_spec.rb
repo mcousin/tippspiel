@@ -10,7 +10,7 @@ describe SessionsController do
       after { get(:new) }
     end
 
-    context "loading the page" do
+    context "successful response" do
       before { get(:new) }
       it { should respond_with(:success) }
     end
