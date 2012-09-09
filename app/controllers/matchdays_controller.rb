@@ -35,7 +35,7 @@ class MatchdaysController < ApplicationController
     @matchday.matches += @matches
 
     if @matchday.save
-      redirect_to @matchday, notice: 'Matchday was successfully created.'
+      redirect_to @matchday, notice: 'The matchday was successfully created.'
     else
       render action: "new"
     end
@@ -48,7 +48,7 @@ class MatchdaysController < ApplicationController
     @matchday.matches += @matches
 
     if @matchday.update_attributes(@matchday_attributes)
-      redirect_to @matchday, notice: 'Matchday was successfully updated.'
+      redirect_to @matchday, notice: 'The matchday was successfully updated.'
     else
       render action: "edit"
     end
@@ -59,7 +59,7 @@ class MatchdaysController < ApplicationController
     @matchday = Matchday.find(params[:id])
     @matchday.destroy
 
-    redirect_to matchdays_url
+    redirect_to matchdays_url, notice: 'The matchday was successfully destroyed.'
   end
 
   protected

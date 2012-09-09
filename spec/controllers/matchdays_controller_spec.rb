@@ -2,143 +2,166 @@ require 'spec_helper'
 
 describe MatchdaysController do
 
-  let(:user) { FactoryGirl.create(:user, role: 1) }
+  let(:current_user) { FactoryGirl.build(:user) }
+  before { controller.stubs(:current_user).returns(current_user) }
+  before { User.any_instance.stubs(:admin?).returns(true) }
 
-  before { cookies['auth_token'] = user.auth_token }
+  context "GET index" do
 
-  context "GET" do
-
-    let(:matchday) { FactoryGirl.create(:matchday) }
-
-    context "index" do
-      it "assigns all matchdays as @matchdays" do
-        matchday
-        get :index, {}
-        assigns(:matchdays).should eq([matchday])
-      end
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:index) }
     end
 
-    context "show" do
-      it "assigns the requested matchday as @matchday" do
-        get :show, {:id => matchday.to_param}
-        assigns(:matchday).should eq(matchday)
-      end
+    context "preparing the view" do
+      let(:matchday) { FactoryGirl.build(:matchday) }
+      before { Matchday.stubs(:all).returns([matchday]) }
+      before { get(:index) }
+      it { should assign_to(:matchdays).with([matchday]) }
     end
 
-    context "new" do
-      it "assigns a new matchday as @matchday" do
-        get :new, {}
-        assigns(:matchday).should be_a_new(Matchday)
-      end
-    end
-
-    context "edit" do
-      it "assigns the requested matchday as @matchday" do
-        get :edit, {:id => matchday.to_param}
-        assigns(:matchday).should eq(matchday)
-      end
-    end
   end
 
-  context "POST create" do
+  describe "GET show" do
 
-    let(:valid_attributes) { FactoryGirl.build(:matchday).as_json(:only => [:description]) }
+    let(:requested_matchday) { FactoryGirl.build(:matchday) }
+    before { Matchday.stubs(:find).with('1').returns(requested_matchday) }
 
-    context "with valid params" do
-      it "creates a new Matchday" do
-        expect {
-          post :create, {:matchday => valid_attributes}
-        }.to change(Matchday, :count).by(1)
-      end
-
-      it "assigns a newly created matchday as @matchday" do
-        post :create, {:matchday => valid_attributes}
-        assigns(:matchday).should be_a(Matchday)
-        assigns(:matchday).should be_persisted
-      end
-
-      it "redirects to the created matchday" do
-        post :create, {:matchday => valid_attributes}
-        response.should redirect_to(Matchday.last)
-      end
-
-      it "creates new matches from csv attributes" do
-        Match.expects(:build_from_csv).with({ "some" => "attributes" }, col_sep: ";", row_sep: "\r\n").returns([])
-        post :create, {:matchday => valid_attributes, :csv => {"some" => "attributes"}}
-      end
-
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:show, id: 1) }
     end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved matchday as @matchday" do
-        Matchday.any_instance.expects(:save).returns(false)
-        post :create, {:matchday => {}}
-        assigns(:matchday).should be_a_new(Matchday)
-      end
-
-      it "re-renders the 'new' template" do
-        Matchday.any_instance.expects(:save).returns(false)
-        post :create, {:matchday => {}}
-        response.should render_template("new")
-      end
+    describe "preparing the view" do
+      before { get(:show, id: 1) }
+      it { should assign_to(:matchday).with(requested_matchday) }
     end
+
   end
 
-  context "PUT update" do
+  describe "GET new" do
 
-    let(:matchday) { FactoryGirl.create(:matchday) }
-    let(:valid_attributes) { FactoryGirl.build(:matchday).as_json(:only => [:description]) }
-
-    context "with valid params" do
-      it "updates the requested matchday" do
-        Matchday.any_instance.expects(:update_attributes).with({'these' => 'params'})
-        put :update, {:id => matchday.to_param, :matchday => {'these' => 'params'}}
-      end
-
-      it "assigns the requested matchday as @matchday" do
-        put :update, {:id => matchday.to_param, :matchday => valid_attributes}
-        assigns(:matchday).should eq(matchday)
-      end
-
-      it "redirects to the matchday" do
-        put :update, {:id => matchday.to_param, :matchday => valid_attributes}
-        response.should redirect_to(matchday)
-      end
-
-      it "creates new matches from csv attributes" do
-        Match.expects(:build_from_csv).with({ "some" => "attributes" }, col_sep: ";", row_sep: "\r\n").returns([])
-        put :update, {:id => matchday.to_param, :matchday => valid_attributes, :csv => {"some" => "attributes"}}
-      end
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:new) }
     end
 
-    context "with invalid params" do
-      it "assigns the matchday as @matchday" do
-        Matchday.any_instance.expects(:save).returns(false)
-        put :update, {:id => matchday.to_param, :matchday => {}}
-        assigns(:matchday).should eq(matchday)
-      end
-
-      it "re-renders the 'edit' template" do
-        Matchday.any_instance.expects(:save).returns(false)
-        put :update, {:id => matchday.to_param, :matchday => {}}
-        response.should render_template("edit")
-      end
+    describe "preparing the view" do
+      before { get(:new) }
+      it { should assign_to(:matchday).with_kind_of(Matchday) }
     end
+
   end
 
-  context "DELETE destroy" do
-    it "destroys the requested matchday" do
-      matchday = FactoryGirl.create(:matchday)
-      expect {
-        delete :destroy, {:id => matchday.to_param}
-      }.to change(Matchday, :count).by(-1)
+  describe "GET edit" do
+
+    let(:requested_matchday) { FactoryGirl.build(:matchday) }
+    before { Matchday.stubs(:find).with('1').returns(requested_matchday) }
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { get(:edit, id: 1) }
     end
 
-    it "redirects to the matchdays list" do
-      matchday = FactoryGirl.create(:matchday)
-      delete :destroy, {:id => matchday.to_param}
-      response.should redirect_to(matchdays_url)
+    describe "preparing the view" do
+      before { get(:edit, id: 1) }
+      it { should assign_to(:matchday).with(requested_matchday) }
     end
+
+  end
+
+  describe "POST create" do
+
+    let(:new_matchday) { FactoryGirl.build(:matchday) }
+    before { new_matchday; Matchday.stubs(:new).with("some" => "attributes").returns(new_matchday) } # create matchday before stubbing the new method
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { post(:create, matchday: {"some" => "attributes"}) }
+    end
+
+    context "sucessful creation of a matchday" do
+      before { Matchday.any_instance.stubs(:save).returns(true) }
+      before { post(:create, matchday: {"some" => "attributes"}) }
+      it { should assign_to(:matchday).with(new_matchday) }
+      it { should redirect_to matchdays_path }
+      it { should set_the_flash[:notice].to('The matchday was successfully created.')}
+    end
+
+    context "unsuccessful signup attempt" do
+      before { Matchday.any_instance.stubs(:save).returns(false) }
+      before { post(:create, matchday: {"some" => "attributes"}) }
+      it { should assign_to(:matchday).with(new_matchday) }
+      it { should render_template :new }
+    end
+
+    context "creates new matches from csv attributes" do
+      specify { Match.expects(:build_from_csv).with("some csv", col_sep: ";", row_sep: "\r\n").returns([]) }
+      after { post(:create, {matchday: {"some" => "attributes"}, csv: "some csv"}) }
+    end
+
+  end
+
+
+  describe "PUT update" do
+
+    let(:requested_matchday) { FactoryGirl.build(:matchday) }
+    before { Matchday.stubs(:find).with('1').returns(requested_matchday) }
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { put(:update, id: 1, matchday: {}) }
+    end
+
+    context "successful update of the current matchday" do
+      before { Matchday.any_instance.stubs(:update_attributes).with("some" => "attributes").returns(true) }
+      before { put(:update, id: 1, matchday: {"some" => "attributes"}) }
+      it { should assign_to(:matchday).with(requested_matchday) }
+      it { should redirect_to matchdays_path }
+      it { should set_the_flash[:notice].to("The matchday was successfully updated.")}
+    end
+
+    context "unsuccessful update of the current matchday" do
+      before { Matchday.any_instance.stubs(:update_attributes).with("some" => "attributes").returns(false) }
+      before { put(:update, id: 1, matchday: {"some" => "attributes"}) }
+      it { should assign_to(:matchday).with(requested_matchday) }
+      it { should render_template :edit }
+    end
+
+    context "creates new matches from csv attributes" do
+      before { Matchday.any_instance.stubs(:update_attributes).with("some" => "attributes") }
+      specify { Match.expects(:build_from_csv).with("some csv", col_sep: ";", row_sep: "\r\n").returns([]) }
+      after { post(:update, id: 1, matchday: {"some" => "attributes"}, csv: "some csv") }
+    end
+
+
+  end
+
+  describe "DELETE destroy" do
+
+    let(:requested_matchday) { FactoryGirl.build(:matchday) }
+    before { Matchday.stubs(:find).with('1').returns(requested_matchday) }
+
+    context "active filters" do
+      specify { controller.expects(:authenticate_user!) }
+      specify { controller.expects(:authenticate_admin!) }
+      after { delete(:destroy, id: 1) }
+    end
+
+    context "successful deletion of the requested matchday" do
+      before { Matchday.any_instance.expects(:destroy) }
+      before { delete(:destroy, id: 1) }
+      it { should assign_to(:matchday).with(requested_matchday) }
+      it { should redirect_to matchdays_url }
+      it { should set_the_flash[:notice].to("The matchday was successfully destroyed.")}
+    end
+
   end
 
 end
