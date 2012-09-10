@@ -2,85 +2,84 @@ require 'spec_helper'
 
 describe Bet do
 
-  before(:each) do
-    @match = FactoryGirl.build(:match, score_a: 1, score_b: 2)
-    @bet = FactoryGirl.build(:bet, score_a: 1, score_b: 2, match: @match)
+  context "associations" do
+    it { should belong_to(:match) }
+    it { should belong_to(:user) }
   end
 
-  context "validation" do
-    it "should reject changes once the match has started" do
-      @bet.save!
-      @match.stubs(:has_started?).returns(true)
-      @bet.score_a += 1
-      @bet.should_not be_valid
-    end
+  context "validations" do
+    it { should validate_presence_of(:user) }
+    it { should validate_presence_of(:match) }
+    it { should_not validate_presence_of(:score_a) }
+    it { should_not validate_presence_of(:score_b) }
+    it { should validate_numericality_of(:score_a).only_integer }
+    it { should validate_numericality_of(:score_b).only_integer }
+    it { should validate_uniqueness_of(:match_id).scoped_to(:user_id)}
 
-    it "should require match_id to be unique for a user" do
-      @bet.save!
-      FactoryGirl.build(:bet, match: @bet.match, user: @bet.user).should_not be_valid
-      FactoryGirl.build(:bet, match: @bet.match).should be_valid
-    end
-
-    it "should require the presence of a match" do
-      FactoryGirl.build(:bet, match_id: 0).should_not be_valid
-    end
-
-    it "should require the presence of a user" do
-      FactoryGirl.build(:bet, user_id: 0).should_not be_valid
-    end
-
-    it "should require both scores to be numbers (if set)" do
-      FactoryGirl.build(:bet, score_a: "x").should_not be_valid
-      FactoryGirl.build(:bet, score_b: "x").should_not be_valid
-    end
-
-  end
-
-  context "result" do
-
-    it "should be correct for incomplete bets" do
-      @bet.score_b = nil
-      @bet.result.should == :incomplete
-    end
-
-    it "should be correct for incomplete matches" do
-      @match.score_a = nil
-      @bet.result.should == :incomplete
-    end
-
-    it "should be correct for a totally correct bet" do
-      @bet.result.should == :correct_result
-    end
-
-    it "should be correct for a correct goal difference" do
-      @bet.score_a = 2
-      @bet.score_b = 3
-      @bet.result.should == :correct_goal_difference
-    end
-
-    it "should be correct for a correct tendency" do
-      @bet.score_a = 1
-      @bet.score_b = 3
-      @bet.result.should == :correct_tendency
-    end
-
-    it "should be correct for a incorrect tendency" do
-      @bet.score_a = 2
-      @bet.score_b = 1
-      @bet.result.should == :incorrect
+    context "reject changes once the match has started" do
+      before { FactoryGirl.create(:bet) }
+      before { Match.any_instance.stubs(:has_started?).returns(true) }
+      before { Bet.any_instance.stubs(:changes).returns({score_a: [1,2]})}
+      specify { Bet.first.should_not be_valid }
     end
   end
 
-  it "should compute points correctly" do
-    @bet.stubs(:result).returns(:correct_result)
-    @bet.points.should == 3
-    @bet.stubs(:result).returns(:correct_goal_difference)
-    @bet.points.should == 2
-    @bet.stubs(:result).returns(:correct_tendency)
-    @bet.points.should == 1
-    @bet.stubs(:result).returns(:incorrect)
-    @bet.points.should == 0
-    @bet.stubs(:result).returns(:incomplete)
-    @bet.points.should == 0
+  context "method result" do
+
+    subject { FactoryGirl.build(:bet) }
+
+    context "an incomplete bet" do
+      [:score_a=, :score_b=].each do |attribute|
+        before { subject.send(attribute, nil) }
+        its(:result) { should eq :incomplete }
+      end
+    end
+
+    context "an bet with incomplete match" do
+      [:score_a=, :score_b=].each do |attribute|
+        before { subject.match.send(attribute, nil) }
+        its(:result) { should eq :incomplete }
+      end
+    end
+
+    context "correctly guessed th result" do
+      before { subject.score_a, subject.score_b = [2,1] }
+      before { subject.match.score_a, subject.match.score_b = [2,1] }
+      its(:result) { should eq :correct_result }
+    end
+
+    context "correctly guessed the goal difference" do
+      before { subject.score_a, subject.score_b = [1,0] }
+      before { subject.match.score_a, subject.match.score_b = [2,1] }
+      its(:result) { should eq :correct_goal_difference }
+    end
+
+    context "correctly guessed the tendency" do
+      before { subject.score_a, subject.score_b = [1,0] }
+      before { subject.match.score_a, subject.match.score_b = [2,0] }
+      its(:result) { should eq :correct_tendency }
+    end
+
+    context "guessed the wrong tendency" do
+      before { subject.score_a, subject.score_b = [1,0] }
+      before { subject.match.score_a, subject.match.score_b = [0,0] }
+      its(:result) { should eq :incorrect }
+    end
+
   end
+
+  context "method points" do
+
+    subject { FactoryGirl.build(:bet) }
+    expected_points = {correct_result: 3, correct_goal_difference: 2, correct_tendency: 1, incorrect: 0, incomplete: 0}
+
+    expected_points.each do |result, points|
+      context "result" do
+        before { subject.stubs(:result).returns(result) }
+        its(:points) { should eq points }
+      end
+    end
+
+  end
+
 end

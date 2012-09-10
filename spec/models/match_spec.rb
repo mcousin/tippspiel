@@ -57,11 +57,11 @@ describe Match do
   context "Match.next" do
 
     context "in case there is no future match" do
-      let(:match1) { FactoryGirl.create(:match, :match_date => 2.days.ago) }
-      let(:match2) { FactoryGirl.create(:match, :match_date => 1.day.from_now) }
-      let(:match3) { FactoryGirl.create(:match, :match_date => 2.days.from_now) }
+      before { FactoryGirl.create(:match, :match_date => 2.days.ago) }
+      before { @match = FactoryGirl.create(:match, :match_date => 1.day.from_now) }
+      before { FactoryGirl.create(:match, :match_date => 2.days.from_now) }
       subject { Match.next }
-      it { should eq match2 }
+      it { should eq @match }
     end
 
     context "in case there is no future match" do
