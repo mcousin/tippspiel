@@ -52,78 +52,50 @@ describe User do
 
 
 
-  context "total points" do
+  context "method total_points" do
 
-    before(:each) do
-      @user = FactoryGirl.create(:user)
+    subject { FactoryGirl.create(:user) }
+
+    context "no bets exist" do
+      its(:total_points) { should eq 0 }
     end
 
-    it "should be the sum of the points of all bets" do
-      bet1 = FactoryGirl.create(:bet, user: @user)
-      bet2 = FactoryGirl.create(:bet, user: @user)
-      another_user = FactoryGirl.create(:user)
-      bet_of_another_user = FactoryGirl.create(:bet)
-      Bet.any_instance.expects(:points).twice.returns(1)
-      @user.total_points.should eq 2
+    context "total points of all bets, if any" do
+      before { 2.times { FactoryGirl.create(:bet, user: subject) } }
+      before { Bet.any_instance.stubs(:points).returns(1) }
+      its(:total_points) { should eq 2 }
     end
 
-    it "should be 0 if no bets exist" do
-      FactoryGirl.build(:user).total_points.should eq 0
-    end
+    context "total points as of a given matchday" do
+      before { @matchday1 = FactoryGirl.create(:matchday) }
+      before { @matchday2 = FactoryGirl.create(:matchday) }
+      before { @matchday3 = FactoryGirl.create(:matchday) }
+      before { @matchday4 = FactoryGirl.create(:matchday) }
+      before { subject.stubs(:matchday_points).returns(1) }
+      before { Matchday.stubs(:all_complete_matchdays_before).with(@matchday1.start).returns([@matchday2, @matchday3]) }
 
-
-
-    context "up to a given matchday" do
-      it "should be sum of all points of complete matchdays up to the given matchday" do
-
-        matches = [FactoryGirl.create(:match, match_date: 3.days.ago, has_ended: true), # yields a complete matchday in the past
-                   FactoryGirl.create(:match, match_date: 2.day.ago, has_ended: false), # yields an incomplete matchday in the past
-                   FactoryGirl.create(:match, match_date: 1.day.ago),                   # match for this matchday
-                   FactoryGirl.create(:match, match_date: 1.day.from_now)             ] # yields a future matchday
-
-        matchday = matches.third.matchday
-
-
-        matches.each do |match|
-          bet = FactoryGirl.build(:bet, match: match, user: @user)
-          bet.save(validate: false) # turn off validation to allow creating bets for matches in the past
-        end
-
-        Bet.any_instance.expects(:points).twice.returns(1)
-        @user.total_points(as_of_matchday: matchday).should eq 2         # only first and third match should be taken into account
-
-      end
-
-      it "should be 0 if no matchday exists" do
-        @user.total_points(as_of_matchday: nil).should eq 0
-      end
+      specify { subject.total_points(as_of_matchday: @matchday1).should eq 3 }
     end
 
   end
 
-  context "matchday points" do
+  context "method matchday_points" do
 
-    before(:each) do
-      @user = FactoryGirl.create(:user)
+    subject { FactoryGirl.create(:user) }
+
+    context "should be 0 if argument is nil" do
+      specify { subject.matchday_points(nil).should eq 0 }
     end
 
+    context "should be the sum of the points of all bets of matches belonging to the given matchday" do
+      let(:matches) { 3.times.map { FactoryGirl.create(:match) } }
+      before { matches.third.update_attributes(matchday: matches.second.matchday) }
+      before { matches.each {|match| FactoryGirl.create(:bet, user: subject, match: match)} }
+      before { Bet.any_instance.stubs(:points).returns(1) }
 
-    it "should be the sum of the points of all bets of matches belonging to the given matchday" do
-      matchday1 = FactoryGirl.create(:matchday)
-      matchday2 = FactoryGirl.create(:matchday)
-
-      matches = [FactoryGirl.create(:match, matchday: matchday1),
-                 FactoryGirl.create(:match, matchday: matchday2),
-                 FactoryGirl.create(:match, matchday: matchday2)]
-
-      bets = matches.map{ |match| FactoryGirl.create(:bet, match: match, user: @user) }
-
-      Bet.any_instance.expects(:points).twice.returns(1)
-      @user.matchday_points(matchday2).should eq 2
-    end
-
-    it "should be 0 if no matchday exists" do
-      @user.matchday_points(nil).should eq 0
+      specify { subject.matchday_points(matches.first.matchday).should eq 1 }
+      specify { subject.matchday_points(matches.second.matchday).should eq 2 }
+      specify { subject.matchday_points(matches.third.matchday).should eq 2 }
     end
 
   end
@@ -132,67 +104,45 @@ describe User do
 
   context "ranking computation" do
 
-    before(:each) do
-      @users = 10.times.map{|n| FactoryGirl.build(:user)}
-      User.stubs(:all).returns(@users)
+    let(:users) { 10.times.map{|n| FactoryGirl.build(:user)} }
+    let(:points) { [10,8,8,7,6,5,4,3,2,2] }
+    let(:ranks)  { [ 1,2,2,4,5,6,7,8,9,9] }
+    before { User.stubs(:all).returns(users) }
 
-      points = [10,8,8,7,6,5,4,3,2,2]
-      @users.each_index do |n|
-        @users[n].stubs(:total_points).returns(points[n])
-      end
-    end
+
 
     context "for a full ranking" do
-      it "should be correct" do
-        ranking = User.ranking
-        ranking[@users[0]].should eq(1)
-        ranking[@users[1]].should eq(2)
-        ranking[@users[2]].should eq(2)
-        ranking[@users[3]].should eq(4)
-        ranking[@users[4]].should eq(5)
-        ranking[@users[5]].should eq(6)
-        ranking[@users[6]].should eq(7)
-        ranking[@users[7]].should eq(8)
-        ranking[@users[8]].should eq(9)
-        ranking[@users[9]].should eq(9)
-      end
+      before { points.each_with_index {|points, index| users[index].stubs(:total_points).returns(points)} }
+      subject { User.ranking }
 
-      it "should be correct when restricting to one matchday" do
-        mocked_matchday = mock("matchday")
-        points = [10,8,8,7,6,5,4,3,2,2]
-        @users.each_index do |n|
-          @users[n].stubs(:total_points).returns(100)
-          @users[n].stubs(:matchday_points).with(mocked_matchday).returns(points[n])
-        end
-        ranking = User.ranking(matchday: mocked_matchday)
-        ranking[@users[0]].should eq(1)
-        ranking[@users[1]].should eq(2)
-        ranking[@users[2]].should eq(2)
-        ranking[@users[3]].should eq(4)
-        ranking[@users[4]].should eq(5)
-        ranking[@users[5]].should eq(6)
-        ranking[@users[6]].should eq(7)
-        ranking[@users[7]].should eq(8)
-        ranking[@users[8]].should eq(9)
-        ranking[@users[9]].should eq(9)
-      end
+      specify { users.map{|user| subject[user]}.should eq ranks }
     end
 
+    context "for a matchday ranking" do
+      let(:matchday) { FactoryGirl.build(:matchday) }
+      before { points.each_with_index {|points, index| users[index].stubs(:matchday_points).with(matchday).returns(points)} }
+      subject { User.ranking(matchday: matchday) }
+
+      specify { users.map{|user| subject[user]}.should eq ranks }
+    end
 
     context "for a ranking fragment" do
-      it "should be correct for a user from the middle of the ranking" do
-        ranking = @users[0].ranking_fragment(2)
-        ranking.values.sort.should eq [1,2,2,4,9,9]
+
+      before { points.each_with_index {|points, index| users[index].stubs(:total_points).returns(points)} }
+
+      context "should be correct for a user from the middle of the ranking" do
+        subject { users[0].ranking_fragment(2).values.sort }
+        it { should eq [1,2,2,4,9,9] }
       end
 
-      it "should be correct for a user from the top of the ranking" do
-        ranking = @users[5].ranking_fragment(1)
-        ranking.values.sort.should eq [1,5,6,7,9,9]
+      context "should be correct for a user from the top of the ranking" do
+        subject { users[5].ranking_fragment(1).values.sort }
+        it { should eq [1,5,6,7,9,9] }
       end
 
-      it "should be correct for a user from the bottom of the ranking" do
-        ranking = @users[7].ranking_fragment(1)
-        ranking.values.sort.should eq [1,7,8,9,9]
+      context "should be correct for a user from the bottom of the ranking" do
+        subject { users[7].ranking_fragment(1).values.sort }
+        it { should eq [1,7,8,9,9] }
       end
 
     end

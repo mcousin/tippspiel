@@ -21,6 +21,10 @@ class Matchday < ActiveRecord::Base
     not self.matches.any?{|match| not match.has_ended}
   end
 
+  def all_complete_matchdays_before(time)
+    Matchday.select{|matchday| matchday.complete? && matchday.start < time}
+  end
+
   def self.next_to_bet
     Match.next.matchday if Match.next
   end

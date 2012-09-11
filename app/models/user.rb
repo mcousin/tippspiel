@@ -27,8 +27,8 @@ class User < ActiveRecord::Base
   def total_points(options = {})
     if options[:as_of_matchday]
       this_matchday = options[:as_of_matchday]
-      earlier_matchdays = Matchday.select{|matchday| matchday.complete? && matchday.start < this_matchday.start}
-      (earlier_matchdays << this_matchday).sum {|matchday| matchday_points(matchday)}
+      matchdays = Matchday.all_complete_matchdays_before(this_matchday.start) + [this_matchday]
+      matchdays.sum { |matchday| matchday_points(matchday) }
     else
       self.bets.sum { |bet| bet.points }
     end
