@@ -6,7 +6,7 @@ class Matchday < ActiveRecord::Base
   validates :description, presence: true
 
   def start
-    self.matches.map{|match| match.match_date}.min
+    self.matches.map{|match| match.match_date}.min || DateTime.new(2000)
   end
 
   def has_started?
@@ -21,8 +21,8 @@ class Matchday < ActiveRecord::Base
     not self.matches.any?{|match| not match.has_ended}
   end
 
-  def all_complete_matchdays_before(time)
-    Matchday.select{|matchday| matchday.complete? && matchday.start < time}
+  def self.all_complete_matchdays_before(time)
+    Matchday.all.select{|matchday| matchday.complete? && matchday.start < time}
   end
 
   def self.next_to_bet

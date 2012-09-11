@@ -11,10 +11,10 @@
       %tr
         %td= element.user.name
         - started_matches.each do |match|
-          - bet = user.bets.find_by_match_id(match.id)
+          - bet = element.user.bets.find_by_match_id(match.id)
           %td= "#{bet ? bet.scores_string : "-:-"} (#{bet ? bet.points : 0} pts)"
-        %td= user.matchday_points(@matchday)
-        %td= user.total_points(as_of_matchday: @matchday)
+        %td= element.user.matchday_points(@matchday)
+        %td= element.user.total_points(as_of_matchday: @matchday)
 - else
   %p No bet overview available for this matchday.
 
