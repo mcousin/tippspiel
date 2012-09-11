@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   end
 
   def matchday_points(matchday)
-    matchday_bets = self.bets.select{|bet| bet.match && bet.match.matchday == matchday}
+    matchday_bets = self.bets.select{|bet| bet.matchday == matchday}
     matchday_bets.sum { |bet| bet.points }
   end
 

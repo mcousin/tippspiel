@@ -2,18 +2,26 @@ require 'spec_helper'
 
 describe User do
 
-
-
-  it "should authenticate a user correctly" do
-    user = FactoryGirl.build(:user)
-    user.password = "correct password"
-    user.authenticate("wrong password").should be_false
-    user.authenticate("correct password").should eq user
+  context "associations" do
+    it { should have_many(:bets).dependent(:destroy) }
   end
 
-  it "should have a function that checks whether the user is admin" do
-    FactoryGirl.build(:user, role: 1).should be_admin
-    FactoryGirl.build(:user, role: 0).should_not be_admin
+  context "validations" do
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:email) }
+    it { should validate_uniqueness_of(:email) }
+  end
+
+  context "authentication" do
+    let(:user) { FactoryGirl.build(:user) }
+    before { user.password = "correct password" }
+    specify { user.authenticate("wrong password").should be_false }
+    specify { user.authenticate("correct password").should eq user }
+  end
+
+  context "method admin?" do
+    specify { FactoryGirl.build(:user, role: 1).should be_admin }
+    specify { FactoryGirl.build(:user, role: 0).should_not be_admin }
   end
 
   context "find_or_build_bet_for_match" do
@@ -36,12 +44,10 @@ describe User do
   end
 
   context "find_or_build_bet_for_matchday" do
-
     let(:user) { FactoryGirl.create(:user) }
     let(:match) { FactoryGirl.create(:match) }
     after { user.find_or_build_bets_for_matchday(match.matchday) }
     specify { User.any_instance.expects(:find_or_build_bet_for_match).with(match) }
-
   end
 
 

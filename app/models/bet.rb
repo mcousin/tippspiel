@@ -1,6 +1,9 @@
 class Bet < ActiveRecord::Base
   attr_accessible :match_id, :score_a, :score_b, :user_id, :match, :user
 
+  belongs_to :user
+  belongs_to :match
+
   validate :no_changes_after_match_start
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
@@ -8,8 +11,7 @@ class Bet < ActiveRecord::Base
   validates_presence_of :match
   validates_presence_of :user
 
-  belongs_to :user
-  belongs_to :match
+  delegate :matchday, to: :match
 
   def scores_string
     [score_a, score_b].map{|score| score ? score.to_s : "-"}.join(":")

@@ -2,161 +2,141 @@ require 'spec_helper'
 
 describe Matchday do
 
-  context "start" do
+  context "method start" do
 
-    it "should return the beginning of the first of its matches" do
-      matchday = FactoryGirl.create(:matchday)
-      match1 = FactoryGirl.create(:match, matchday: matchday, match_date: 1.day.ago)
-      match2 = FactoryGirl.create(:match, matchday: matchday, match_date: 1.day.from_now)
-      match3 = FactoryGirl.create(:match, matchday: matchday, match_date: 2.days.from_now)
+    subject { FactoryGirl.build(:matchday) }
 
-      matchday.start.should eq match1.match_date
+    context "should return nil if it has no matches" do
+      its(:start) { should be_nil }
     end
 
-    it "should return nil if it has no matches" do
-      FactoryGirl.create(:matchday).start.should be_nil
-    end
-
-    it "should compare matchdays by start" do
-      early_matchday = FactoryGirl.build(:matchday)
-      early_matchday.stubs(:start).returns(2.days.ago)
-
-      late_matchday = FactoryGirl.build(:matchday)
-      late_matchday.stubs(:start).returns(1.day.ago)
-
-      (early_matchday <=> late_matchday).should eq(-1)
-      [late_matchday, early_matchday].sort.should eq([early_matchday, late_matchday])
-    end
-
-    it "should regard a match as started once its start lies in the past" do
-      started_matchday = FactoryGirl.build(:matchday)
-      started_matchday.stubs(:start).returns(1.day.ago)
-      started_matchday.should have_started
-
-      future_matchday = FactoryGirl.build(:matchday)
-      future_matchday.stubs(:start).returns(1.day.from_now)
-      future_matchday.should_not have_started
+    context "returning the beginning of the first of its matches, if any" do
+      before { subject.matches = [         FactoryGirl.build(:match, match_date: 1.day.from_now),
+                                  @match = FactoryGirl.build(:match, match_date: 1.day.ago),
+                                           FactoryGirl.build(:match, match_date: 2.days.from_now)] }
+      its(:start) { should eq @match.match_date }
     end
 
   end
 
-  context "complete?" do
 
-    it "should return true if all of its matches have ended" do
-      matchday = FactoryGirl.create(:matchday)
-      match1 = FactoryGirl.create(:match, matchday: matchday, match_date: 1.day.ago, has_ended: true)
-      match2 = FactoryGirl.create(:match, matchday: matchday, match_date: 2.days.ago, has_ended: true)
+  context "comparing matchdays" do
+    let (:early_matchday) { FactoryGirl.build(:matchday) }
+    let (:late_matchday) { FactoryGirl.build(:matchday) }
 
-      matchday.should be_complete
+    before { early_matchday.stubs(:start).returns(2.days.ago) }
+    before { late_matchday.stubs(:start).returns(1.day.ago) }
+
+    specify { (early_matchday <=> late_matchday).should eq(-1) }
+    specify { [late_matchday, early_matchday].sort.should eq([early_matchday, late_matchday]) }
+  end
+
+  context "method has_started?" do
+
+    subject { FactoryGirl.build(:matchday) }
+
+    context "for a started match" do
+      before { subject.stubs(:start).returns(1.day.ago) }
+      it { should have_started }
     end
 
-    it "should return false if it has a match that has not ended yet" do
-      matchday = FactoryGirl.create(:matchday)
-      match1 = FactoryGirl.create(:match, matchday: matchday, match_date: 1.day.ago, has_ended: true)
-      match2 = FactoryGirl.create(:match, matchday: matchday, match_date: 1.day.from_now, has_ended: false)
-
-      matchday.should_not be_complete
+    context "for a future match" do
+      before { subject.stubs(:start).returns(1.day.from_now) }
+      it { should_not have_started }
     end
 
-    it "should return true if it has no matches" do
-      matchday = FactoryGirl.create(:matchday).should be_complete
+  end
+
+  context "method complete?" do
+
+    subject { FactoryGirl.build(:matchday) }
+
+    context "should return true if it has no matches" do
+      it { should be_complete }
+    end
+
+    context "all of its matches have ended" do
+      before { subject.matches = [FactoryGirl.build(:match, match_date: 1.day.ago, has_ended: true),
+                                  FactoryGirl.build(:match, match_date: 2.days.ago, has_ended: true)] }
+      it { should be_complete }
+    end
+
+    context "should return false if it has a match that has not ended yet" do
+      before { subject.matches = [FactoryGirl.build(:match, match_date: 1.day.ago, has_ended: true),
+                                  FactoryGirl.build(:match, match_date: 1.day.from_now, has_ended: false)] }
+      it { should_not be_complete }
     end
 
   end
 
   context "Matchday.next_to_bet" do
 
-    it "should return the matchday that contains the next match" do
-      matchday1 = FactoryGirl.create(:matchday)
-      match1 = FactoryGirl.create(:match, matchday: matchday1, match_date: 1.day.ago)
+    subject { Matchday.next_to_bet }
 
-      matchday2 = FactoryGirl.create(:matchday)
-      match2 = FactoryGirl.create(:match, matchday: matchday2, match_date: 1.day.from_now)
-
-      matchday3 = FactoryGirl.create(:matchday)
-      match3 = FactoryGirl.create(:match, matchday: matchday3, match_date: 2.days.from_now)
-
-      Matchday.next_to_bet.should eq matchday2
+    context "returning the matchday that contains the next match" do
+      before {          FactoryGirl.create(:match, match_date: 1.day.ago) }
+      before { @match = FactoryGirl.create(:match, match_date: 1.day.from_now) }
+      before {          FactoryGirl.create(:match, match_date: 2.days.from_now) }
+      it { should eq @match.matchday }
     end
 
-    it "should return nil if all matches have started" do
-      matchday1 = FactoryGirl.create(:matchday)
-      match1 = FactoryGirl.create(:match, matchday: matchday1, match_date: 1.day.ago)
-
-      Matchday.next_to_bet.should be_nil
+    context "Match.next returns nil" do
+      before { Match.stubs(:next).returns(nil) }
+      it { should be_nil }
     end
 
   end
 
+  context "methods last_complete and first_incomplete" do
 
+    before { @match1 = FactoryGirl.create(:match, match_date: 3.days.ago, has_ended: true) }
+    before { @match2 = FactoryGirl.create(:match, match_date: 2.day.ago, has_ended: false) }
+    before { @match3 = FactoryGirl.create(:match, match_date: 1.days.ago, has_ended: true) }
+    before { @match4 = FactoryGirl.create(:match, match_date: 1.day.from_now, has_ended: false) }
 
+    specify { Matchday.last_complete.should eq @match3.matchday }
+    specify { Matchday.first_incomplete.should eq @match2.matchday }
 
-  context "Matchday.last_complete" do
-
-    it "should return the most recent matchday that is complete" do
-      matchday1 = FactoryGirl.create(:matchday)
-      match1 = FactoryGirl.create(:match, matchday: matchday1, match_date: 2.days.ago, has_ended: true)
-
-      matchday2 = FactoryGirl.create(:matchday)
-      match2 = FactoryGirl.create(:match, matchday: matchday2, match_date: 1.day.ago, has_ended: false)
-
-      matchday3 = FactoryGirl.create(:matchday)
-      match3 = FactoryGirl.create(:match, matchday: matchday3, match_date: 3.days.ago, has_ended: true)
-
-      Matchday.last_complete.should eq matchday1
+    context "no complete matchday" do
+      before { Matchday.any_instance.stubs(:complete?).returns(false) }
+      specify { Matchday.last_complete.should be_nil }
+      specify { Matchday.first_incomplete.should eq @match1.matchday }
     end
 
-    it "should return nil if there is no complete matchday" do
-      Matchday.last_complete.should be_nil
-    end
-
-  end
-
-  context "Matchday.first_incomplete" do
-
-    it "should return the most recent matchday that is incomplete" do
-      matchday1 = FactoryGirl.create(:matchday)
-      match1 = FactoryGirl.create(:match, matchday: matchday1, match_date: 3.days.ago, has_ended: true)
-
-      matchday2 = FactoryGirl.create(:matchday)
-      match2 = FactoryGirl.create(:match, matchday: matchday2, match_date: 2.days.ago, has_ended: false)
-
-      matchday3 = FactoryGirl.create(:matchday)
-      match3 = FactoryGirl.create(:match, matchday: matchday3, match_date: 1.day.ago, has_ended: true)
-
-      Matchday.first_incomplete.should eq matchday2
-    end
-
-    it "should return nil if there is no complete matchday" do
-      Matchday.first_incomplete.should be_nil
+    context "no incomplete matchday" do
+      before { Matchday.any_instance.stubs(:complete?).returns(true) }
+      specify { Matchday.last_complete.should eq @match4.matchday }
+      specify { Matchday.first_incomplete.should be_nil }
     end
 
   end
+
 
   context "Matchday.current" do
 
+    subject { Matchday.current }
     let(:mocked_matchday) { mock("matchday") }
 
-    it "should return the matchday that next to bet, if any" do
-      Matchday.expects(:next_to_bet).returns(mocked_matchday)
-      Matchday.current.should eq mocked_matchday
+    context "should return the matchday that next to bet, if any" do
+      before { Matchday.stubs(:next_to_bet).returns(mocked_matchday) }
+      it { should eq mocked_matchday }
     end
 
-    it "should return the first incomplete matchday if there are no matches to bet" do
-      Matchday.expects(:next_to_bet).returns(nil)
-      Matchday.expects(:first_incomplete).returns(mocked_matchday)
-      Matchday.current.should eq mocked_matchday
+    context "should return the first incomplete matchday if there are no matches to bet" do
+      before { Matchday.stubs(:next_to_bet).returns(nil) }
+      before { Matchday.stubs(:first_incomplete).returns(mocked_matchday) }
+      it { should eq mocked_matchday }
     end
 
-    it "should return the last complete matchday if there are no matches to bet and no incomplete matchdays" do
-      Matchday.expects(:next_to_bet).returns(nil)
-      Matchday.expects(:first_incomplete).returns(nil)
-      Matchday.expects(:last_complete).returns(mocked_matchday)
-      Matchday.current.should eq mocked_matchday
+    context "should return the last complete matchday if there are no matches to bet and no incomplete matchdays" do
+      before { Matchday.stubs(:next_to_bet).returns(nil) }
+      before { Matchday.stubs(:first_incomplete).returns(nil) }
+      before { Matchday.stubs(:last_complete).returns(mocked_matchday) }
+      it { should eq mocked_matchday }
     end
 
-    it "should return nil if no matchdays exist" do
-      Matchday.current.should be_nil
+    context "should return nil if no matchdays exist" do
+      it { should be_nil }
     end
 
   end
