@@ -4,6 +4,7 @@ class BetsController < ApplicationController
   def index
     @matchday = Matchday.find(params[:matchday_id])
     @bets = current_user.find_or_build_bets_for_matchday(@matchday)
+    @ranking = Ranking.new(User.all, :matchday => @matchday)
   end
 
   # PUT matchdays/:matchday_id/bets

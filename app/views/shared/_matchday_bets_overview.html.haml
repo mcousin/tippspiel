@@ -7,9 +7,9 @@
         %th= "#{match} (#{match.scores_string})"
       %th matchday points
       %th total points
-    - User.ranking(:matchday => @matchday).sort_by {|user, rank| rank}.each do |user, rank|
+    - @ranking.each do |element|
       %tr
-        %td= user.name
+        %td= element.user.name
         - started_matches.each do |match|
           - bet = user.bets.find_by_match_id(match.id)
           %td= "#{bet ? bet.scores_string : "-:-"} (#{bet ? bet.points : 0} pts)"

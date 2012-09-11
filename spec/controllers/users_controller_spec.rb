@@ -16,7 +16,7 @@ describe UsersController do
     context "preparing the view" do
       let(:ranking) { mock("ranking") }
       let(:matchday) { FactoryGirl.build(:matchday) }
-      before { User.any_instance.stubs(:ranking_fragment).with(1).returns(ranking) }
+      before { Ranking.any_instance.stubs(:fragment_for).with(current_user).returns(ranking) }
       before { Matchday.stubs(:current).returns(matchday) }
       before { get(:home) }
       it { should assign_to(:ranking).with(ranking) }
@@ -36,7 +36,7 @@ describe UsersController do
 
     describe "preparing the view" do
       let(:ranking) { mock("ranking") }
-      before { User.stubs(:ranking).returns(ranking) }
+      before { Ranking.stubs(:new).returns(ranking) }
       before { get(:index) }
       it { should assign_to(:ranking).with(ranking) }
     end

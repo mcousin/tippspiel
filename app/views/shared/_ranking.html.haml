@@ -4,24 +4,24 @@
     %th Name
     %th Total points
   - expected_rank = 1
-  - @ranking.sort_by {|user, rank| rank}.each do |user, rank|
-    - if rank > expected_rank
+  - @ranking.each do |element|
+    - if element.rank > expected_rank
       %tr
         %td ...
         %td ...
         %td ...
-      - expected_rank = rank
+      - expected_rank = element.rank
     - expected_rank += 1
-    - if user.id == @current_user.id
+    - if element.user.id == @current_user.id
       %tr.highlighted
-        %td= rank
-        %td= link_to user.name, user
-        %td= user.total_points
+        %td= element.rank
+        %td= link_to element.user.name, element.user
+        %td= element.user.total_points
     - else
       %tr
-        %td= rank
-        %td= link_to user.name, user
-        %td= user.total_points
+        %td= element.rank
+        %td= link_to element.user.name, element.user
+        %td= element.user.total_points
 
 
 

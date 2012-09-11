@@ -7,6 +7,9 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
   before_filter :set_time_zone_and_format
 
+  def current_user
+    @current_user ||= User.find_by_auth_token!(cookies[:auth_token]) if cookies[:auth_token]
+  end
 
   def authenticate_user!
     unless current_user
@@ -14,8 +17,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def current_user
-    @current_user ||= User.find_by_auth_token!(cookies[:auth_token]) if cookies[:auth_token]
+  def authenticate_admin!
+    unless current_user.admin?
+      render_forbidden
+    end
   end
 
   def login!(user, options = {})
@@ -28,12 +33,6 @@ class ApplicationController < ActionController::Base
 
   def logout!
     cookies.delete('auth_token')
-  end
-
-  def authenticate_admin!
-    unless current_user.admin?
-      render_forbidden
-    end
   end
 
   def set_time_zone_and_format

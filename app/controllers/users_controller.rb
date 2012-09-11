@@ -6,15 +6,9 @@ class UsersController < ApplicationController
 
   # GET /home
   def home
-    @ranking = current_user.ranking_fragment(1)
-
+    @ranking = Ranking.new(User.all).fragment_for(current_user)
     @matchday = Matchday.current
-    if @matchday
-      @bets = @matchday.matches.map do |match|
-        current_user.bets.find_by_match_id(match.id) || current_user.bets.build(:match => match)
-      end
-    end
-
+    @bets = current_user.find_or_build_bets_for_matchday(@matchday) if @matchday
   end
 
 
@@ -26,7 +20,7 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @ranking = User.ranking
+    @ranking = Ranking.new(User.all)
   end
 
 
