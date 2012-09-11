@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
 
   def set_time_zone_and_format
     Time.zone = "Berlin"
-    Time::DATE_FORMATS[:default] = "%Y-%m-%d %H:%M"
+    Time::DATE_FORMATS[:default] = "%d.%m. - %H:%M"
   end
 
   def render_forbidden

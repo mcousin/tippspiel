@@ -21,7 +21,7 @@
         %th{:style=>'text-align: center'} Bet
       - @bets.select{|bet| not bet.match.has_started?}.each do |bet|
         %tr
-          %td= bet.match.match_date.strftime("%d.%m - %H:%M")
+          %td= bet.match.match_date
           %td{:style=>'text-align: right'}= bet.match.team_a
           %td{:style=>'text-align: center'} :
           %td= bet.match.team_b
