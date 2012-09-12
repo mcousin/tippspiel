@@ -6,7 +6,7 @@ class Matchday < ActiveRecord::Base
   validates :description, presence: true
 
   def start
-    self.matches.map{|match| match.match_date}.min || DateTime.new(2000)
+    self.matches.map{|match| match.match_date}.min || DateTime.new(2222)
   end
 
   def has_started?

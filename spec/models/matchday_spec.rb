@@ -6,8 +6,8 @@ describe Matchday do
 
     subject { FactoryGirl.build(:matchday) }
 
-    context "should return nil if it has no matches" do
-      its(:start) { should be_nil }
+    context "should have a default start if it has no matches" do
+      its(:start) { should eq DateTime.new(2222)}
     end
 
     context "returning the beginning of the first of its matches, if any" do

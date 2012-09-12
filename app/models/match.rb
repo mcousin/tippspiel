@@ -40,7 +40,7 @@ class Match < ActiveRecord::Base
 
   # first match that is not started (or last one, if all are started)
   def self.next
-    self.all.find{|match| not match.has_started?}
+    find(:first, conditions: ["match_date > ?", DateTime.now])
   end
 
   def self.build_from_csv(csv_string, options = {})
