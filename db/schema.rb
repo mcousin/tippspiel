@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120907142831) do
+ActiveRecord::Schema.define(:version => 20120913053618) do
 
   create_table "bets", :force => true do |t|
     t.integer  "match_id"
@@ -44,10 +44,12 @@ ActiveRecord::Schema.define(:version => 20120907142831) do
     t.string   "name"
     t.string   "email"
     t.string   "password_digest"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.integer  "role"
     t.string   "auth_token"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
 
 end

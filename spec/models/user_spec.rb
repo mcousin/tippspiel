@@ -99,4 +99,24 @@ describe User do
     end
 
   end
+
+  context "password reset" do
+
+    subject { FactoryGirl.create(:user) }
+
+    context "setting password reset token" do
+      before { subject.send_password_reset }
+      its(:password_reset_token) { should_not be_nil }
+      its(:password_reset_sent_at) { should be > 1.second.ago }
+    end
+
+    context "sending email" do
+      let(:message) { mock("message")}
+      before { UserMailer.stubs(:password_reset).with(subject).returns(message) }
+      after { subject.send_password_reset }
+      specify { message.expects(:deliver) }
+    end
+
+  end
+
 end
