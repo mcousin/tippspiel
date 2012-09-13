@@ -1,6 +1,8 @@
 Tippspiel::Application.routes.draw do
 
 
+  get "password_resets/new"
+
   # routes for sessions
   resource :session, :only => [:create]
   match 'login' => 'sessions#new'
@@ -21,6 +23,9 @@ Tippspiel::Application.routes.draw do
   match 'signup'  => 'users#new'
   match 'profile' => 'users#update', :via => :put
   match 'profile' => 'users#edit'
+
+  # routes for password resets
+  resources :password_resets, :except => [:show, :index, :destroy]
 
 
   # root route
