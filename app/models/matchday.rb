@@ -21,6 +21,10 @@ class Matchday < ActiveRecord::Base
     not self.matches.any?{|match| not match.has_ended}
   end
 
+  def running?
+    not complete? and has_started?
+  end
+
   def self.all_complete_matchdays_before(time)
     Matchday.all.select{|matchday| matchday.complete? && matchday.start < time}
   end
@@ -35,6 +39,10 @@ class Matchday < ActiveRecord::Base
 
   def self.first_incomplete
     self.select{|matchday| not matchday.complete?}.sort.first
+  end
+
+  def self.last_running
+    self.select{|matchday| matchday.running?}.sort.last
   end
 
   def self.current

@@ -54,32 +54,17 @@ class User < ActiveRecord::Base
     awards = []
 
     ranking = Ranking.new(User.all)
-    case ranking.rank(self)
-    when 1
-      awards << ["badge-number-one", "You're", "N1!"]
-    when ranking.map{|element| element.rank}.max
-      awards << ["badge-number-last", "Oh, you're", "LAST!"]
-    end
+    awards << :leader if ranking.rank(self) == 1
+    awards << :last if ranking.rank(self) == ranking.ranks.max
 
-    first_incomplete_matchday = Matchday.first_incomplete
-    if first_incomplete_matchday && first_incomplete_matchday.has_started?
-      matchday = first_incomplete_matchday
-    else
-      matchday = Matchday.last_complete
-    end
+    matchday = Matchday.last_running || Matchday.last_complete
 
     if matchday
-      ranking = Ranking.new(User.all, :matchday => matchday)
-      case ranking.rank(self)
-      when 1
-        awards << ["badge-match-day-winner", "Todays", "BEST!"]
-      end
+      matchday_ranking = Ranking.new(User.all, :matchday => matchday)
+      awards << :matchday_leader if matchday_ranking.rank(self) == 1
     end
 
-    if awards.empty?
-      awards << ["badge-none", "No award", "so far!"]
-    end
     awards
-
   end
+
 end

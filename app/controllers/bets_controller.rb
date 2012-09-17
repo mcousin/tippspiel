@@ -2,6 +2,7 @@ class BetsController < ApplicationController
 
   # GET matchdays/:matchday_id/bets
   def index
+    @matchdays = Matchday.all
     @matchday = Matchday.find(params[:matchday_id])
     @bets = current_user.find_or_build_bets_for_matchday(@matchday)
     @ranking = Ranking.new(User.all, :matchday => @matchday)

@@ -1,6 +1,7 @@
 %h1 Listing matches
 %table.table
   %tr
+    %th Matchday
     %th Home
     %th Away
     %th Result
@@ -9,6 +10,7 @@
     %th
   - @matches.each do |match|
     %tr
+      %td= match.matchday.description
       %td= match.team_a
       %td= match.team_b
       %td= match.scores_string
