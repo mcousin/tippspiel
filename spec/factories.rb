@@ -7,6 +7,8 @@ FactoryGirl.define do
 
   factory :match do
     matchday
+    home_team
+    away_team
     match_date  1.day.from_now
     team_a      "BVB"
     team_b      "S04"
@@ -26,12 +28,21 @@ FactoryGirl.define do
     match
   end
 
+
+  factory :team, :aliases => [:home_team, :away_team] do
+    name        { FactoryGirl.generate(:team_name) }
+  end
+
   sequence :user_email do |n|
     "email#{n}@foo.com"
   end
 
   sequence :user_name do |n|
     "User #{n}"
+  end
+
+  sequence :team_name do |n|
+    "Team #{n}"
   end
 
 

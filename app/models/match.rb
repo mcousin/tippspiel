@@ -4,6 +4,8 @@ class Match < ActiveRecord::Base
   attr_accessible :match_date, :score_a, :score_b, :team_a, :team_b, :bets, :matchday, :matchday_id, :has_ended
 
   belongs_to :matchday
+  belongs_to :home_team, class_name: Team
+  belongs_to :away_team, class_name: Team
   has_many :bets, dependent: :destroy
 
   validates :team_a, presence: true

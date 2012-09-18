@@ -5,6 +5,8 @@ describe Match do
   context "associations" do
     it { should belong_to(:matchday) }
     it { should have_many(:bets).dependent(:destroy) }
+    it { should belong_to(:home_team).class_name(Team) }
+    it { should belong_to(:away_team).class_name(Team) }
   end
 
   context "validations" do
