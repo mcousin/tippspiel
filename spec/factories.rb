@@ -10,8 +10,6 @@ FactoryGirl.define do
     home_team
     away_team
     match_date  1.day.from_now
-    team_a      "BVB"
-    team_b      "S04"
   end
 
   factory :user do

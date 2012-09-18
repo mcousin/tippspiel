@@ -1,15 +1,15 @@
 require 'csv'
 
 class Match < ActiveRecord::Base
-  attr_accessible :match_date, :score_a, :score_b, :team_a, :team_b, :bets, :matchday, :matchday_id, :has_ended
+  attr_accessible :match_date, :score_a, :score_b, :home_team, :away_team, :home_team_id, :away_team_id, :bets, :matchday, :matchday_id, :has_ended
 
   belongs_to :matchday
   belongs_to :home_team, class_name: Team
   belongs_to :away_team, class_name: Team
   has_many :bets, dependent: :destroy
 
-  validates :team_a, presence: true
-  validates :team_b, presence: true
+  validates :home_team, presence: true
+  validates :away_team, presence: true
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
   validates :match_date, presence: true
@@ -29,7 +29,7 @@ class Match < ActiveRecord::Base
 
 
   def to_s
-    "#{team_a} vs #{team_b}"
+    "#{home_team.name} vs #{away_team.name}"
   end
 
   def has_started?

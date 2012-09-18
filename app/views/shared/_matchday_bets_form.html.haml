@@ -22,9 +22,9 @@
       - @bets.select{|bet| not bet.match.has_started?}.each do |bet|
         %tr
           %td= bet.match.match_date
-          %td{:style=>'text-align: right'}= bet.match.team_a
+          %td{:style=>'text-align: right'}= bet.match.home_team.name
           %td{:style=>'text-align: center'} :
-          %td= bet.match.team_b
+          %td= bet.match.away_team.name
           %td{:class=>'nopadding'}
             = fields_for :bets, bet, index: (bet.match_id) do |bet_form|
               .field.nomargin

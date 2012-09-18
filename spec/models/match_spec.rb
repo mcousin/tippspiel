@@ -10,8 +10,8 @@ describe Match do
   end
 
   context "validations" do
-    it { should validate_presence_of(:team_a) }
-    it { should validate_presence_of(:team_b) }
+    it { should validate_presence_of(:home_team) }
+    it { should validate_presence_of(:away_team) }
     it { should validate_presence_of(:match_date) }
     it { should validate_presence_of(:matchday)}
     it { should_not validate_presence_of(:score_a) }
@@ -31,15 +31,17 @@ describe Match do
   end
 
   context "method to_s" do
-    subject { FactoryGirl.build(:match, team_a: "A", team_b: "B") }
-    its(:to_s) { should eq "A vs B" }
+    let(:match) { FactoryGirl.build(:match) }
+    subject { match }
+    its(:to_s) { should eq "#{match.home_team.name} vs #{match.away_team.name}" }
   end
 
   context "CSV import" do
-    let(:csv) { File.read(Rails.root.join('spec/test.csv')) }
-    subject { Match.build_from_csv(csv, :col_sep => ";", :row_sep => "\n") }
-    its(:count) { should eq 54 }
-    its(:first) { should be_a(Match) }
+    pending("will be removed")
+    # let(:csv) { File.read(Rails.root.join('spec/test.csv')) }
+    # subject { Match.build_from_csv(csv, :col_sep => ";", :row_sep => "\n") }
+    # its(:count) { should eq 54 }
+    # its(:first) { should be_a(Match) }
   end
 
   context "method has_started?" do
