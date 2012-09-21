@@ -10,19 +10,78 @@ describe OpenLigaDbLeague do
     let(:oldb_league) { FactoryGirl.create(:oldb_league, oldb_league: "bl1", oldb_season: "2012") }
 
     context "import_matches" do
-      context "fail if teams are not aligned"
-      context "fail if matchdays are not aligned"
-      context "create match only if missing" do
-        context "if match exists"
-        context "if match does not exists"
+      before { OpenLigaDbLeague.any_instance.stubs(:structs_for).with(:matches).returns(
+              [ {points_team1: "2", points_team2: "1", match_date_time_utc: DateTime.new(2012),
+                 name_team1: "Borussia Dortmund", name_team2: "Werder Bremen", group_name: "Spieltag 1"} ] ) }
+
+      context "teams are not aligned" do
+        before { OpenLigaDbLeague.any_instance.stubs(:teams_aligned?).returns(false) }
+        before { OpenLigaDbLeague.any_instance.stubs(:matchdays_aligned?).returns(true) }
+        specify { expect { oldb_league.import_matches }.to change(Team, :count).by(0) }
+        specify { expect { oldb_league.import_matches }.to change(Matchday, :count).by(0) }
+        specify { expect { oldb_league.import_matches }.to change(Match, :count).by(0) }
       end
-      context "create team only if missing" do
-        context "if team exists"
-        context "if team does not exist"
+      context "matchdays are not aligned" do
+        before { OpenLigaDbLeague.any_instance.stubs(:teams_aligned?).returns(true) }
+        before { OpenLigaDbLeague.any_instance.stubs(:matchdays_aligned?).returns(false) }
+        specify { expect { oldb_league.import_matches }.to change(Team, :count).by(0) }
+        specify { expect { oldb_league.import_matches }.to change(Matchday, :count).by(0) }
+        specify { expect { oldb_league.import_matches }.to change(Match, :count).by(0) }
       end
-      context "create matchday only if missing" do
-        context "if matchday exists"
-        context "if matchday does not exist"
+      context "teams and matchdays are not aligned" do
+        before { OpenLigaDbLeague.any_instance.stubs(:teams_aligned?).returns(false) }
+        before { OpenLigaDbLeague.any_instance.stubs(:matchdays_aligned?).returns(false) }
+        specify { expect { oldb_league.import_matches }.to change(Team, :count).by(0) }
+        specify { expect { oldb_league.import_matches }.to change(Matchday, :count).by(0) }
+        specify { expect { oldb_league.import_matches }.to change(Match, :count).by(0) }
+      end
+
+      context "teams and matchdays are aligned" do
+        before { OpenLigaDbLeague.any_instance.stubs(:teams_aligned?).returns(true) }
+        before { OpenLigaDbLeague.any_instance.stubs(:matchdays_aligned?).returns(true) }
+
+        context "create match only if missing" do
+          let(:matchday) { FactoryGirl.create(:matchday, league: oldb_league.league, description: "Spieltag 1") }
+          let(:home_team) { FactoryGirl.create(:team, name: "Borussia Dortmund") }
+          let(:away_team) { FactoryGirl.create(:team, name: "Werder Bremen") }
+          before do
+            oldb_league.league.matchdays << matchday
+            oldb_league.league.teams << home_team << away_team
+            oldb_league.league.save!
+          end
+
+          context "if match exists" do
+            before { FactoryGirl.create(:match, matchday: matchday, home_team: home_team, away_team: away_team) }
+            specify { expect { oldb_league.import_matches }.to change(Match, :count).by(0) }
+          end
+          context "if match does not exists" do
+            specify { expect { oldb_league.import_matches }.to change(Match, :count).by(1) }
+          end
+        end
+
+        context "create teams only if missing" do
+          context "if teams exist" do
+            before do
+              oldb_league.league.teams << FactoryGirl.create(:team, name: "Borussia Dortmund")
+              oldb_league.league.teams << FactoryGirl.create(:team, name: "Werder Bremen")
+              oldb_league.league.save!
+            end
+          specify { expect { oldb_league.import_matches }.to change(Team, :count).by(0) }
+          end
+          context "if teams do not exist" do
+            specify { expect { oldb_league.import_matches }.to change(Team, :count).by(2) }
+          end
+        end
+
+        context "create matchday only if missing" do
+          context "if matchday exists" do
+            before { FactoryGirl.create(:matchday, league: oldb_league.league, description: "Spieltag 1") }
+            specify { expect { oldb_league.import_matches }.to change(Matchday, :count).by(0) }
+          end
+          context "if matchday does not exist" do
+            specify { expect { oldb_league.import_matches }.to change(Matchday, :count).by(1) }
+          end
+        end
       end
     end
 
@@ -65,6 +124,10 @@ describe OpenLigaDbLeague do
 
     context "private methods" do
 
+      context "teams_aligned?"
+      context "matchdays_aligned?"
+
+
       context "structs_for" do
         context "teams" do
           subject { oldb_league.send(:structs_for, :teams) }
@@ -80,6 +143,7 @@ describe OpenLigaDbLeague do
           specify { subject.first[:points_team2].should be_a(String) }
           specify { subject.first[:group_name].should be_a(String) }
           specify { subject.first[:match_date_time_utc].should be_a(DateTime) }
+          specify { [true, false].should include(subject.first[:match_is_finished]) }
         end
         context "matchdays" do
           subject { oldb_league.send(:structs_for, :matchdays) }
@@ -87,6 +151,7 @@ describe OpenLigaDbLeague do
           specify { subject.first[:group_name].should be_a(String) }
         end
       end
+
 
     end
 

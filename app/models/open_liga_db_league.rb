@@ -15,10 +15,11 @@ class OpenLigaDbLeague < ActiveRecord::Base
       return
     end
     structs_for(:matches).each do |struct|
-      home_team = league.teams.find_or_create_by_name(struct[:name_team1])
-      away_team = league.teams.find_or_create_by_name(struct[:name_team2])
+      league.reload
+      home_team = league.teams.find_by_name(struct[:name_team1]) || league.teams.create(name: struct[:name_team1])
+      away_team = league.teams.find_by_name(struct[:name_team2]) || league.teams.create(name: struct[:name_team2])
       matchday = league.matchdays.find_or_create_by_description(struct[:group_name])
-      match = matchday.matches.find_or_create_by_home_team_and_away_team(home_team: home_team, away_team: away_team)
+      match = matchday.matches.find_or_create_by_home_team_id_and_away_team_id(home_team.id, away_team.id)
       update_match(match, struct)
     end
   end
@@ -77,7 +78,8 @@ class OpenLigaDbLeague < ActiveRecord::Base
     def update_match(match, struct)
       match.assign_attributes(score_a: convert_score(struct[:points_team1]),
                               score_b: convert_score(struct[:points_team2]),
-                              match_date: struct[:match_date_time_utc] )
+                              match_date: struct[:match_date_time_utc],
+                              has_ended: struct[:match_is_finished] )
       if match.changed?
         if match.save
           Rails.logger.info("Match '#{match}' successfully updated.")
