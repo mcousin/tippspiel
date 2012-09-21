@@ -2,6 +2,7 @@ class Matchday < ActiveRecord::Base
   attr_accessible :matches, :description
 
   has_many :matches, dependent: :destroy
+  belongs_to :league
 
   validates :description, presence: true
 

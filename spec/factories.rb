@@ -27,9 +27,18 @@ FactoryGirl.define do
   end
 
 
-  factory :team, :aliases => [:home_team, :away_team] do
+  factory :team, aliases: [:home_team, :away_team] do
     name        { FactoryGirl.generate(:team_name) }
   end
+
+  factory :league do
+    description "Bundesliga 2012"
+  end
+
+  factory :oldb_league, class: OpenLigaDbLeague do
+    league
+  end
+
 
   sequence :user_email do |n|
     "email#{n}@foo.com"

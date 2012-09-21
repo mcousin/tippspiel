@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120918165134) do
+ActiveRecord::Schema.define(:version => 20120918190059) do
 
   create_table "bets", :force => true do |t|
     t.integer  "match_id"
@@ -26,6 +26,11 @@ ActiveRecord::Schema.define(:version => 20120918165134) do
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "leagues_teams", :id => false, :force => true do |t|
+    t.integer "league_id"
+    t.integer "team_id"
   end
 
   create_table "matchdays", :force => true do |t|
@@ -47,6 +52,14 @@ ActiveRecord::Schema.define(:version => 20120918165134) do
     t.boolean  "has_ended"
     t.integer  "home_team_id"
     t.integer  "away_team_id"
+  end
+
+  create_table "open_liga_db_leagues", :force => true do |t|
+    t.string   "oldb_league"
+    t.string   "oldb_season"
+    t.string   "league_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "teams", :force => true do |t|

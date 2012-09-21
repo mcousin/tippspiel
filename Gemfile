@@ -8,6 +8,9 @@ gem 'haml-rails'
 gem 'hpricot'
 gem 'ruby_parser'
 
+gem 'savon' # soap client
+gem 'fuzzy-string-match_pure'
+
 group :development, :test do
   gem 'factory_girl_rails'
   gem 'debugger'

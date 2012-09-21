@@ -2,6 +2,12 @@ require 'spec_helper'
 
 describe Matchday do
 
+  context "associations" do
+    it { should belong_to(:league) }
+    it { should have_many(:matches).dependent(:destroy) }
+  end
+
+
   context "method start" do
 
     subject { FactoryGirl.build(:matchday) }

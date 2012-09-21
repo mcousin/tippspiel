@@ -58,7 +58,7 @@ class Match < ActiveRecord::Base
 
   def match_has_not_ended_before_its_start
     if has_ended and not has_started?
-      errors.add(:has_ended, "can't true if match has not even started.")
+      errors.add(:has_ended, "can't be true if match has not even started.")
     end
   end
 end
