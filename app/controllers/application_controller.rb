@@ -44,4 +44,14 @@ class ApplicationController < ActionController::Base
     render :file => "#{Rails.root}/public/403", :status => :forbidden, :formats => [:html]
   end
 
+  # needs to be refactored as soon as we have something like a "current_league"
+  def update_matches
+    return if Rails.env.test?
+    league = League.first
+    if league.matches.any? {|match| match.has_started? and not match.has_ended}
+      league.open_liga_db_league.refresh!
+      league.open_liga_db_league.update_matches
+    end
+  end
+
 end
