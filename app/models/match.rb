@@ -49,10 +49,10 @@ class Match < ActiveRecord::Base
     csv = CSV.new(csv_string, options)
 
     matches = []
-    csv.each do |row|
-      attributes = {match_date: row.first, team_a: row.second, team_b: row.third}
-      matches << Match.new(attributes)
-    end
+    # csv.each do |row|
+    #   attributes = {match_date: row.first, team_a: row.second, team_b: row.third}
+    #   matches << Match.new(attributes)
+    # end
     matches
   end
 

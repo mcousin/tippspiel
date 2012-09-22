@@ -44,4 +44,11 @@ class ApplicationController < ActionController::Base
     render :file => "#{Rails.root}/public/403", :status => :forbidden, :formats => [:html]
   end
 
+  # needs to be refactored as soon as we have something like a "current_league"
+  def update_matches
+    league = League.first
+    league.open_liga_db_league.refresh!
+    league.open_liga_db_league.update_matches
+  end
+
 end

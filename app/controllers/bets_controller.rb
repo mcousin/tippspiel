@@ -1,5 +1,7 @@
 class BetsController < ApplicationController
 
+  before_filter :update_matches, :only => [:index]
+
   # GET matchdays/:matchday_id/bets
   def index
     @matchdays = Matchday.all

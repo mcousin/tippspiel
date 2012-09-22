@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   skip_before_filter :authenticate_user!,  :only => [:new, :create]
   before_filter :authenticate_admin!,      :only => [:destroy]
+  before_filter :update_matches,           :only => [:home, :index]
 
 
   # GET /home

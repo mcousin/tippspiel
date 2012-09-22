@@ -36,6 +36,9 @@ class OpenLigaDbLeague < ActiveRecord::Base
     end
   end
 
+  def refresh!
+    refresh_structs_for :matches
+  end
 
 
 
