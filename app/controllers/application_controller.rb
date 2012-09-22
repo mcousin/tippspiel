@@ -48,9 +48,10 @@ class ApplicationController < ActionController::Base
   def update_matches
     return if Rails.env.test?
     league = League.first
+    open_liga_db_league = OpenLigaDbLeague.first # "league.open_liga_db_league" produces weird error in production env
     if league.matches.any? {|match| match.has_started? and not match.has_ended}
-      league.open_liga_db_league.refresh!
-      league.open_liga_db_league.update_matches
+      open_liga_db_league.refresh!
+      open_liga_db_league.update_matches
     end
   end
 
