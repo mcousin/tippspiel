@@ -3,12 +3,14 @@
     = link_to matchday.description + " / ", matchday_bets_path(matchday) 
 
 - if @matchday
-  .wspace
-  %h1= @matchday.description
-  .wspace
-  %h2 Your bets
-  .wspace
-  = render :partial => "shared/matchday_bets_form"
+  .row
+    .span7
+      .wspace
+      %h1= @matchday.description
+      .wspace
+      = render :partial => "shared/matchday_bets_form"
+    .span5
+      .wspace
   .wspace
   .wspace
   %h2 Bet overview
