@@ -20,6 +20,9 @@ Tippspiel::Application.routes.draw do
   # routes for teams
   resources :teams
 
+  # routes for leagues
+  resources :leagues
+
   # routes for users
   resources :users, :except => [:edit, :new, :update]
   match 'home'    => 'users#home'
