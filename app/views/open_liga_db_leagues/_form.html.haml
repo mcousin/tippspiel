@@ -1,0 +1,22 @@
+= form_for(@open_liga_db_league) do |f|
+  - if @open_liga_db_league.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@open_liga_db_league.errors.count, "error")
+        prohibited this open_liga_db_league from being saved:
+      %ul
+        - @open_liga_db_league.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = f.label "League"
+    = f.collection_select :league_id, League.all, :id, :description
+  .field
+    = f.label :oldb_league
+    %br/
+    = f.text_field :oldb_league
+  .field
+    = f.label :oldb_season
+    %br/
+    = f.text_field :oldb_season
+  .actions
+    = f.submit

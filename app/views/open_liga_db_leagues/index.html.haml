@@ -1,0 +1,15 @@
+%h1 Listing open_liga_db_leagues
+%table.table
+  %tr
+    %th League Shortcut
+    %th Season
+  - @open_liga_db_leagues.each do |open_liga_db_league|
+    %tr
+      %td= open_liga_db_league.oldb_league
+      %td= open_liga_db_league.oldb_season
+      %td
+        = link_to 'Show', open_liga_db_league, :class => 'btn btn-mini'
+        = link_to 'Edit', edit_open_liga_db_league_path(open_liga_db_league), :class => 'btn btn-mini'
+        = link_to 'Destroy', open_liga_db_league, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'
+%br/
+= link_to 'New Matchday', new_open_liga_db_league_path, :class => 'btn btn-mini'

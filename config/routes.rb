@@ -23,6 +23,9 @@ Tippspiel::Application.routes.draw do
   # routes for leagues
   resources :leagues
 
+  # routes for open_liga_db_leagues
+  resources :open_liga_db_leagues
+
   # routes for users
   resources :users, :except => [:edit, :new, :update]
   match 'home'    => 'users#home'
