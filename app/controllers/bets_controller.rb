@@ -1,33 +1,27 @@
 class BetsController < ApplicationController
-  
+
+  before_filter :update_matches, :only => [:index]
+
   # GET matchdays/:matchday_id/bets
   def index
-    raise "NOT YET IMPLEMENTED!"
-  end
-  
-  # GET matchdays/:matchday_id/bets/edit
-  def edit
+    @matchdays = Matchday.all
     @matchday = Matchday.find(params[:matchday_id])
-    @bets = @matchday.matches.map do |match|
-      current_user.bets.find_by_match_id(match.id) || current_user.bets.build(match: match)
-    end
+    @bets = current_user.find_or_build_bets_for_matchday(@matchday)
+    @ranking = Ranking.new(User.all, :matchday => @matchday)
   end
-  
+
   # PUT matchdays/:matchday_id/bets
   def update
-    @bets = []
-    if params[:bets]
-      params[:bets].each do |match_id, bet_attributes|
-        bet = current_user.bets.find_by_match_id(match_id) || current_user.bets.build(match_id: match_id)
-        bet.update_attributes(bet_attributes)
-        @bets << bet
-      end
+    @bets = (params[:bets] || {}).map do |match_id, bet_attributes|
+      bet = current_user.find_or_build_bet_for_match(Match.find_by_id(match_id))
+      bet.update_attributes(bet_attributes)
+      bet
     end
-    
+
     @matchday = Matchday.find(params[:matchday_id])
     if @bets.any?{|bet| bet.errors.any?}
-      render "bets/edit"
-    else 
+      render action: "index"
+    else
       redirect_to :back, notice: 'Your bets were successfully updated.'
     end
   end

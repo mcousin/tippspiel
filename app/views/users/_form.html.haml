@@ -1,4 +1,4 @@
-= form_for(@user) do |f|
+= form_for(@user, url: profile_path) do |f|
   - if @user.errors.any?
     #error_explanation
       %h2
@@ -24,4 +24,4 @@
     %br/
     = f.password_field :password_confirmation
   .actions
-    = f.submit
+    = f.submit nil, :class => 'btn btn-primary btn-large'

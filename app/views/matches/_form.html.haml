@@ -12,8 +12,8 @@
     = f.collection_select :matchday_id, Matchday.all, :id, :description
   .field
     = f.label "Pairing"
-    = f.text_field :team_a
-    \:#{f.text_field :team_b}
+    = f.collection_select :home_team_id, Team.all, :id, :name
+    \:#{f.collection_select :away_team_id, Team.all, :id, :name}
   .field
     = f.label "Result"
     = f.number_field :score_a
@@ -21,5 +21,8 @@
   .field
     = f.label "Date"
     = f.datetime_select :match_date
+  .field
+    = f.check_box :has_ended
+    = f.label "has ended"
   .actions
     = f.submit

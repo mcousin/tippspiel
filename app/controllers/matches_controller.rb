@@ -31,7 +31,7 @@ class MatchesController < ApplicationController
     @match = Match.new(params[:match])
 
     if @match.save
-      redirect_to @match, notice: 'Match was successfully created.'
+      redirect_to @match, notice: 'The match was successfully created.'
     else
       render action: "new"
     end
@@ -42,7 +42,7 @@ class MatchesController < ApplicationController
     @match = Match.find(params[:id])
 
     if @match.update_attributes(params[:match])
-      redirect_to @match, notice: 'Match was successfully updated.'
+      redirect_to @match, notice: 'The match was successfully updated.'
     else
       render action: "edit"
     end
@@ -52,7 +52,7 @@ class MatchesController < ApplicationController
   def destroy
     @match = Match.find(params[:id])
     @match.destroy
-    
-    redirect_to matches_url
+
+    redirect_to matches_url, notice: 'The match was successfully destroyed.'
   end
 end

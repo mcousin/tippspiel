@@ -1,30 +1,37 @@
 Tippspiel::Application.routes.draw do
-  
+
+
+  get "password_resets/new"
 
   # routes for sessions
-  root :to => 'users#home'    
-  resource :session, :only => [:create]   
+  resource :session, :only => [:create]
   match 'login' => 'sessions#new'
   match 'logout' => 'sessions#destroy'
 
-  # routes for matchdays/bets
+  # routes for matchdays and bets
   resources :matchdays do
-    match 'bets'      => 'bets#update', :via => :put    
-    match 'bets'      => 'bets#edit'
-
-    match 'bets/all'  => 'bets#index'
+    match 'bets'      => 'bets#update', :via => :put
+    match 'bets'      => 'bets#index'
   end
 
   # routes for matches
   resources :matches
-  
+
   # routes for users
-  resources :users, :except => [:edit, :new]
-  match 'home'    => 'users#home'  
-  match 'signup'  => 'users#new'  
+  resources :users, :except => [:edit, :new, :update]
+  match 'home'    => 'users#home'
+  match 'signup'  => 'users#new'
+  match 'profile' => 'users#update', :via => :put
   match 'profile' => 'users#edit'
 
-  
+  # routes for password resets
+  resources :password_resets, :except => [:show, :index, :destroy]
+
+
+  # root route
+  root :to => 'users#home'
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

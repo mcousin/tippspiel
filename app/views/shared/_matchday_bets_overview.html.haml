@@ -1,4 +1,4 @@
-- started_matches = @matchday.matches.select{|match| match.started?}
+- started_matches = @matchday.matches.select{|match| match.has_started?}
 - if started_matches.any?
   %table.table.table-striped.table-condensed.text-small
     %tr
@@ -6,16 +6,16 @@
       - started_matches.each do |match|
         %th= "#{match} (#{match.scores_string})"
       %th matchday points
-      %th total points         
-    - User.ranking(:matchday => @matchday).sort_by {|user, rank| rank}.each do |user, rank|
+      %th total points
+    - @ranking.each do |element|
       %tr
-        %td= user.name
+        %td= element.user.name
         - started_matches.each do |match|
-          - bet = user.bets.find_by_match_id(match.id)
+          - bet = element.user.bets.find_by_match_id(match.id)
           %td= "#{bet ? bet.scores_string : "-:-"} (#{bet ? bet.points : 0} pts)"
-        %td= user.matchday_points(@matchday)
-        %td= user.total_points
-- else 
-  %p No bet overview available yet for this matchday.
+        %td= element.user.matchday_points(@matchday)
+        %td= element.user.total_points(as_of_matchday: @matchday)
+- else
+  %p No bet overview available for this matchday.
 
 

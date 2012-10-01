@@ -9,7 +9,7 @@
       - error_messages.each do |msg|
         %li= msg
 
-- editable_bets = @bets ? @bets.select{|bet| not bet.match.started?} : []        
+- editable_bets = @bets ? @bets.select{|bet| not bet.match.has_started?} : []
 - if editable_bets.any?
   = form_tag(matchday_bets_path(@matchday), :method => :put) do
     %table.table
@@ -19,19 +19,19 @@
         %th{:style=>'text-align: center; width: 1em'} :
         %th{:style=>'width: 12em'} Away team
         %th{:style=>'text-align: center'} Bet
-      - @bets.select{|bet| not bet.match.started?}.each do |bet|
+      - @bets.select{|bet| not bet.match.has_started?}.each do |bet|
         %tr
-          %td= bet.match.match_date.strftime("%d.%m - %H:%M")
-          %td{:style=>'text-align: right'}= bet.match.team_a
+          %td= bet.match.match_date
+          %td{:style=>'text-align: right'}= bet.match.home_team.name
           %td{:style=>'text-align: center'} :
-          %td= bet.match.team_b
+          %td= bet.match.away_team.name
           %td{:class=>'nopadding'}
             = fields_for :bets, bet, index: (bet.match_id) do |bet_form|
               .field.nomargin
                 = bet_form.number_field :score_a, :class => 'input-mini nomargin'
                 = bet_form.number_field :score_b, :class => 'input-mini nomargin'
     %p= submit_tag "Submit Bets", :class => 'btn btn-large btn-primary pull-right', :id=> 'test'
-- else 
+- else
   %p No matches to bet.
 
 :javascript

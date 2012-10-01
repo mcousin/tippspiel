@@ -1,17 +1,21 @@
 %h1 Listing matches
 %table.table
   %tr
+    %th Matchday
     %th Home
     %th Away
     %th Result
     %th Match date
+    %th has ended
     %th
   - @matches.each do |match|
     %tr
-      %td= match.team_a
-      %td= match.team_b
+      %td= match.matchday.description
+      %td= match.home_team.name
+      %td= match.away_team.name
       %td= match.scores_string
       %td= match.match_date
+      %td= match.has_ended
       %td
         = link_to 'Show', match, :class => 'btn btn-mini'
         = link_to 'Edit', edit_match_path(match), :class => 'btn btn-mini'

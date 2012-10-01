@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120807050011) do
+ActiveRecord::Schema.define(:version => 20120922080730) do
 
   create_table "bets", :force => true do |t|
     t.integer  "match_id"
@@ -22,30 +22,60 @@ ActiveRecord::Schema.define(:version => 20120807050011) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "leagues", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "leagues_teams", :id => false, :force => true do |t|
+    t.integer "league_id"
+    t.integer "team_id"
+  end
+
   create_table "matchdays", :force => true do |t|
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "description"
+    t.integer  "league_id"
   end
 
   create_table "matches", :force => true do |t|
-    t.string   "team_a"
-    t.string   "team_b"
     t.integer  "score_a"
     t.integer  "score_b"
     t.datetime "match_date"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "matchday_id"
+    t.boolean  "has_ended"
+    t.integer  "home_team_id"
+    t.integer  "away_team_id"
+  end
+
+  create_table "open_liga_db_leagues", :force => true do |t|
+    t.string   "oldb_league"
+    t.string   "oldb_season"
+    t.string   "league_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.integer  "matchday_id"
+  end
+
+  create_table "teams", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
     t.string   "password_digest"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.integer  "role"
+    t.string   "auth_token"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
 
 end

@@ -1,9 +1,9 @@
-%h1 Your new awards
-- @current_user.my_awards().each do |award|
-  %div{:class => "badge-icon " + award[0]}
+- awards = current_user.awards
+- awards = [:none] if awards.empty?
+- awards.each do |award|
+  %div{:class => "badge-icon #{award_class(award)}" }
     %div{:class => "badge-caption"}
-      = award[1]
+      = award_text(award)[:small]
     %div{:class => "badge-caption text-large"}
-      = award[2]
-%div{:class => "clearfix"}
-  .wspace
+      = award_text(award)[:large]
+

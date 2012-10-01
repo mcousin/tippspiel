@@ -7,6 +7,9 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
   before_filter :set_time_zone_and_format
 
+  def current_user
+    @current_user ||= User.find_by_auth_token!(cookies[:auth_token]) if cookies[:auth_token]
+  end
 
   def authenticate_user!
     unless current_user
@@ -14,23 +17,42 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def current_user
-    @current_user ||= User.find_by_id(session[:user_id])
-  end
-  
   def authenticate_admin!
     unless current_user.admin?
       render_forbidden
     end
   end
-  
+
+  def login!(user, options = {})
+    if options[:permanent]
+      cookies.permanent['auth_token'] = user.auth_token
+    else
+      cookies['auth_token'] = user.auth_token
+    end
+  end
+
+  def logout!
+    cookies.delete('auth_token')
+  end
+
   def set_time_zone_and_format
     Time.zone = "Berlin"
-    Time::DATE_FORMATS[:default] = "%Y-%m-%d %H:%M"
+    Time::DATE_FORMATS[:default] = "%d.%m. - %H:%M"
   end
-  
+
   def render_forbidden
-    render :file => "#{Rails.root}/public/403.html", :status => :forbidden
+    render :file => "#{Rails.root}/public/403", :status => :forbidden, :formats => [:html]
+  end
+
+  # needs to be refactored as soon as we have something like a "current_league"
+  def update_matches
+    return if Rails.env.test?
+    league = League.first
+    open_liga_db_league = OpenLigaDbLeague.first # "league.open_liga_db_league" produces weird error in production env
+    if league.matches.any? {|match| match.has_started? and not match.has_ended}
+      open_liga_db_league.refresh!
+      open_liga_db_league.update_matches
+    end
   end
 
 end

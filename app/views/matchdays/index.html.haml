@@ -2,10 +2,12 @@
 %table.table
   %tr
     %th Description
+    %th complete
     %th
   - @matchdays.each do |matchday|
     %tr
       %td= matchday.description
+      %td= matchday.complete?
       %td
         = link_to 'Show', matchday, :class => 'btn btn-mini'
         = link_to 'Edit', edit_matchday_path(matchday), :class => 'btn btn-mini'

@@ -1,14 +1,17 @@
 class Bet < ActiveRecord::Base
   attr_accessible :match_id, :score_a, :score_b, :user_id, :match, :user
 
+  belongs_to :user
+  belongs_to :match
+
   validate :no_changes_after_match_start
   validates :score_a, numericality: { only_integer: true }, allow_nil: true
   validates :score_b, numericality: { only_integer: true }, allow_nil: true
+  validates :match_id, uniqueness:  { scope: :user_id }
   validates_presence_of :match
   validates_presence_of :user
-  
-  belongs_to :user
-  belongs_to :match
+
+  delegate :matchday, to: :match
 
   def scores_string
     [score_a, score_b].map{|score| score ? score.to_s : "-"}.join(":")
@@ -40,16 +43,16 @@ class Bet < ActiveRecord::Base
       :incorrect
     end
   end
-  
+
   private
-  
+
   def no_changes_after_match_start
-    if match && match.started?
+    if match && match.has_started?
       changes.except(:match_id).each_key do |attribute|
         errors.add(attribute, "can't be changed once the match has started.")
       end
     end
   end
-  
-  
+
+
 end
