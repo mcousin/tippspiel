@@ -1,0 +1,14 @@
+%h1 Listing teams
+%table.table
+  %tr
+    %th Name
+    %th
+  - @teams.each do |team|
+    %tr
+      %td= team.name
+      %td
+        = link_to 'Show', team, :class => 'btn btn-mini'
+        = link_to 'Edit', edit_team_path(team), :class => 'btn btn-mini'
+        = link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'
+%br/
+= link_to 'New Team', new_team_path, :class => 'btn btn-mini'

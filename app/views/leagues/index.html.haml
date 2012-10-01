@@ -1,0 +1,14 @@
+%h1 Listing leagues
+%table.table
+  %tr
+    %th Description
+    %th
+  - @leagues.each do |league|
+    %tr
+      %td= league.description
+      %td
+        = link_to 'Show', league, :class => 'btn btn-mini'
+        = link_to 'Edit', edit_league_path(league), :class => 'btn btn-mini'
+        = link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' }, :class => 'btn btn-mini btn-danger'
+%br/
+= link_to 'New League', new_league_path, :class => 'btn btn-mini'

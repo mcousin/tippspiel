@@ -1,0 +1,15 @@
+= form_for(@league) do |f|
+  - if @league.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@league.errors.count, "error")
+        prohibited this league from being saved:
+      %ul
+        - @league.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = f.label :description
+    %br/
+    = f.text_field :description
+  .actions
+    = f.submit

@@ -13,5 +13,8 @@
 %p
   %b Match date:
   = @match.match_date
+%p
+  %b Matchday:
+  = @match.matchday.description
 = link_to 'Edit', edit_match_path(@match), :class => 'btn btn-mini'
 = link_to 'Back', matches_path, :class => 'btn btn-mini'

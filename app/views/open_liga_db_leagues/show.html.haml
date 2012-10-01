@@ -1,0 +1,11 @@
+%p
+  %b League:
+  = @open_liga_db_league.league.description
+%p
+  %b Shortcut:
+  = @open_liga_db_league.oldb_league
+%p
+  %b Season:
+  = @open_liga_db_league.oldb_season
+= link_to 'Edit', edit_open_liga_db_league_path(@open_liga_db_league), :class => 'btn btn-mini'
+= link_to 'Back', open_liga_db_leagues_path, :class => 'btn btn-mini'

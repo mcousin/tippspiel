@@ -1,4 +1,7 @@
 %p
+  %b League:
+  = @matchday.league.description
+%p
   %b Description:
   = @matchday.description
 = link_to 'Edit', edit_matchday_path(@matchday), :class => 'btn btn-mini'

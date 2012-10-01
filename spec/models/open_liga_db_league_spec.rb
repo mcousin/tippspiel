@@ -124,8 +124,10 @@ describe OpenLigaDbLeague do
 
     context "private methods" do
 
-      context "teams_aligned?"
-      context "matchdays_aligned?"
+      context "teams_aligned?" do
+      end
+      context "matchdays_aligned?" do
+      end
 
 
       context "structs_for" do

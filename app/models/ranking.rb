@@ -21,24 +21,10 @@ class Ranking
     @ranking.values
   end
 
-  def fragment_for(user, options = {})
-    radius = options[:radius] || 1
-
-    selected_ranks = [1, ranks.max, rank(user)]
-    selected_ranks += @ranking.values.uniq.select{|r| r < rank(user)}.sort.last(radius)
-    selected_ranks += @ranking.values.uniq.select{|r| r > rank(user)}.sort.first(radius)
-
-    ranking_elements.select { |element| selected_ranks.include?(element.rank) }
-  end
-
-  def ranking_elements
-    @ranking_elements ||= @ranking.sort_by {|user, rank| rank}.map {|pair| RankingElement.new(pair.first, pair.second)}
-  end
-
   def generate(options = {})
     @ranking = {}
-    points = Hash[*@users.collect { |user| [user, options[:matchday] ? user.matchday_points(options[:matchday])
-                                                                     : user.total_points]}.flatten]
+    points_method = options[:matchday] ? [:matchday_points, options[:matchday]] : [:total_points]
+    points = Hash[*@users.collect { |user| [user, user.send(*points_method)]}.flatten]
 
     sorted_users = @users.sort {|a,b| points[b] <=> points[a]}
     sorted_users.each_with_index do |user, index|
@@ -49,6 +35,22 @@ class Ranking
     end
   end
 
+  def fragment_for(user, options = {})
+    radius = options[:radius] || 1
+
+    selected_ranks = [1, ranks.max, rank(user)]
+    selected_ranks += @ranking.values.uniq.select{|r| r < rank(user)}.sort.last(radius)
+    selected_ranks += @ranking.values.uniq.select{|r| r > rank(user)}.sort.first(radius)
+
+    ranking_elements.select { |element| selected_ranks.include?(element.rank) }
+  end
+
+
+  private
+
+    def ranking_elements
+      @ranking_elements ||= @ranking.sort_by {|user, rank| rank}.map {|pair| RankingElement.new(pair.first, pair.second)}
+    end
 
 end
 

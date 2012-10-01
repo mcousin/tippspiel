@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
 
   # needs to be refactored as soon as we have something like a "current_league"
   def update_matches
-    return if Rails.env.test?
+    return #if Rails.env.test?
     league = League.first
     open_liga_db_league = OpenLigaDbLeague.first # "league.open_liga_db_league" produces weird error in production env
     if league.matches.any? {|match| match.has_started? and not match.has_ended}
