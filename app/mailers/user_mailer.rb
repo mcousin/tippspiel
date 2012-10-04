@@ -6,4 +6,9 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "Password Reset")
   end
 
+  def reminder(user)
+    @user = user
+    mail(to: user.email, subject: "Reminder")
+  end
+
 end

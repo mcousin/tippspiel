@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120922080730) do
+ActiveRecord::Schema.define(:version => 20121004153733) do
 
   create_table "bets", :force => true do |t|
     t.integer  "match_id"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(:version => 20120922080730) do
     t.string   "auth_token"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.boolean  "send_reminder"
   end
 
 end

@@ -11,4 +11,13 @@ describe UserMailer do
     # its(:subject) { should eq "Password Reset" }
   end
 
+  context "reminder" do
+    pending("Mailer not yet configured.")
+    # let(:user) { FactoryGirl.build(:user) }
+    # subject { UserMailer.reminder(user).deliver }
+    # specify { UserMailer.deliveries.should_not be_empty }
+    # its(:to) { should eq [user.email] }
+    # its(:subject) { should eq "Reminder" }
+  end
+
 end

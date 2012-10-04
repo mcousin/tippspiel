@@ -16,6 +16,9 @@
     %br/
     = f.text_field :email
   .field
+    %br/
+    = f.check_box(:send_reminder) + " Remind me to bet."
+  .field
     = f.label :password
     %br/
     = f.password_field :password
