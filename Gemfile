@@ -11,6 +11,8 @@ gem 'ruby_parser'
 gem 'savon' # soap client
 gem 'fuzzy-string-match_pure'
 
+gem 'will_paginate'
+
 group :development, :test do
   gem 'factory_girl_rails'
   gem 'debugger'

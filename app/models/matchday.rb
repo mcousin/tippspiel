@@ -13,6 +13,10 @@ class Matchday < ActiveRecord::Base
   def has_started?
     start < Time.now
   end
+  
+  def next
+    Matchday.all.select{|matchday| matchday.start < time}
+  end
 
   def <=>(other)
     start <=> other.start
