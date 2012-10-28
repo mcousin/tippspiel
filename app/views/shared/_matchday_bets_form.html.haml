@@ -25,11 +25,12 @@
           %td{:style=>'text-align: right'}= bet.match.home_team.name
           %td{:style=>'text-align: center'} :
           %td= bet.match.away_team.name
-          %td{:class=>'nopadding'}
+          %td{:class=>'nopadding', :style=>'text-align: center'}
             = fields_for :bets, bet, index: (bet.match_id) do |bet_form|
               .field.nomargin
-                = bet_form.number_field :score_a, :class => 'input-mini nomargin'
-                = bet_form.number_field :score_b, :class => 'input-mini nomargin'
+                = bet_form.number_field :score_a, :class => 'input-result nomargin', :min => '0', :max => '100', :step => '1'
+                = ":"
+                = bet_form.number_field :score_b, :class => 'input-result nomargin', :min => '0', :max => '100', :step => '1'
     %p= submit_tag "Submit Bets", :class => 'btn btn-large btn-primary pull-right', :id=> 'test'
 - else
   %p No matches to bet.

@@ -35,14 +35,16 @@
 
 
 
-body {
-	padding-top: 0px;
-	background-image: asset-url('bg_footer_left_line.png'), asset-url('bg_with_line_center.png'), asset-url('bg_footer.png');
-	background-position: bottom left, left, bottom;
-	background-repeat: no-repeat, repeat-y, repeat-x;
+@media screen and (min-width: 800px)
+{
+	body {
+		padding-top: 0px;
+		background-image: asset-url('bg_footer_left_line.png'), asset-url('bg_with_line_center.png'), asset-url('bg_footer.png');
+		background-position: bottom left, left, bottom;
+		background-repeat: no-repeat, repeat-y, repeat-x;
+	}
 }
 
-// 
 .highlighted {
 	background-color: #edf0ea;	
 }
@@ -52,10 +54,13 @@ body {
 	padding: 5px;
 }
 
-#header{
-	min-height: 200px;
-	background-image: asset-url("bg_top_left_line.png"), asset-url("bg_top.png");
-	background-repeat: no-repeat, repeat-x;
+@media screen and (min-width: 800px)
+{
+	#header{
+		min-height: 200px;
+		background-image: asset-url("bg_top_left_line.png"), asset-url("bg_top.png");
+		background-repeat: no-repeat, repeat-x;
+	}
 }
 
 .h1{
@@ -68,7 +73,7 @@ body {
 }
 
 #content{
-	padding-left: 60px;
+	padding-left: 0px;
 	min-height: 600px;
 }
 
@@ -148,6 +153,17 @@ body {
 	color:blue;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
 
+h1{
+	clear:left;
+}
 
-
+.input-result{
+	width: 2em;
+}
