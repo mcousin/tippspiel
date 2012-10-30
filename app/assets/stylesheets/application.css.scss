@@ -1,0 +1,136 @@
+@import "compass_twitter_bootstrap";
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+
+// Colors
+$green: hsl(84deg, 60%, 49%);
+
+// Resets
+.wspace {
+	padding: 5px;
+}
+
+.nomargin {
+	margin: 0px;
+}
+
+.rightaligned{
+	text-align: right;
+}
+
+
+// Body
+@media screen and (min-width: 800px)
+{
+	body {
+		padding-top: 0px;
+		background-image: asset-url('bg_footer_left_line.png', image), asset-url('bg_with_line_center.png', image), asset-url('bg_footer.png', image);
+		background-position: bottom left, left, bottom;
+		background-repeat: no-repeat, repeat-y, repeat-x;
+	}
+}
+
+// Layout-Sections
+
+#content{
+	padding-left: 0px;
+	min-height: 600px;
+}
+
+#footer{
+	min-height: 200px;
+}
+
+// Headings
+h1{
+	font-family: 'Lobster Two', cursive;
+	color: #000000;
+}
+
+// Table Styling
+.highlighted {
+	background-color: hsl(90,3,94);	
+}
+
+.table-striped tbody th {
+    background-color: #496a2b;
+}
+
+.table td .nopadding {
+	padding: 0px;
+}
+
+
+// Links
+a {
+	color: $green;	
+	&:hover { 
+		font-weight: solid; 
+		text-decoration: none;
+		color: hsl(84deg, 60%, 39%);
+	}
+}
+
+// Badge-Stuff
+.badge-icon{
+    width: 100px;
+	height: 100px;
+    margin: 5px;
+	margin-top: 10px;
+	font-family: 'Oleo Script', cursive;
+	float: left;
+}
+
+.badge-number-one{
+	background-image: asset-url('badge_yellow.png', image);
+	color: #ffffff;
+	font-size: 16px;
+	text-shadow: #c0c0c0 3px 3px 5px;
+}
+
+.badge-match-day-winner{
+	background-image: asset-url('badge_matchday.png', image);
+	color: #ffffff;
+	font-size: 16px;
+	text-shadow: #c0c0c0 3px 3px 5px;
+}
+
+.badge-number-last{
+	background-image: asset-url('badge_last.png', image);
+	color: #ffffff;
+	font-size: 16px;
+	text-shadow: #c0c0c0 3px 3px 5px;
+}
+
+.badge-none{
+	background-image: asset-url('badge_none.png', image);
+	color: #ffffff;
+	font-size: 16px;
+	text-shadow: #c0c0c0 3px 3px 5px;
+}
+
+.badge-caption{
+	padding-top: 12px;
+	text-align: center;
+}
+
+.text-large{
+	line-height: 32px;
+	font-size: 28px;
+}
+
+.text-small{
+	font-size: 9px;
+}

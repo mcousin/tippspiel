@@ -48,5 +48,6 @@ Tippspiel::Application.configure do
     authentication:        'plain',
     enable_starttls_auto:  true  }
 
-
+  #COMPASS configuration for css folder
+  config.compass.sass_dir = "app/assets/stylesheets"
 end
