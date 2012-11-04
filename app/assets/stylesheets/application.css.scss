@@ -15,11 +15,27 @@
 
 
 // Colors
-$green: hsl(84deg, 60%, 49%);
+
+$lightgreen: hsl(84deg, 60%, 55%);
+$green: hsl(84deg, 60%, 45%);
+$darkgreen: hsl(84deg, 60%, 35%);
+
+$blue-gradient: linear-gradient(top, $green, $darkgreen);
+
+.btn-primary {
+  @include background-image($blue-gradient);
+  background-color: $darkgreen;
+  border-color: $darkgreen;
+  &:hover, &:active, &.active, &.disabled, &[disabled] {
+    background-color: $darkgreen;
+  }
+}
 
 // Resets
+	
 .wspace {
 	padding: 5px;
+	clear: both;
 }
 
 .nomargin {
@@ -28,6 +44,16 @@ $green: hsl(84deg, 60%, 49%);
 
 .rightaligned{
 	text-align: right;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-result{
+	width: 2em;
 }
 
 
@@ -42,7 +68,17 @@ $green: hsl(84deg, 60%, 49%);
 	}
 }
 
+
 // Layout-Sections
+
+@media screen and (min-width: 800px)
+{
+	#header{
+		min-height: 200px;
+		background-image: asset-url("bg_top_left_line.png", image), asset-url("bg_top.png", image);
+		background-repeat: no-repeat, repeat-x;
+	}
+}
 
 #content{
 	padding-left: 0px;
@@ -54,22 +90,29 @@ $green: hsl(84deg, 60%, 49%);
 }
 
 // Headings
+
 h1{
 	font-family: 'Lobster Two', cursive;
 	color: #000000;
+	float: none;
+}
+
+h2 {
+	font-family: 'Lobster Two', cursive;	
 }
 
 // Table Styling
-.highlighted {
-	background-color: hsl(90,3,94);	
-}
 
+.table {
+	.highlighted {
+		background-color: hsl(90deg,30%,94%);	
+	}
+	td .nopadding {
+		padding: 100px;
+	}
+}
 .table-striped tbody th {
     background-color: #496a2b;
-}
-
-.table td .nopadding {
-	padding: 0px;
 }
 
 
@@ -85,30 +128,36 @@ a {
 
 // Badge-Stuff
 .badge-icon{
-    width: 100px;
-	height: 100px;
+    width: 90px;
+	height: 90px;
     margin: 5px;
-	margin-top: 10px;
+	padding-top: 10px;
 	font-family: 'Oleo Script', cursive;
 	float: left;
 }
 
 .badge-number-one{
-	background-image: asset-url('badge_yellow.png', image);
+    background: hsl(44deg,82%,50%); 	
 	color: #ffffff;
 	font-size: 16px;
 	text-shadow: #c0c0c0 3px 3px 5px;
 }
 
+.circle { 
+   -moz-border-radius: 50%; 
+   -webkit-border-radius: 50%; 
+   border-radius: 50%;
+}
+
 .badge-match-day-winner{
-	background-image: asset-url('badge_matchday.png', image);
+    background: hsl(44deg,82%,50%); 
 	color: #ffffff;
 	font-size: 16px;
 	text-shadow: #c0c0c0 3px 3px 5px;
 }
 
 .badge-number-last{
-	background-image: asset-url('badge_last.png', image);
+    background: hsl(229deg,78%,59%); 
 	color: #ffffff;
 	font-size: 16px;
 	text-shadow: #c0c0c0 3px 3px 5px;
@@ -134,3 +183,5 @@ a {
 .text-small{
 	font-size: 9px;
 }
+
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }

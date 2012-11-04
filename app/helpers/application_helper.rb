@@ -18,13 +18,13 @@ module ApplicationHelper
   def award_class(award)
     case award
     when :leader
-      "badge-number-one"
+      "badge-number-one circle"
     when :last
-      "badge-number-last"
+      "badge-number-last circle"
     when :matchday_leader
-      "badge-match-day-winner"
+      "badge-match-day-winner circle"
     when :none
-      "badge-none"
+      "badge-none circle"
     else
       ""
     end
