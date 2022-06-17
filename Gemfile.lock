@@ -61,6 +61,7 @@ GEM
       compass (>= 0.12.2, < 0.14)
     compass_twitter_bootstrap (2.0.3)
       compass
+    concurrent-ruby (1.1.10)
     debugger (1.2.0)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.1.1)
@@ -94,7 +95,8 @@ GEM
     hpricot (0.8.6)
     httpi (1.1.1)
       rack
-    i18n (0.6.0)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     journey (1.0.4)
     jquery-rails (2.1.1)
       railties (>= 3.1.0, < 5.0)
